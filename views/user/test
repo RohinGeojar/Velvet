@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Settings | Velvet Vogue</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@300;400;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#241a0c",
+                        "on-primary-fixed": "#101f10",
+                        "secondary": "#6a5c4a",
+                        "inverse-primary": "#b9ccb4",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#474836",
+                        "on-secondary-fixed-variant": "#524534",
+                        "secondary-fixed-dim": "#d7c3ae",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-high": "#e8e8e8",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f9f9f9",
+                        "surface": "#f9f9f9",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "surface-dim": "#dadada",
+                        "primary": "#475845",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#f4dfc9",
+                        "outline-variant": "#c4c8bf",
+                        "on-secondary-container": "#6f604e",
+                        "tertiary-fixed-dim": "#c8c8b0",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#1b1d0e",
+                        "on-surface": "#1a1c1c",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1a1c1c",
+                        "tertiary-container": "#6c6d59",
+                        "surface-tint": "#52634f",
+                        "on-tertiary-container": "#efefd7",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#e4e4cc",
+                        "primary-fixed": "#d5e8cf",
+                        "tertiary": "#535542",
+                        "surface-container-highest": "#e2e2e2",
+                        "background": "#f9f9f9",
+                        "primary-container": "#5f705c",
+                        "surface-container": "#eeeeee",
+                        "primary-fixed-dim": "#b9ccb4",
+                        "on-surface-variant": "#444842",
+                        "surface-container-low": "#f3f3f3",
+                        "on-secondary": "#ffffff",
+                        "outline": "#747871",
+                        "secondary-container": "#f1ddc6",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-container": "#e0f3da",
+                        "on-primary-fixed-variant": "#3b4b39"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        h1, h2, h3, .serif { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-primary">
+<!-- Top Navigation Bar -->
+<header class="bg-[#f9f9f9]/80 dark:bg-stone-900/80 backdrop-blur-xl sticky top-0 z-50 flex flex-col items-center w-full px-8 pt-4 pb-2">
+<div class="w-full flex justify-between items-center max-w-7xl">
+<div class="font-['Noto_Serif'] text-4xl font-light tracking-widest text-[#475845] dark:text-[#a3b1a1] uppercase">Velvet Vogue</div>
+<nav class="hidden md:flex items-center space-x-12">
+<a class="text-[#6a5c4a] dark:text-stone-400 font-['Manrope'] tracking-widest uppercase text-xs hover:text-[#475845] transition-colors duration-300" href="#">Collections</a>
+<a class="text-[#6a5c4a] dark:text-stone-400 font-['Manrope'] tracking-widest uppercase text-xs hover:text-[#475845] transition-colors duration-300" href="#">New Arrivals</a>
+<a class="text-[#6a5c4a] dark:text-stone-400 font-['Manrope'] tracking-widest uppercase text-xs hover:text-[#475845] transition-colors duration-300" href="#">Sustainability</a>
+<a class="text-[#6a5c4a] dark:text-stone-400 font-['Manrope'] tracking-widest uppercase text-xs hover:text-[#475845] transition-colors duration-300" href="#">Journal</a>
+</nav>
+<div class="flex items-center space-x-6 text-[#475845]">
+<button class="hover:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+<button class="hover:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex flex-col md:flex-row min-h-screen max-w-screen-2xl mx-auto">
+<!-- Sidebar Navigation -->
+<aside class="bg-[#e8e8e8] dark:bg-stone-800/50 h-screen w-full md:w-80 left-0 sticky flex flex-col py-12 px-8 space-y-8">
+<div class="flex flex-col items-center text-center space-y-4 mb-8">
+<div class="w-24 h-24 rounded-full bg-primary flex items-center justify-center text-on-primary text-2xl font-headline tracking-widest">
+                    RG
+                </div>
+<div>
+<h2 class="font-headline text-xl text-[#475845] dark:text-[#a3b1a1]">Rose Garden</h2>
+<p class="text-xs text-secondary font-label tracking-wide">rose@example.com</p>
+</div>
+</div>
+<nav class="flex flex-col space-y-2">
+<a class="flex items-center space-x-4 py-2 text-[#6a5c4a] dark:text-stone-400 pl-4 hover:bg-[#f3f3f3] dark:hover:bg-stone-800 transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-['Manrope'] tracking-wide">Overview</span>
+</a>
+<a class="flex items-center space-x-4 py-2 text-[#475845] dark:text-white font-semibold border-l-2 border-[#475845] pl-4" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+<span class="text-sm font-['Manrope'] tracking-wide">Account Details</span>
+</a>
+<a class="flex items-center space-x-4 py-2 text-[#6a5c4a] dark:text-stone-400 pl-4 hover:bg-[#f3f3f3] dark:hover:bg-stone-800 transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="package_2">package_2</span>
+<span class="text-sm font-['Manrope'] tracking-wide">Order History</span>
+</a>
+<a class="flex items-center space-x-4 py-2 text-[#6a5c4a] dark:text-stone-400 pl-4 hover:bg-[#f3f3f3] dark:hover:bg-stone-800 transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="credit_card">credit_card</span>
+<span class="text-sm font-['Manrope'] tracking-wide">My Wallet</span>
+</a>
+<a class="flex items-center space-x-4 py-2 text-[#6a5c4a] dark:text-stone-400 pl-4 hover:bg-[#f3f3f3] dark:hover:bg-stone-800 transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
+<span class="text-sm font-['Manrope'] tracking-wide">Wishlist</span>
+</a>
+<a class="flex items-center space-x-4 py-2 text-[#6a5c4a] dark:text-stone-400 pl-4 hover:bg-[#f3f3f3] dark:hover:bg-stone-800 transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span>
+<span class="text-sm font-['Manrope'] tracking-wide">Addresses</span>
+</a>
+<a class="flex items-center space-x-4 py-2 text-[#6a5c4a] dark:text-stone-400 pl-4 hover:bg-[#f3f3f3] dark:hover:bg-stone-800 transition-all" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_cart">shopping_cart</span>
+<span class="text-sm font-['Manrope'] tracking-wide">My Cart</span>
+</a>
+<div class="pt-8 mt-auto">
+<a class="flex items-center space-x-4 py-2 text-error pl-4 hover:bg-error-container/20 transition-all" href="/logout">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+<span class="text-sm font-['Manrope'] tracking-wide uppercase">Sign Out</span>
+</a>
+</div>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<section class="flex-1 bg-surface py-16 px-6 md:px-20 space-y-16">
+<header>
+<h1 class="text-4xl md:text-5xl font-headline tracking-tighter text-primary mb-4">Account Details</h1>
+<p class="text-secondary font-label uppercase tracking-widest text-xs">The Digital Atelier • Personal Sanctuary</p>
+</header>
+<!-- Account Settings Card -->
+<div class="bg-surface-container-lowest p-8 md:p-12 rounded-lg shadow-[0px_20px_40px_rgba(26,28,28,0.06)] max-w-4xl">
+<div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-12 mb-12">
+<div class="relative group">
+<img alt="Profile photo" class="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover filter grayscale hover:grayscale-0 transition-all duration-700" data-alt="editorial portrait of a sophisticated woman with natural lighting and minimalist background in soft earth tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzk3aDGcfhxmhACaiGji1vVdOOUSaUl3cN7LewrGyOjWUE0IIS_ef5zKhp4Lm7UZAvZoVHvy8ygGNe6cfLwPcxLjxaUHXg-YIKYamGWd_vs1UW-eNeo4BMhg_uFpM-9yhLL6POoWfaaK6n6_xRrFi2-t7sl9If9nb-D4Axmv6UrMBrA7NpiEgf-ac3f8d_3_FgYUUcT0TUiVei6fKkXzpScrnAsQ8t14dudjAqLeKAzBbX2P2PfH77scOu6vBIGyoPs4kOiPc8p0RZ"/>
+<button class="absolute bottom-0 right-0 bg-primary text-on-primary p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="photo_camera">photo_camera</span>
+</button>
+</div>
+<div class="flex-1 text-center md:text-left pt-4">
+<h3 class="text-2xl font-headline text-on-surface mb-2">Update photo</h3>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Ensure your profile picture reflects your current aesthetic. Formats: JPG, PNG. Max 2MB.</p>
+<button class="px-8 py-3 bg-primary text-on-primary rounded-md text-xs font-label tracking-widest uppercase hover:bg-primary-container transition-colors shadow-sm">Upload New Image</button>
+</div>
+</div>
+<form action="/profile" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+<div class="space-y-2">
+<label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant">First Name</label>
+<input class="w-full bg-surface-container-low border-none focus:ring-1 focus:ring-primary/20 text-on-surface text-sm py-4 px-4 rounded-sm" type="text" name="firstName" value="<%= user?.firstName || '' %>"/>
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant">Last Name</label>
+<input class="w-full bg-surface-container-low border-none focus:ring-1 focus:ring-primary/20 text-on-surface text-sm py-4 px-4 rounded-sm" type="text" name="lastName" value="<%= user?.lastName || '' %>" />
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant">Phone Number</label>
+<input class="w-full bg-surface-container-low border-none focus:ring-1 focus:ring-primary/20 text-on-surface text-sm py-4 px-4 rounded-sm" type="tel" name="phone" value="<%= user?.phone || '' %>"  />
+</div>
+<div class="space-y-2">
+<label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant">Email Address</label>
+<input class="w-full bg-surface-container-low border-none focus:ring-1 focus:ring-primary/20 text-on-surface text-sm py-4 px-4 rounded-sm" type="email" name="email" value="<%= user?.email || '' %>" />
+</div>
+<div class="md:col-span-2 pt-6">
+<button class="w-full md:w-auto px-12 py-4 bg-primary text-on-primary rounded-md text-xs font-label tracking-widest uppercase hover:bg-primary-container transition-all" type="submit">Save Changes</button>
+</div>
+</form>
+</div>
+<!-- Change Password Card -->
+<div class="bg-surface-container-low p-8 md:p-12 rounded-lg max-w-4xl">
+<header class="mb-10">
+<h3 class="text-2xl font-headline text-primary mb-2">Security</h3>
+<p class="text-secondary text-sm">Keep your sanctuary secure with a strong password.</p>
+ <% if (error) { %>
+      <p class=" text-md  mb-4  text-red-700 text-start space-y-4 max-w-md mx-auto lg:mx-0"><%-error %></p>
+        <% } %>
+</header>
+<form  action="/profile/changePassword" method="POST" class="space-y-8 max-w-xl">
+<div class="space-y-2 relative">
+<label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant">Current Password</label>
+<div class="relative">
+<input  id="currentPassword" class="w-full bg-white border-none focus:ring-1 focus:ring-primary/20 text-on-surface text-sm py-4 px-4 rounded-sm pr-12" type="password" name="currentPassword" placeholder="Enter current password"/>
+<span onclick="togglePassword('currentPassword', this)" class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant cursor-pointer text-lg" data-icon="visibility">visibility</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-2">
+<div class="relative space-y-2">
+<label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant">New Password</label>
+<input  id="newPassword" class="w-full bg-white border-none focus:ring-1 focus:ring-primary/20 text-on-surface text-sm py-4 px-4 rounded-sm" type="password" name="newPassword"  placeholder="Enter new password"/>
+<span onclick="togglePassword('newPassword', this)" class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant cursor-pointer text-lg" data-icon="visibility">visibility</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="relative space-y-2">
+<label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant">Confirm New Password</label>
+<input  id="confirmPassword" class="w-full bg-white border-none focus:ring-1 focus:ring-primary/20 text-on-surface text-sm py-4 px-4 rounded-sm"  type="password" name="confirmPassword"  placeholder="Confirm New Password"/>
+<span onclick="togglePassword('confirmPassword', this)" class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant cursor-pointer text-lg" data-icon="visibility">visibility</span>
+</div>
+</div>
+</div>
+<div class="pt-4">
+<button class="w-full md:w-auto px-12 py-4 bg-primary text-on-primary rounded-md text-xs font-label tracking-widest uppercase hover:bg-primary-container transition-all" type="submit">Update Password</button>
+</div>
+</form>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#475845] text-[#f9f9f9] w-full">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-12 py-20 w-full max-w-7xl mx-auto">
+<!-- Newsletter Column -->
+<div class="md:col-span-2 space-y-8">
+<div class="font-['Noto_Serif'] text-3xl text-[#f4dfc9]">Join Our Club</div>
+<p class="font-['Manrope'] text-sm tracking-wide text-[#a3b1a1] max-w-md">Subscribe to receive editorial updates, early access to collections, and reflections from the atelier.</p>
+<div class="flex items-center border-b border-[#a3b1a1]/30 pb-2 max-w-md">
+<input class="bg-transparent border-none focus:ring-0 text-xs font-label tracking-widest flex-1 placeholder:text-[#a3b1a1]/50" placeholder="YOUR EMAIL ADDRESS" type="email"/>
+<button class="text-[#f4dfc9] uppercase text-xs tracking-widest hover:pl-2 transition-all">Subscribe</button>
+</div>
+</div>
+<!-- Nav Links -->
+<div class="space-y-6">
+<div class="font-['Manrope'] text-xs uppercase tracking-widest text-[#f4dfc9] opacity-60">Company</div>
+<ul class="space-y-4">
+<li><a class="text-[#a3b1a1] hover:text-[#f4dfc9] text-xs uppercase tracking-widest transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-[#a3b1a1] hover:text-[#f4dfc9] text-xs uppercase tracking-widest transition-colors" href="#">Terms of Service</a></li>
+<li><a class="text-[#a3b1a1] hover:text-[#f4dfc9] text-xs uppercase tracking-widest transition-colors" href="#">Shipping &amp; Returns</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<div class="font-['Manrope'] text-xs uppercase tracking-widest text-[#f4dfc9] opacity-60">Support</div>
+<ul class="space-y-4">
+<li><a class="text-[#a3b1a1] hover:text-[#f4dfc9] text-xs uppercase tracking-widest transition-colors" href="#">Contact Us</a></li>
+<li><a class="text-[#a3b1a1] hover:text-[#f4dfc9] text-xs uppercase tracking-widest transition-colors" href="#">Newsletter</a></li>
+<li class="flex space-x-4 pt-4">
+<a class="text-[#a3b1a1] hover:text-[#f4dfc9] transition-colors" href="#"><span class="material-symbols-outlined text-xl" data-icon="share">share</span></a>
+<a class="text-[#a3b1a1] hover:text-[#f4dfc9] transition-colors" href="#"><span class="material-symbols-outlined text-xl" data-icon="public">public</span></a>
+</li>
+</ul>
+</div>
+</div>
+<div class="border-t border-white/5 px-12 py-8 flex flex-col md:flex-row justify-between items-center text-[#a3b1a1] text-[10px] uppercase tracking-[0.2em]">
+<div>© 2024 Velvet Vogue. Crafted for the Digital Atelier.</div>
+<div class="mt-4 md:mt-0">All Rights Reserved.</div>
+</div>
+</footer>\
+<script>
+   
+function togglePassword(id, el) {
+  const input = document.getElementById(id);
+
+  if (input.type === "password") {
+    input.type = "text";
+    el.textContent = "visibility_off";
+  } else {
+    input.type = "password";
+    el.textContent = "visibility";
+  }
+}
+
+</script>
+</body>
+
+</html>
