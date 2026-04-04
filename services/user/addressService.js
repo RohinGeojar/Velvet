@@ -24,7 +24,7 @@ export const getAddressById = async (addressId, userId) => {
   });
 
   if (!address) {
-    throw new Error("Address not found");
+    throw new Error("Address not found ");
   }
 
   return address;
