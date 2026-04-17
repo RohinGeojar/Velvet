@@ -112,57 +112,7 @@
 <body class="bg-white text-gray-800 font-sans antialiased flex flex-col min-h-screen overflow-x-hidden">
 
     <!-- Top Banner -->
-    <div id="top-banner" class="bg-brand text-white text-center py-2 text-[10px] sm:text-sm tracking-wide z-50">
-        Enjoy Free Shipping On All Orders
-    </div>
-
-    <!-- Header Navigation -->
-    <header id="main-header" class="border-b border-gray-100 sticky top-0 bg-white z-40">
-        <div class="w-full mx-0 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 flex items-center justify-between">
-
-            <!-- Hamburger Button (Mobile Only) -->
-            <button id="hamburger" class="md:hidden text-gray-600 p-2 -ml-2" aria-label="Menu">
-                <i class="ph ph-list text-2xl"></i>
-            </button>
-
-            <!-- Logo -->
-            <div class="flex-shrink-0 flex flex-col items-center relative">
-                <div class="flex items-center gap-1 mx-10">
-                    <span class="font-kaushan text-2xl sm:text-3xl tracking-tight text-gray-800">Velvet
-                        Vogue</span>
-                    <i class="ph-fill ph-plant text-brand text-lg sm:text-xl relative -top-1"></i>
-                </div>
-                <span class="text-[0.5rem] sm:text-[0.6rem] text-gray-500 tracking-widest uppercase -mt-1">women
-                    clothing</span>
-            </div>
-
-            <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex space-x-6 lg:space-x-8">
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Collection</a>
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">New In</a>
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Wedding</a>
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Plus Size</a>
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Kids</a>
-            </nav>
-
-            <!-- Icons -->
-            <div class="flex items-center space-x-3 sm:space-x-6 mr-8 ">
-                <a href="#" class="text-gray-600 hover:text-brand transition p-1" aria-label="Search"><i
-                        class="ph ph-magnifying-glass text-xl sm:text-2xl"></i></a>
-                <a href="#" class="text-gray-600 hover:text-brand transition p-1 relative hidden sm:block"
-                    aria-label="Profile">
-                    <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-black rounded-full">
-                    </div>
-                    <i class="ph ph-user text-xl sm:text-2xl"></i>
-                </a>
-                <a href="#" class="text-gray-600 hover:text-brand transition p-1" aria-label="Favorites"><i
-                        class="ph ph-heart text-xl sm:text-2xl"></i></a>
-                <a href="#" class="text-gray-600 hover:text-brand transition p-1" aria-label="Cart">
-                    <i class="ph ph-tote text-xl sm:text-2xl"></i>
-                </a>
-            </div>
-        </div>
-    </header>
+   
 
     <!-- Mobile Navigation Overlay (Drawer) -->
     <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-[60] hidden transition-opacity duration-300"></div>
@@ -200,109 +150,10 @@
         <div class=" mx-auto h-full flex flex-col md:flex-row w-full">
 
             <!-- Sidebar (Left-placed, separate scroll on desktop) -->
-            <aside class="w-full md:w-72 lg:w-80 flex-shrink-0 sidebar-scroll border-r border-gray-100 bg-white">
-                <div class="px-4 lg:px-8 py-0">
-                    <!-- User Info -->
-                    <div class="flex flex-col items-center mb-0  border-b border-gray-100 text-center">
-                        <div
-                            class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand flex items-center justify-center text-white text-2xl sm:text-3xl mb-4 shadow-lg shadow-brand/20">
-                            <%-user?.firstName.charAt(0).toUpperCase()+user?.lastName.charAt(0).toUpperCase() %>
-                        </div>
-                        <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-1">
-                            <%= user?.firstName || '' %>
-                                <%= user?.lastName || '' %>
-                        </h2>
-                        <p class="text-gray-500 text-xs sm:text-sm">
-                            <%= user?.email || '' %>
-                        </p>
-                    </div>
-
-                    <!-- Navigation Menu -->
-                    <nav class="space-y-1">
-                        <a href="#"
-                            class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
-                            <div
-                                class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
-                                <i class="ph ph-squares-four text-lg"></i>
-                            </div>
-                            <span
-                                class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">Overview</span>
-                        </a>
-
-                        <a href="/profile"
-                            class="sidebar-link  flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
-                            <div
-                                class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
-                                <i class="ph ph-user text-lg"></i>
-                            </div>
-                            <span class="text-sm">Account Details</span>
-                        </a>
-
-                        <a href="#"
-                            class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
-                            <div
-                                class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
-                                <i class="ph ph-bag text-lg"></i>
-                            </div>
-                            <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">Order
-                                History</span>
-                        </a>
-
-                        <a href="#"
-                            class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
-                            <div
-                                class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
-                                <i class="ph ph-wallet text-lg"></i>
-                            </div>
-                            <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">My
-                                Wallet</span>
-                        </a>
-
-                        <a href="#"
-                            class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
-                            <div
-                                class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
-                                <i class="ph ph-heart text-lg"></i>
-                            </div>
-                            <span
-                                class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">Wishlist</span>
-                        </a>
-
-                        <a href="/address"
-                            class="sidebar-link active flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
-                            <div
-                                class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
-                                <i class="ph ph-map-pin text-lg"></i>
-                            </div>
-                            <span
-                                class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">Addresses</span>
-                        </a>
-
-                        <a href="#"
-                            class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
-                            <div
-                                class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
-                                <i class="ph ph-shopping-cart text-lg"></i>
-                            </div>
-                            <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">My
-                                Cart</span>
-                        </a>
-
-                        <div class=" pt-4 border-t pb-8  border-gray-100">
-                            <a href="/logout"
-                                class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-red-50 transition group">
-                                <div class="icon-container text-red-400 w-9 h-9 rounded-md flex items-center justify-center mr-3 transition">
-                                    <i class="ph ph-sign-out text-lg"></i>
-                                </div>
-                                <span class="text-red-500 font-medium text-sm">Logout</span>
-                            </a>
-                        </div>
-                    </nav>
-                </div>
-            </aside>
+            
 
             <!-- Main Scrollable Body Area -->
-            <main class="flex-1 content-scroll p-6 md:p-12 lg:p-16 bg-white">
+            <main class="flex-1 content-scroll  md:p-6 lg:p-8 bg-white mb-11">
                 <h1 class="text-3xl font-bold text-[#1A1A1A] mb-8">Add addresses</h1>
 
                 <form action="<%= address ? `/address/${address._id}/edit` : '/address' %>" method="POST" class="max-w-3xl">
@@ -344,7 +195,7 @@
                         </div>
 
                         <div class="col-span-1">
-                            <input type="text" name="postalCode" value="<%= address?.postalCode || '' %>" placeholder="Postal Code"
+                            <input type="text" id="postalCode" name="postalCode" value="<%= address?.postalCode || '' %>" placeholder="Postal Code" pattern="/^[6-9]\d{9}$/" maxlength="6" inputmode="numeric"
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                         </div>
                         <div class="col-span-1">
@@ -525,6 +376,9 @@
             window.addEventListener('resize', adjustHeight);
             adjustHeight();
         });
+       document.getElementById("postalCode").addEventListener("input", function (e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 6);
+});
     </script>
 </body>
 

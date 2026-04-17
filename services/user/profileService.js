@@ -1,12 +1,13 @@
 import User from "../../models/user.js";
 import { comparePassword, hashPassword } from "../../utils/hash.js";
+import bcrypt from "bcryptjs";
 
 export const getUserProfile = async (userId) => {
     return await User.findById(userId)
 }
 
 export const updateUserProfile = async (userId, data) => {
-    const { firstName, lastName, email,phone } = data;
+    const { firstName, lastName, email, phone } = data;
 
     const existing = await User.findOne({ email });
 
@@ -16,7 +17,7 @@ export const updateUserProfile = async (userId, data) => {
 
     const updatedUser = await User.findByIdAndUpdate(
         userId,
-        { firstName, lastName, email ,phone},
+        { firstName, lastName, email, phone },
         { new: true }
     );
     console.log("user updated")
@@ -27,7 +28,11 @@ export const updateUserProfile = async (userId, data) => {
 //change password
 
 export const changePasswordService = async (userId, data) => {
-    const { currentPassword, newPassword } = data;
+    const { currentPassword, newPassword, confirmPassword } = data;
+
+    if (newPassword !== confirmPassword) {
+        throw new Error("Passwords do not match");
+    }
 
     const user = await User.findById(userId);
 
@@ -41,11 +46,17 @@ export const changePasswordService = async (userId, data) => {
         throw new Error("Current password is incorrect");
     }
 
-    const hashedPassword = await hashPassword(newPassword);
+    const isSame = await bcrypt.compare(newPassword, user.password);
 
-    user.password = hashedPassword;
+    if (isSame) {
+        throw new Error("New password cannot be same as old password");
+    }
 
-    await user.save();
+    const hashedPassword = await hashPassword(newPassword, 10);
 
-    return user;
+    await User.findByIdAndUpdate(user._id, {
+        password: hashedPassword
+    });
+
+    return true;
 };

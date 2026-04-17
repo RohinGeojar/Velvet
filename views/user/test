@@ -292,3 +292,21 @@ function togglePassword(id, el) {
 </body>
 
 </html>
+<div class="px-6 py-6 border-t border-gray-100 flex items-center justify-between">
+                        <p class="text-sm text-gray-400">Showing 1 to 5 of 124 results</p>
+                        <div class="flex items-center gap-1">
+                            <button class="p-2 text-gray-400 hover:text-gray-600"><i data-lucide="chevron-left"
+                                    class="w-5 h-5"></i></button>
+                            <button
+                                class="w-8 h-8 rounded-lg bg-brand text-white text-sm font-semibold flex items-center justify-center shadow-sm">1</button>
+                            <button
+                                class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center">2</button>
+                            <button
+                                class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center">3</button>
+                            <span class="px-1 text-gray-400">...</span>
+                            <button
+                                class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center">25</button>
+                            <button class="p-2 text-gray-400 hover:text-gray-600"><i data-lucide="chevron-right"
+                                    class="w-5 h-5"></i></button>
+                        </div>
+                    </div>
