@@ -1,0 +1,58 @@
+
+<style>
+.sidebar { background-color: #F4EDE6; }
+.active-nav { background-color: #8B5E3C; color: white; }
+.no-active-nav { background-color: #F4EDE6;  }
+</style>
+
+
+<aside class="sidebar w-[260px] hidden lg:flex flex-col border-r border-gray-200 fixed top-0 left-0 h-screen z-50">
+        <div class="p-6 flex items-center gap-2 mb-4">
+            <div class="bg-brand w-8 h-8 rounded-lg flex items-center justify-center text-white">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="text-brand font-bold text-xl leading-tight">Velvet Vogue</h1>
+                <p class="text-xs text-gray-500 uppercase tracking-widest">Admin Panel</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 space-y-1">
+            <a href="/adminAuth/dashboard" class="<%= activeNavLink === 'Dashboard' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50 '%> flex items-center gap-3 px-4 py-3  rounded-xl  transition-colors">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl hover:bg-white/50 transition-colors">
+                <i data-lucide="package" class="w-5 h-5"></i> Products
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl hover:bg-white/50 transition-colors">
+                <i data-lucide="shopping-cart" class="w-5 h-5"></i> Orders
+            </a>
+            <a href="/admin/users" class=" <%= activeNavLink === 'Users' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 '%> flex items-center gap-3 px-4 py-3 rounded-xl ">
+                <i data-lucide="users" class="w-5 h-5"></i> Users
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl hover:bg-white/50 transition-colors">
+                <i data-lucide="layers" class="w-5 h-5"></i> Categories
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl hover:bg-white/50 transition-colors">
+                <i data-lucide="ticket" class="w-5 h-5"></i> Coupons
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl hover:bg-white/50 transition-colors">
+                <i data-lucide="image" class="w-5 h-5"></i> Banners
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl hover:bg-white/50 transition-colors">
+                <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Sales Report
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl hover:bg-white/50 transition-colors">
+                <i data-lucide="percent" class="w-5 h-5"></i> Offers
+            </a>
+        </nav>
+
+        <div class="p-6 border-t border-gray-200 mt-auto mb-6">
+            <a href="/adminAuth/logout" class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors">
+                <i data-lucide="log-out" class="w-5 h-5"></i> Sign Out
+            </a>
+        </div>
+    </aside>
+    <script>
+         lucide.createIcons();
+    </script>

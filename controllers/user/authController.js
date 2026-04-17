@@ -10,15 +10,20 @@ export const loadHome = async (req,res) => {
     if(!req.session.user){
         return res.render("user/home", { 
         title: "Home" ,
-        error:"no user"});
+        error:"no user",
+        showNavbar: false,
+        showSidebar: false,
+    layout:false});
     }
     return res.render("user/home", { 
         title: "Home" ,
-        error:null
+        error:null,
+        showNavbar: false,
+        showSidebar: false,
+        layout:false
     });
     
 }
-
 
 //loadSignup
 
@@ -26,8 +31,10 @@ export const loadRegister = (req, res) => {
     if(req.session.user){
         return res.redirect("/")
     }
-    console.log("🔥 register page hit");
-    return res.render("auth/register", { title: "Create Account", error:null , showOtpModal: false })
+   
+    return res.render("auth/register", { title: "Create Account", error:null , showOtpModal: false ,
+        showNavbar: false,
+        showSidebar: false})
 }
 
 //signup
@@ -40,14 +47,18 @@ export const signup = async (req, res) => {
            return res.render("auth/register", {
                 title: "Create Account",
                 error: "All fields are required",
-                showOtpModal: false
+                showOtpModal: false,
+        showNavbar: false,
+        showSidebar: false
             })
         }
         if (password !== confirmPassword) {
             return res.render("auth/register", {
                 title: "Create Account",
                 error: "Password do not match",
-                showOtpModal: false
+                showOtpModal: false,
+        showNavbar: false,
+        showSidebar: false
             })
         }
 
@@ -62,7 +73,9 @@ export const signup = async (req, res) => {
             email:email,
             error:null,
             otpAction: "/verifyOtp",
-            showOtpModal: true
+            showOtpModal: true,
+        showNavbar: false,
+        showSidebar: false
         })
 
     }
@@ -71,7 +84,9 @@ export const signup = async (req, res) => {
         return res.render("auth/register", {
             title: "Create Account",
             showOtpModal: false,
-            error: err.message
+            error: err.message,
+        showNavbar: false,
+        showSidebar: false
         });
     }
 
@@ -91,7 +106,7 @@ export const verifyOtp = async (req, res) => {
             return res.redirect("/register")
         }
 
-        console.log("tempuser",tempUser)
+        
      
        
         const email = tempUser.email
@@ -100,7 +115,7 @@ export const verifyOtp = async (req, res) => {
 
         if (!otpDoc) {
             req.flash("error", "OTP expired");
-            return res.redirect("/forgotPassword")
+            return res.redirect("/register")
         }
         if (otpDoc.otp !== OTP) {
             return res.send("invalid OTP")
@@ -129,7 +144,9 @@ export const verifyOtp = async (req, res) => {
 
 export const loadLogin = async (req, res) => {
     try {
-        res.render("auth/login", { title: "Login",error:null })
+        res.render("auth/login", { title: "Login",error:null ,
+        showNavbar: false,
+        showSidebar: false})
 
     } catch (err) {
         console.error(err)
@@ -149,13 +166,17 @@ export const login = async(req,res) =>{
     if(!user){
         return res.render("auth/login",{
             title:"Login",
-            error:"User Not Found"
+            error:"User Not Found",
+        showNavbar: false,
+        showSidebar: false
         })
     }
     if(user.isBlocked){
         return res.render("auth/login",{
             title:"Login",
-            error:"User Is Blocked"
+            error:"Your account Is Blocked",
+        showNavbar: false,
+        showSidebar: false
         })
     }
     const isMatch = await comparePassword(password,user.password)
@@ -163,7 +184,9 @@ export const login = async(req,res) =>{
     if (!isMatch) {
             return res.render("auth/login", {
                 title: "Login",
-                error: "Invalid password"
+                error: "Invalid password",
+        showNavbar: false,
+        showSidebar: false
             });
         }
 
@@ -176,7 +199,9 @@ export const login = async(req,res) =>{
 
         return res.render("auth/login", {
             title: "Login",
-            error: "Something went wrong"
+            error: "Something went wrong",
+        showNavbar: false,
+        showSidebar: false
         });
     }
 }
@@ -186,7 +211,9 @@ export const loadForgotPassword = async(req,res) => {
          return res.render("auth/forgotPassword",{
             title:"Forgot password",
             error:null,
-            showOtpModal:false
+            showOtpModal:false,
+            showNavbar: false,
+            showSidebar: false
         })
     }catch(error){
         console.error(error)
@@ -205,7 +232,9 @@ export const sendForgotOtp = async (req , res ) => {
             return res.render("auth/forgotPassword" , {
                 title:"Forgot password",
                 error:"User NOt Found" ,
-                showOtpModal:false 
+                showOtpModal:false ,
+                showNavbar: false,
+                showSidebar: false
             })
         }
         req.session.resetEmail = email
@@ -217,11 +246,13 @@ export const sendForgotOtp = async (req , res ) => {
             email:email,
             error:null,
             otpAction: "/verifyForgotOtp",
-            showOtpModal:true
+            showOtpModal:true,
+            showNavbar: false,
+            showSidebar: false
         })
 
     }catch(err){
-
+        console.log(err)
     }
 }
 
@@ -310,7 +341,11 @@ export const resetPassword = async (req, res) => {
 //Logout
 
 export const logout = (req, res) => {
-    req.session.destroy()
-    res.redirect("/")
+   if(req.session.admin){
+            req.session.user =null
+           return res.redirect("/")
+        }
+        req.session.destroy()
+        return res.redirect("/")
 
 }

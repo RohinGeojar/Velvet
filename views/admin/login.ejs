@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Vogue - Admin Login</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+    </style>
+</head>
+<body class="min-h-screen flex-row items-center justify-center bg-[#F9FAFB] text-[#111827]">
+
+    <!-- --- Header Section --- -->
+    <header class="sticky top-0 z-50 w-full bg-white border-b border-[#E5E7EB] shadow-sm h-20">
+        <div class="max-w-7xl mx-auto h-full px-5 md:px-24 flex flex-col md:flex-row items-center justify-center md:justify-between gap-2 md:gap-0">
+            <!-- Brand Logo -->
+            <h1 class="text-2xl md:text-[28px] font-serif italic text-[#111827] tracking-tight">
+                Velvet Vogue
+            </h1>
+            
+            <!-- Page Title -->
+            <span class="text-sm md:text-base font-bold text-[#6B7280] uppercase tracking-widest">
+                ADMIN LOGIN
+            </span>
+        </div>
+    </header>
+
+    <!-- --- Main Content Area --- -->
+    <main class="flex items-center justify-center min-h-[calc(100vh-80px)] px-4 py-12">
+        
+        <!-- Login Card -->
+        <div class="w-full max-w-[480px] bg-white rounded-xl border border-[#E5E7EB] shadow-lg p-8 md:p-10">
+            
+            <h2 class="text-xl font-bold mb-8 text-[#111827]">
+                Login
+            </h2>
+
+            <!-- EJS form handling logic -->
+            <form action="/adminAuth/login" method="POST" class="space-y-6">
+                
+                <!-- Email Field -->
+                <div class="space-y-1.5">
+                    <label for="email" class="block text-[13px] text-[#6B7280] font-medium">
+                        Email
+                    </label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9CA3AF]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            required
+                            class="w-full pl-10 pr-4 py-2.5 border border-[#D1D5DB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8D6E46]/20 focus:border-[#8D6E46] transition-all placeholder:text-[#9CA3AF]"
+                        >
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="space-y-1.5">
+                    <label for="password" class="block text-[13px] text-[#6B7280] font-medium">
+                        Password
+                    </label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#9CA3AF]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                            class="w-full pl-10 pr-12 py-2.5 border border-[#D1D5DB] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8D6E46]/20 focus:border-[#8D6E46] transition-all placeholder:text-[#9CA3AF]"
+                        >
+                        <button
+                            type="button"
+                            onclick="togglePassword()"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9CA3AF] hover:text-[#6B7280] transition-colors"
+                            aria-label="Toggle password visibility"
+                        >
+                            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Login Button -->
+                <button
+                    type="submit"
+                    class="w-full bg-[#8D6E46] hover:bg-[#A07E52] text-white font-medium py-3 px-4 rounded-lg transition-colors shadow-sm active:scale-[0.99]"
+                >
+                    Login
+                </button>
+            </form>
+
+            <!-- Forgot Password Link -->
+            <div class="mt-6 text-center">
+                <a href="/admin/forgot-password" class="text-sm font-semibold text-[#111827] hover:underline transition-all">
+                    Forgot password?
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = '<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>';
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>';
+            }
+        }
+    </script>
+</body>
+</html>

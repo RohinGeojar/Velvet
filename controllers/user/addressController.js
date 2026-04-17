@@ -4,12 +4,15 @@ import User from "../../models/user.js";
 
 export const loadAddAddress = (req, res) => {
   try {
-    
 
-    res.render("user/addAddress",{
-        address:null,user:req.user 
-        
-    })
+
+    res.render("user/AddAddress", {
+      address:null,
+      user: req.user,
+      layout: "partials/user/layout",
+      showSidebar: true,
+      showNavbar: true
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send("Error loading add address page");
@@ -19,11 +22,17 @@ export const loadAddAddress = (req, res) => {
 export const loadAddressPage = async (req, res) => {
   try {
     const userId = req.user._id;
-  
- 
+
+
     const addresses = await addressService.getUserAddresses(userId);
 
-    res.render("user/address", { addresses,user:req.user });
+    res.render("user/address", {
+      addresses,
+      user: req.user,
+      layout: "partials/user/layout",
+      showSidebar: true,
+      showNavbar: true
+    });
 
   } catch (error) {
     console.log(error);
@@ -39,8 +48,8 @@ export const addAddress = async (req, res) => {
 
     const data = {
       ...req.body,
-       name: `${req.body.firstName || ''} ${req.body.lastName || ''}`.trim(),
-       isDefault: req.body.isDefault === "on"
+      name: `${req.body.firstName || ''} ${req.body.lastName || ''}`.trim(),
+      isDefault: req.body.isDefault === "on"
     };
 
     await addressService.addAddress(userId, data);
@@ -59,10 +68,16 @@ export const loadEditAddress = async (req, res) => {
   try {
     const userId = req.user._id;
     const { id } = req.params;
-    
+
     const address = await addressService.getAddressById(id, userId);
 
-    res.render("user/addAddress", { address,user:req.user  });
+    res.render("user/addAddress", {
+      address,
+      user: req.user,
+      layout: "partials/user/layout",
+      showSidebar: true,
+      showNavbar: true
+    });
 
   } catch (error) {
     console.log(error);
@@ -79,8 +94,8 @@ export const updateAddress = async (req, res) => {
 
     const data = {
       ...req.body,
-       name: `${req.body.firstName || ''} ${req.body.lastName || ''}`.trim(),
-       isDefault: req.body.isDefault === "on",
+      name: `${req.body.firstName || ''} ${req.body.lastName || ''}`.trim(),
+      isDefault: req.body.isDefault === "on",
     };
 
     await addressService.updateAddress(id, userId, data);

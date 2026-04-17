@@ -1,0 +1,113 @@
+<aside class="w-full md:w-72 lg:w-80 flex-shrink-0 border-r border-gray-100 bg-white h-full overflow-y-auto">
+    <div class="px-4 lg:px-8 py-0">
+        <!-- User Info -->
+        <div class="flex flex-col py-4 items-center mb-0  border-b border-gray-100 text-center">
+            <div class="flex flex-col items-center mb-0 border-b border-gray-100 text-center py-4">
+
+                <% if (user?.profileImage) { %>
+
+                    <!-- Profile Image -->
+                    <img id="profilePreview" src="<%= user.profileImage %>"
+                        class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover mb-4 shadow-lg shadow-brand/20">
+
+                    <% } else { %>
+
+                        <!-- Initials Avatar -->
+                        <div
+                            class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand flex items-center justify-center text-white text-2xl sm:text-3xl mb-4 shadow-lg shadow-brand/20">
+
+                            <%= (user?.firstName?.[0] || '' ).toUpperCase() + (user?.lastName?.[0] || '' ).toUpperCase()
+                                %>
+
+                        </div>
+
+                        <% } %>
+
+                            <!-- Name -->
+
+            </div>
+            <h2 class="text-lg sm:text-xl font-semibold text-gray-900 mb-1">
+                <%= user?.firstName || '' %>
+                    <%= user?.lastName || '' %>
+            </h2>
+            <p class="text-gray-500 text-xs sm:text-sm">
+                <%= user?.email || '' %>
+            </p>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="space-y-1">
+            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+                <div
+                    class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
+                    <i class="ph ph-squares-four text-lg"></i>
+                </div>
+                <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">Overview</span>
+            </a>
+
+            <a href="/profile"
+                class="sidebar-link active flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+                <div
+                    class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
+                    <i class="ph ph-user text-lg"></i>
+                </div>
+                <span class="text-sm">Account Details</span>
+            </a>
+
+            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+                <div
+                    class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
+                    <i class="ph ph-bag text-lg"></i>
+                </div>
+                <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">Order
+                    History</span>
+            </a>
+
+            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+                <div
+                    class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
+                    <i class="ph ph-wallet text-lg"></i>
+                </div>
+                <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">My
+                    Wallet</span>
+            </a>
+
+            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+                <div
+                    class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
+                    <i class="ph ph-heart text-lg"></i>
+                </div>
+                <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">Wishlist</span>
+            </a>
+
+            <a href="/address"
+                class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+                <div
+                    class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
+                    <i class="ph ph-map-pin text-lg"></i>
+                </div>
+                <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">Addresses</span>
+            </a>
+
+            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+                <div
+                    class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
+                    <i class="ph ph-shopping-cart text-lg"></i>
+                </div>
+                <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">My
+                    Cart</span>
+            </a>
+
+            <div class="pt-4 border-t pb-8 border-gray-100">
+                <a href="/logout"
+                    class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-red-50 transition group">
+                    <div
+                        class="icon-container text-red-400 w-9 h-9 rounded-md flex items-center justify-center mr-3 transition">
+                        <i class="ph ph-sign-out text-lg"></i>
+                    </div>
+                    <span class="text-red-500 font-medium text-sm">Logout</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+</aside>
