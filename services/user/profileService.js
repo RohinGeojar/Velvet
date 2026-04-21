@@ -46,7 +46,7 @@ export const changePasswordService = async (userId, data) => {
         throw new Error("Current password is incorrect");
     }
 
-    const isSame = await bcrypt.compare(newPassword, user.password);
+   const isSame = await comparePassword(newPassword, user.password);
 
     if (isSame) {
         throw new Error("New password cannot be same as old password");

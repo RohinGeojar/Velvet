@@ -65,7 +65,7 @@ export const signup = async (req, res) => {
 
         const tempUser = await signupService(req.body)
 
-        console.log(tempUser)
+      
         req.session.tempUser = tempUser
 
         return res.render('auth/register', {
