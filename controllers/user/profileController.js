@@ -7,6 +7,9 @@ import {
 import fs from "fs";
 import path from "path";
 import { fileTypeFromBuffer } from "file-type";
+import { sendOtpService } from "../../services/user/otpService.js"
+import Otp from "../../models/otp.js";
+import bcrypt from "bcryptjs";
 
 
 // ================= LOAD PROFILE =================
@@ -32,25 +35,32 @@ export const loadProfile = async (req, res) => {
 // ================= UPDATE PROFILE =================
 export const updateProfile = async (req, res) => {
     try {
-        const userId = req.session.user;
+        const user = await User.findById(req.session.user);
 
-        const updatedUser = await updateUserProfile(userId, req.body);
+        // 🔥 EMAIL CHANGED
+        if (req.body.email && req.body.email !== user.email) {
 
-        if (!updatedUser) {
-            return res.status(404).json({ message: "User not found" });
+            user.tempEmail = req.body.email;
+            await user.save();
+
+
+            await sendOtpService(user.tempEmail);
+
+            return res.json({
+                requireOtp: true
+            });
         }
 
-        return res.status(200).json({
-            message: "Profile updated successfully"
-        });
+        // ✅ normal update
+        await updateUserProfile(user._id, req.body);
+
+        res.json({ message: "Profile updated" });
 
     } catch (err) {
-        return res.status(400).json({
-            message: err.message
-        });
-    }
+    console.log("🔥 FULL ERROR:", err);  // 👈 ADD THIS
+    res.status(400).json({ message: err.message });
+}
 };
-
 
 // ================= CHANGE PASSWORD =================
 export const changePassword = async (req, res) => {
@@ -90,15 +100,23 @@ export const uploadProfilePhoto = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // 🔥 Create new file
-        const filename = Date.now() + "." + type.ext;
-        const filePath = path.join("public/uploads", filename);
 
-        fs.writeFileSync(filePath, req.file.buffer);
+        const filename = Date.now() + "." + type.ext;
+
+
+        const uploadDir = path.join("public/uploads");
+
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+
+        const filePath = path.join(uploadDir, filename);
+
+        await fs.promises.writeFile(filePath, req.file.buffer);
 
         const newImagePath = "/uploads/" + filename;
 
-        // 🔥 Delete old image
+
         if (user.profileImage && user.profileImage.startsWith("/uploads/")) {
             const oldPath = path.join(process.cwd(), "public", user.profileImage);
 
@@ -107,7 +125,7 @@ export const uploadProfilePhoto = async (req, res) => {
             }
         }
 
-        // 🔥 Update DB
+
         await User.findByIdAndUpdate(userId, {
             profileImage: newImagePath
         });
@@ -122,5 +140,68 @@ export const uploadProfilePhoto = async (req, res) => {
         return res.status(500).json({
             message: "Upload failed"
         });
+    }
+};
+
+export const resendEmailOtp = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.user);
+
+        if (!user || !user.tempEmail) {
+            return res.status(400).json({ message: "Invalid request" });
+        }
+
+        await sendOtpService(user.tempEmail);
+
+        res.json({ success: true });
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).json({ message: "Error resending OTP" });
+    }
+};
+
+
+export const verifyEmailChange = async (req, res) => {
+    try {
+        console.log("VERIFY HIT");
+        const user = await User.findById(req.session.user);
+
+        const enteredOtp =
+            req.body.otp1 +
+            req.body.otp2 +
+            req.body.otp3 +
+            req.body.otp4;
+
+        const record = await Otp.findOne({ email: user.tempEmail })
+    .sort({ createdAt: -1 });
+
+        if (!record) {
+           return res.status(400).json({ message: "OTP not Found" });
+        }
+
+        if (record.expiresAt < new Date()) {
+           return res.status(400).json({ message: "OTP Expired" });
+        }
+
+        const isMatch = await bcrypt.compare(enteredOtp, record.otp);
+
+        if (!isMatch) {
+           return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        // ✅ update email
+        const tempEmail = user.tempEmail;
+
+        user.email = tempEmail;
+        user.tempEmail = null;
+
+        await user.save();
+        await Otp.deleteOne({ email: tempEmail });
+       res.json({ success: true });
+
+    } catch (err) {
+        console.log(err);
+        res.redirect("/error");
     }
 };

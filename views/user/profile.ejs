@@ -122,7 +122,7 @@
 <body class="bg-white text-gray-800 font-sans antialiased flex flex-col min-h-screen overflow-x-hidden">
 
     <!-- Top Banner -->
-
+<%- include('../partials/user/otpModal',{ email: null }) %>
 
     <!-- Mobile Navigation Overlay (Drawer) -->
     <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-[60] hidden transition-opacity duration-300"></div>
@@ -176,7 +176,7 @@
                         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/80">
                             <h3 class="text-xs font-bold text-gray-500 tracking-widest uppercase">Account Setting</h3>
                             <button type="button" id="editBtn"
-                                class="px-6 py-2 bg-brand text-white rounded-lg flex justify-self-end text-sm">Edit</button>
+                                class="px-6 py-2 bg-brand text-white rounded-lg flex justify-self-end text-sm active:scale-95">Edit</button>
                         </div>
 
 
@@ -278,8 +278,8 @@
                                         </div>
                                     </div>
                                     <div class="flex justify-end pt-2">
-                                        <button type="submit"
-                                            class="w-full sm:w-auto px-10 py-3.5 bg-brand text-white font-semibold rounded-lg text-sm hover:bg-brand-dark transition-all shadow-md shadow-brand/10 active:scale-95">
+                                        <button type="submit" id="saveBtn" disabled
+                                            class="w-full sm:w-auto px-10 py-3.5 bg-brand text-white opacity-50  cursor-not-allowed  font-semibold rounded-lg text-sm hover:bg-brand-dark transition-all shadow-md shadow-brand/10 active:scale-95">
                                             Save Changes
                                         </button>
                                     </div>
@@ -449,18 +449,25 @@
     </button>
 
     <script>
+
+        
         // Toggle Edit Mode
-        const editBtn = document.getElementById("editBtn");
-        const saveBtn = document.getElementById("saveBtn");
-        const inputs = document.querySelectorAll("input:not([type='file'])");
+      // ✅ FIXED Toggle Edit Mode (scoped to profile form)
+const editBtn = document.getElementById("editBtn");
+const saveBtn = document.getElementById("saveBtn");
 
-        editBtn.addEventListener("click", () => {
-            inputs.forEach(input => input.disabled = false);
-            saveBtn.disabled = false;
-            saveBtn.classList.remove("opacity-50", "cursor-not-allowed");
-            editBtn.style.display = "none";
-        });
+const form = document.querySelector("form[action='/profile']");
+const inputs = form.querySelectorAll("input");
+console.log(editBtn)
+editBtn.addEventListener("click", (e) => {
+     console.log(e.target);
+    inputs.forEach(input => input.disabled = false);
 
+    saveBtn.disabled = false;
+    saveBtn.classList.remove("opacity-50", "cursor-not-allowed");
+
+    editBtn.style.display = "none";
+});
 
         document.addEventListener('DOMContentLoaded', () => {
             // Menu Toggle
@@ -506,15 +513,22 @@
 
             // Adjust height for fixed sidebar effect
             function adjustHeight() {
-                if (window.innerWidth >= 768) {
-                    const topH = document.getElementById('top-banner').offsetHeight;
-                    const headH = document.getElementById('main-header').offsetHeight;
-                    document.querySelector('.main-container').style.height = `calc(100vh - ${topH + headH}px)`;
-                } else {
-                    document.querySelector('.main-container').style.height = 'auto';
-                }
-            }
+    const mainContainer = document.querySelector('.main-container');
 
+    if (!mainContainer) return;
+
+    if (window.innerWidth >= 768) {
+        const topBanner = document.getElementById('top-banner');
+        const mainHeader = document.getElementById('main-header');
+
+        const topH = topBanner ? topBanner.offsetHeight : 0;
+        const headH = mainHeader ? mainHeader.offsetHeight : 0;
+
+        mainContainer.style.height = `calc(100vh - ${topH + headH}px)`;
+    } else {
+        mainContainer.style.height = 'auto';
+    }
+}
             window.addEventListener('resize', adjustHeight);
             adjustHeight();
         });
@@ -527,6 +541,18 @@
         document.getElementById("profileImage").addEventListener("change", function (e) {
             const file = e.target.files[0];
             if (!file) return;
+            if (!file.type.startsWith("image/")) {
+                showToast("Only image files are allowed", "error");
+                this.value = "";
+                return;
+            }
+
+
+            if (file.size > 2 * 1024 * 1024) {
+                showToast("Image must be less than 2MB", "error");
+                this.value = "";
+                return;
+            }
 
             const cropImage = document.getElementById("cropImage");
             const modal = document.getElementById("cropModal");
@@ -569,13 +595,22 @@
             croppedCanvas.toBlob((blob) => {
                 const formData = new FormData();
                 formData.append("profileImage", blob, "cropped.png");
-
                 fetch("/profile/uploadPhoto", {
                     method: "POST",
                     body: formData
-                }).then(response => {
-                    if (response.ok) console.log("Upload successful");
-                });
+                })
+                    .then(async (res) => {
+                        const data = await res.json();
+
+                        if (!res.ok) {
+                            return showToast(data.message || "Upload failed", "error");
+                        }
+
+                        showToast(data.message || "Image uploaded", "success");
+                    })
+                    .catch(() => {
+                        showToast("Upload error", "error");
+                    });
             });
 
             closeConfirmModal();
@@ -599,17 +634,17 @@
         }
 
         function submitPasswordForm() {
-    const form = document.getElementById("passwordForm");
+            const form = document.getElementById("passwordForm");
 
-   
-    form.requestSubmit(); 
 
-    closePasswordModal();
-}
+            form.requestSubmit();
+
+            closePasswordModal();
+        }
         document.getElementById("phone").addEventListener("input", function (e) {
             this.value = this.value.replace(/\D/g, '').slice(0, 10);
         });
-       
+
         document.querySelector("form[action='/profile']").addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -629,38 +664,66 @@
             return showToast(data.message, "error");
         }
 
+        // 🔥 THIS IS WHAT YOU NEED
+        if (data.requireOtp) {
+
+            const modal = document.getElementById("otpModal");
+            modal.classList.remove("hidden");
+
+            const form = modal.querySelector("form");
+
+            currentOtpFlow = "emailChange";
+            form.action = "/profile/verifyEmailChange";
+
+            return;
+        }
+
         showToast("Profile updated successfully", "success");
 
     } catch (err) {
         showToast("Something went wrong", "error");
     }
 });
-document.getElementById("passwordForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+        document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-    const formData = new FormData(e.target);
-    const body = Object.fromEntries(formData.entries());
+            const formData = new FormData(e.target);
+            const body = Object.fromEntries(formData.entries());
 
-    try {
-        const res = await fetch("/profile/changePassword", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
+            try {
+                const res = await fetch("/profile/changePassword", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(body)
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    return showToast(data.message, "error");
+                }
+
+                showToast(data.message, "success");
+                e.target.reset();
+
+            } catch (err) {
+                showToast("Something went wrong", "error");
+            }
         });
+        function showToast(message, type = "success") {
+            const toast = document.createElement("div");
 
-        const data = await res.json();
+            toast.className = `
+        fixed top-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded text-white z-50 shadow-lg
+        ${type === "error" ? "bg-red-500" : "bg-green-600"}
+    `;
 
-        if (!res.ok) {
-            return showToast(data.message, "error");
+            toast.innerText = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 3000);
         }
-
-        showToast(data.message, "success");
-        e.target.reset();
-
-    } catch (err) {
-        showToast("Something went wrong", "error");
-    }
-});
     </script>
 </body>
 

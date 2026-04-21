@@ -42,7 +42,10 @@ const userSchema = new mongoose.Schema({
   profileImage: {
     type: String
   },
-
+  tempEmail: {
+  type: String,
+  default: null
+},
   role: {
     type: String,
     enum: ["user", "admin"],
