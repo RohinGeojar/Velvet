@@ -154,13 +154,22 @@
 
             <!-- Main Scrollable Body Area -->
             <main class="flex-1 content-scroll  md:p-6 lg:p-8 bg-white mb-11">
-                <h1 class="text-3xl font-bold text-[#1A1A1A] mb-8">Add addresses</h1>
+                <nav class="flex items-center gap-2 text-[11px] uppercase tracking-[0.05em] text-gray-400 mb-4">
+        <a href="/" class="hover:text-gray-600">HOME</a>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <a href="/profile/overview" class="hover:text-gray-600">OVERVIEW </a>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <a href="/address" class="hover:text-gray-600">ADDRESS </a>
+        <i data-lucide="chevron-right" class="w-3 h-3"></i>
+        <span class="text-gray-500 font-semibold">ADD or EDIT ADDRESS </span>
+    </nav>
+                <h1 class="text-3xl font-bold text-[#1A1A1A] mb-8">ADD OR EDIT ADDRESS</h1>
 
                 <form id="addressForm" action="<%= address ? `/address/${address._id}/edit` : '/address' %>" method="POST" class="max-w-3xl">
                     <div class="grid grid-cols-2 gap-y-4 gap-x-4">
 
                         <div class="relative col-span-2">
-                            <input type="text" name="country" id="country" value="<%= address?.country || '' %>" placeholder="Country/Region" 
+                            <input type="text" name="country" id="country" value="<%= address?.country || '' %>" placeholder="Country/Region"  required
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500 pr-10">
                                 <p id="countryError" class="text-red-500 text-xs mt-1"></p>
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -169,18 +178,18 @@
                         </div>
 
                         <div class="col-span-1">
-                            <input type="text" name="firstName"  id="firstName" value="<%= address?.name?.split(' ')[0] || '' %>" placeholder="First Name" 
+                            <input type="text" name="firstName"  id="firstName" value="<%= address?.name?.split(' ')[0] || '' %>" placeholder="First Name" required
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                                 <p id="firstNameError" class="text-red-500 text-xs mt-1"></p>
                         </div>
                         <div class="col-span-1">
-                            <input type="text" name="lastName" id="lastName" value="<%= address?.name?.split(' ').slice(1).join(' ') || '' %>" placeholder="Last Name" 
+                            <input type="text" name="lastName" id="lastName" value="<%= address?.name?.split(' ').slice(1).join(' ') || '' %>" placeholder="Last Name" required
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                                 <p id="lastNameError" class="text-red-500 text-xs mt-1"></p>
                         </div>
 
                         <div class="col-span-2">
-                            <input type="text" name="addressLine1" value="<%= address?.addressLine1 || '' %>" placeholder="Address Line 1"
+                            <input type="text" name="addressLine1" value="<%= address?.addressLine1 || '' %>" placeholder="Address Line 1" required
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                         </div>
 
@@ -193,22 +202,22 @@
                         </div>
 
                         <div class="col-span-2">
-                            <input type="text" name="landmark" value="<%= address?.landmark || '' %>" placeholder="Landmark (Optional)"
+                            <input type="text" name="landmark" value="<%= address?.landmark || '' %>" placeholder="Landmark (Optional)" 
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                         </div>
 
                         <div class="col-span-1">
-                            <input type="text" id="postalCode" name="postalCode" value="<%= address?.postalCode || '' %>" placeholder="Postal Code"  maxlength="6" inputmode="numeric"
+                            <input type="text" id="postalCode" name="postalCode" value="<%= address?.postalCode || '' %>" placeholder="Postal Code"  maxlength="6" inputmode="numeric" required
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                                 <p id="postalCodeError" class="text-red-500 text-xs mt-1"></p>
                         </div>
                         <div class="col-span-1">
-                            <input type="text" name="city" id="city" value="<%= address?.city || '' %>" placeholder="City"
+                            <input type="text" name="city" id="city" value="<%= address?.city || '' %>" placeholder="City" required
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                         </div>
 
                         <div class="relative col-span-2">
-                            <input type="tel" name="phone" value="<%= address?.phone || '' %>" placeholder="Phone"
+                            <input type="tel" name="phone" value="<%= address?.phone || '' %>" placeholder="Phone" required
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500 pr-10">
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                                 <i data-lucide="smartphone" class="w-5 h-5"></i>
@@ -312,9 +321,12 @@
         class="fixed bottom-6 right-6 w-14 h-14 bg-white border border-gray-200 text-gray-800 rounded-full shadow-2xl flex items-center justify-center hover:bg-gray-50 transition-all active:scale-90 z-30">
         <i class="ph ph-chat-centered-text text-2xl"></i>
     </button>
-
+<script src="https://unpkg.com/lucide@latest">
+   
+</script>
    <script>
 document.addEventListener("DOMContentLoaded", () => {
+     lucide.createIcons();
 
   const form = document.getElementById("addressForm");
   const saveBtn = document.getElementById("saveBtn");

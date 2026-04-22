@@ -79,58 +79,8 @@
         .font-serif { font-family: 'Noto Serif', serif; }
     </style>
 </head>
-<body class="bg-surface text-on-surface selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
-<!-- Top Announcement Bar -->
-<div class="w-full bg-primary py-2 text-center">
-<p class="text-on-primary text-[10px] tracking-[0.2em] font-label font-light">ENJOY FREE SHIPPING ON ALL ORDERS</p>
-</div>
-<!-- Header / TopAppBar -->
-<header class="w-full top-0 sticky z-50 border-none bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur-md shadow-sm shadow-[#1a1c1c]/5">
-<div class="flex flex-col items-center w-full px-12 py-6 max-w-[1920px] mx-auto">
-<!-- Brand & Icons Row -->
-<div class="w-full flex justify-between items-center mb-6">
-<!-- Spacer for balance -->
-<div class="w-1/3 flex text-start">
-  <h1 class="text-4xl font-serif tracking-tighter text-[#475845] dark:text-[#f9f9f9]">Velvet Vogue</h1><br>
-  <p class="text-[10px] tracking-[0.4em] uppercase text-secondary ">women clothing</p>
-</div>
-<!-- Logo -->
-<div class="w-1/3 text-start">
+<body class="bg-surface w-full text-on-surface selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
 
-</div>
-<!-- Actions -->
-<div class="w-1/3 flex justify-end items-center gap-6">
-<button class="hover:opacity-70 transition-opacity duration-300 cursor-pointer active:scale-95 transition-transform">
-<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
-</button>
-<button class="hover:opacity-70 transition-opacity duration-300 cursor-pointer active:scale-95 transition-transform">
-
-
-<span class="material-symbols-outlined text-primary" data-icon="person"><a  href="/profile">person</a></span>
-</button>
-<button class="hover:opacity-70 transition-opacity duration-300 cursor-pointer active:scale-95 transition-transform">
-<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
-</button>
-<button class="hover:opacity-70 transition-opacity duration-300 cursor-pointer active:scale-95 transition-transform">
-<span class="material-symbols-outlined text-primary" data-icon="shopping_bag">shopping_bag</span>
-</button>
-</div>
-
-<% if (error) { %>
-      <a class="text-[#475845] mx-4 border-b-2 border-[#475845] pb-1 font-bold" href="/register"> signup</a></p>
-        <% } %>
-
-</div>
-<!-- Navigation Links -->
-<nav class="flex gap-12 font-['Noto_Serif'] text-sm tracking-widest uppercase">
-<a class="text-[#475845] border-b-2 border-[#475845] pb-1 font-bold" href="/register">Collection</a>
-<a class="text-[#6a5c4a] hover:text-[#475845] transition-colors duration-300" href="#">New In</a>
-<a class="text-[#6a5c4a] hover:text-[#475845] transition-colors duration-300" href="/profile">Wedding</a>
-<a class="text-[#6a5c4a] hover:text-[#475845] transition-colors duration-300" href="#">Plus Size</a>
-<a class="text-[#6a5c4a] hover:text-[#475845] transition-colors duration-300" href="#">Kids</a>
-</nav>
-</div>
-</header>
 <main>
 <!-- Hero Section -->
 <section class="relative w-full h-[870px] overflow-hidden">
@@ -351,68 +301,5 @@
 </div>
 </section>
 </main>
-<!-- Footer -->
-<footer class="w-full bg-[#475845] dark:bg-[#1a1c1c] text-[#f9f9f9] font-['Manrope'] text-xs tracking-wider">
-<!-- Newsletter Section -->
-<div class="px-20 py-16 border-b border-white/10">
-<div class="flex flex-col md:flex-row justify-between items-center gap-12">
-<div class="max-w-md">
-<h4 class="text-3xl font-serif text-white mb-4">Stay Inspired</h4>
-<p class="text-white/60 font-light leading-relaxed">Subscribe to receive editorial lookbooks, exclusive collection previews, and invitations to our private events.</p>
-</div>
-<div class="w-full md:w-auto min-w-[400px]">
-<div class="relative flex items-center border-b border-white/30 pb-2">
-<input class="bg-transparent border-none focus:ring-0 text-white placeholder:text-white/40 w-full py-2" placeholder="Your email address" type="email"/>
-<button class="hover:translate-x-2 transition-transform duration-300">
-<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-20 py-16 w-full">
-<!-- Brand Column -->
-<div>
-<h2 class="text-xl font-serif text-[#ffffff] mb-8">Velvet Vogue</h2>
-<div class="flex gap-6 mt-8">
-<a class="hover:text-white transition-colors duration-200 text-[#e8e8e8]/80" href="#">
-<span class="material-symbols-outlined" data-icon="public">public</span>
-</a>
-<a class="hover:text-white transition-colors duration-200 text-[#e8e8e8]/80" href="#">
-<span class="material-symbols-outlined" data-icon="share">share</span>
-</a>
-<a class="hover:text-white transition-colors duration-200 text-[#e8e8e8]/80" href="#">
-<span class="material-symbols-outlined" data-icon="mail">mail</span>
-</a>
-</div>
-</div>
-<!-- About Us -->
-<div class="flex flex-col gap-4">
-<h5 class="uppercase tracking-[0.2em] font-semibold text-white/50 mb-4">About Us</h5>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Our Story</a>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Sustainability</a>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Atelier</a>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Careers</a>
-</div>
-<!-- Help & Support -->
-<div class="flex flex-col gap-4">
-<h5 class="uppercase tracking-[0.2em] font-semibold text-white/50 mb-4">Help &amp; Support</h5>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Shipping &amp; Delivery</a>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Returns &amp; Exchanges</a>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Size Guide</a>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Contact Us</a>
-</div>
-<!-- Join Up -->
-<div class="flex flex-col gap-4">
-<h5 class="uppercase tracking-[0.2em] font-semibold text-white/50 mb-4">Join Up</h5>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200 underline" href="#">Terms of Service</a>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Privacy Policy</a>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Cookie Policy</a>
-<a class="text-[#e8e8e8]/80 hover:text-white transition-colors duration-200" href="#">Accessibility</a>
-</div>
-</div>
-<div class="px-20 py-8 border-t border-white/5 text-center md:text-left">
-<p class="text-[#e8e8e8]/60 text-[10px] uppercase tracking-widest">© 2024 Velvet Vogue. All Rights Reserved.</p>
-</div>
-</footer>
+
 </body></html>

@@ -14,17 +14,18 @@ import Address from "../../models/address.js";
 
 export const loadOverview = async (req, res) => {
     try {
-        const userId = req.session.user._id;
-
-        if (!userId) {
+        
+        if (!req.session.user) {
             return res.redirect("/login");
         }
+        const userId = req.session.user._id;
 
-        // 🔹 Get user
+
+      
         const user = await User.findById(userId).lean();
         console.log(req.session.user._id)
      
-        // 🔹 Get addresses
+       
         const defaultAddress = await Address.findOne({
             user: userId,
             isDefault: true

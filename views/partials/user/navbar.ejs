@@ -1,5 +1,27 @@
-
-    <div id="top-banner" class="bg-brand text-white text-center py-2 text-[10px] sm:text-sm tracking-wide z-50">
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        kaushan: ['"Kaushan Script"', 'cursive'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#7a9575',// #7a9575,#475845  #7a9575,#475845 00674F ,#2e6f40
+                            dark: '#627a5e',
+                        },
+                        footer: {
+                            DEFAULT: '#4a4a4a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+<div class="sticky top-0 z-50">
+    <div id="top-banner" class="  bg-brand text-white text-center py-2 text-[10px] sm:text-sm tracking-wide z-50">
         Enjoy Free Shipping On All Orders
     </div>
 
@@ -36,7 +58,7 @@
                 
                 <a href="#" class="text-gray-600 hover:text-brand transition p-1" aria-label="Search"><i
                         class="ph ph-magnifying-glass text-xl sm:text-2xl"></i></a>
-                <a href="/profile" class="text-gray-600 hover:text-brand transition p-1 relative hidden sm:block"
+                <a href="/profile/overview" class="text-gray-600 hover:text-brand transition p-1 relative hidden sm:block"
                     aria-label="Profile">
                     
                     <i class="ph ph-user text-xl sm:text-2xl"></i>
@@ -46,22 +68,11 @@
                 <a href="#" class="text-gray-600 hover:text-brand transition p-1" aria-label="Cart">
                     <i class="ph ph-tote text-xl sm:text-2xl"></i>
                 </a>
+                <% if (typeof error !== "undefined" && error) { %>
+      <a class="text-[#475845] mx-4 bg-dark border-b-2 border-[#475845] pb-1 font-bold" href="/register"> signup</a></p>
+        <% } %>
             </div>
         </div>
     </header>
-    <script>
-          // Adjust height for fixed sidebar effect
-            function adjustHeight() {
-                if (window.innerWidth >= 768) {
-                    const topH = document.getElementById('top-banner').offsetHeight;
-                    const headH = document.getElementById('main-header').offsetHeight;
-                    document.querySelector('.main-container').style.height = `calc(100vh - ${topH + headH}px)`;
-                } else {
-                    document.querySelector('.main-container').style.height = 'auto';
-                }
-            }
-
-            window.addEventListener('resize', adjustHeight);
-            adjustHeight();
-        
-    </script>
+</div>
+   

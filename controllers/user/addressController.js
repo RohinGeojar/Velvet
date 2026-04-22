@@ -15,6 +15,7 @@ export const loadAddAddress = (req, res) => {
       layout: "partials/user/layout",
       showSidebar: true,
       showNavbar: true,
+      
       currentPage:"address"
     });
   } catch (error) {
@@ -53,17 +54,44 @@ export const addAddress = async (req, res) => {
 
     const data = {
       ...req.body,
-      name: `${req.body.firstName || ''} ${req.body.lastName || ''}`.trim(),
-      
+      isDefault: req.body.isDefault === "on"
     };
 
-    await addressService.addAddress(userId, data);
+ 
+    const validatedData = await addressSchema.validateAsync(data, {
+      abortEarly: false
+    });
 
-    res.redirect("/address");
+    
+    validatedData.name = `${validatedData.firstName} ${validatedData.lastName}`.trim();
+
+
+    if (validatedData.isDefault) {
+      await Address.updateMany(
+        { user: userId },
+        { isDefault: false }
+      );
+    }
+
+    await addressService.addAddress(userId, validatedData);
+
+
+    return res.json({ success: true });
 
   } catch (error) {
     console.log(error);
-    res.status(500).send("Failed to add address");
+
+
+    if (error.isJoi) {
+      return res.status(400).json({
+        errors: error.details.map(err => ({
+          field: err.path[0],
+          message: err.message
+        }))
+      });
+    }
+
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -104,15 +132,15 @@ export const updateAddress = async (req, res) => {
 
     const data = { ...req.body };
 
-    // ✅ validate
+
     const validatedData = await addressSchema.validateAsync(data,{
     abortEarly: false
   });
 
-    // ✅ computed field
+    
     validatedData.name = `${validatedData.firstName} ${validatedData.lastName}`.trim();
 
-    // ✅ ensure only one default
+
     if (validatedData.isDefault) {
       await Address.updateMany(
         { user: userId },
