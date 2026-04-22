@@ -5,7 +5,8 @@
     lastName: Joi.string().allow("").optional(),
     email: Joi.string().email().required(),
     phone: Joi.string().pattern(/^[6-9]\d{9}$/).optional(),
-    password: Joi.string().min(6).required()
+    password: Joi.string().min(6).required(),
+    confirmPassword: Joi.string().min(6).required()
  })
 
  export const loginSchema = Joi.object({

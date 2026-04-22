@@ -11,7 +11,7 @@ export const updateUserProfile = async (userId, data) => {
 
     const existing = await User.findOne({ email });
 
-    if (existing && existing._id.toString() !== userId) {
+    if (existing && existing._id.toString() !== userId.toString()) {
         throw new Error("Email already in use");
     }
 
