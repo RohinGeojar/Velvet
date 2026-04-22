@@ -12,17 +12,17 @@ export const loadHome = async (req, res) => {
         return res.render("user/home", {
             title: "Home",
             error: "no user",
-            showNavbar: false,
+            showNavbar: true,
             showSidebar: false,
-            layout: false
+            showFooter:true,
         });
     }
     return res.render("user/home", {
         title: "Home",
         error: null,
-        showNavbar: false,
+        showNavbar: true,
         showSidebar: false,
-        layout: false
+        
     });
 
 }
@@ -37,7 +37,8 @@ export const loadRegister = (req, res) => {
     return res.render("auth/register", {
         title: "Create Account", error: null, showOtpModal: false,
         showNavbar: false,
-        showSidebar: false
+        showSidebar: false,
+        showFooter:false
     })
 }
 
@@ -276,7 +277,8 @@ export const loadForgotPassword = async (req, res) => {
             error: null,
             showOtpModal: false,
             showNavbar: false,
-            showSidebar: false
+            showSidebar: false,
+            showFooter:false
         })
     } catch (error) {
         console.error(error)
