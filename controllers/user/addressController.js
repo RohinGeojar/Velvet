@@ -1,5 +1,8 @@
 import * as addressService from "../../services/user/addressService.js";
 import User from "../../models/user.js";
+import { addressSchema } from "../../validators/addressValidator.js";
+import Address from "../../models/address.js";
+import mongoose from "mongoose";
 
 
 export const loadAddAddress = (req, res) => {
@@ -11,7 +14,8 @@ export const loadAddAddress = (req, res) => {
       user: req.user,
       layout: "partials/user/layout",
       showSidebar: true,
-      showNavbar: true
+      showNavbar: true,
+      currentPage:"address"
     });
   } catch (error) {
     console.log(error);
@@ -22,7 +26,7 @@ export const loadAddAddress = (req, res) => {
 export const loadAddressPage = async (req, res) => {
   try {
     const userId = req.user._id;
-
+    
 
     const addresses = await addressService.getUserAddresses(userId);
 
@@ -31,7 +35,8 @@ export const loadAddressPage = async (req, res) => {
       user: req.user,
       layout: "partials/user/layout",
       showSidebar: true,
-      showNavbar: true
+      showNavbar: true,
+      currentPage:"address"
     });
 
   } catch (error) {
@@ -49,7 +54,7 @@ export const addAddress = async (req, res) => {
     const data = {
       ...req.body,
       name: `${req.body.firstName || ''} ${req.body.lastName || ''}`.trim(),
-      isDefault: req.body.isDefault === "on"
+      
     };
 
     await addressService.addAddress(userId, data);
@@ -69,6 +74,10 @@ export const loadEditAddress = async (req, res) => {
     const userId = req.user._id;
     const { id } = req.params;
 
+
+     if (!id || !mongoose.isValidObjectId(id)) {
+  return res.status(400).send("Invalid address ID");
+}
     const address = await addressService.getAddressById(id, userId);
 
     res.render("user/addAddress", {
@@ -76,7 +85,8 @@ export const loadEditAddress = async (req, res) => {
       user: req.user,
       layout: "partials/user/layout",
       showSidebar: true,
-      showNavbar: true
+      showNavbar: true,
+      currentPage:"address"
     });
 
   } catch (error) {
@@ -92,19 +102,41 @@ export const updateAddress = async (req, res) => {
     const userId = req.user._id;
     const { id } = req.params;
 
-    const data = {
-      ...req.body,
-      name: `${req.body.firstName || ''} ${req.body.lastName || ''}`.trim(),
-      isDefault: req.body.isDefault === "on",
-    };
+    const data = { ...req.body };
 
-    await addressService.updateAddress(id, userId, data);
+    // ✅ validate
+    const validatedData = await addressSchema.validateAsync(data,{
+    abortEarly: false
+  });
 
-    res.redirect("/address");
+    // ✅ computed field
+    validatedData.name = `${validatedData.firstName} ${validatedData.lastName}`.trim();
+
+    // ✅ ensure only one default
+    if (validatedData.isDefault) {
+      await Address.updateMany(
+        { user: userId },
+        { isDefault: false }
+      );
+    }
+
+    // ✅ update
+    await addressService.updateAddress(id, userId, validatedData);
+
+    return res.json({ success: true });
 
   } catch (error) {
     console.log(error);
-    res.status(500).send(error.message);
+   if (error.isJoi) {
+    const errors = error.details.map(err => ({
+      field: err.path[0],
+      message: err.message
+    }));
+
+    return res.status(400).json({ errors });
+  }
+
+  return res.status(500).json({ message: "Server error" });
   }
 };
 

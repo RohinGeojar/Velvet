@@ -43,154 +43,163 @@ export const loadRegister = (req, res) => {
 
 //signup
 export const signup = async (req, res) => {
-  try {
-    let { firstName, lastName, email, password, confirmPassword } = req.body;
+    try {
+        let { firstName, lastName, email, password, confirmPassword } = req.body;
 
 
-    firstName = firstName?.trim();
-    lastName = lastName?.trim();
-    email = email?.trim();
+        firstName = firstName?.trim();
+        lastName = lastName?.trim();
+        email = email?.trim();
+        firstName = capitalizeName(req.body.firstName);
+        lastName = capitalizeName(req.body.lastName);
+        function capitalizeName(name) {
+            if (!name) return "";
+            return name
+                .toLowerCase()
+                .split(" ")
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ");
+        }
+
+        if (!firstName || !email || !password || !confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required"
+            });
+        }
 
 
-    if (!firstName || !email || !password || !confirmPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields are required"
-      });
+        if (password !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Passwords do not match"
+            });
+        }
+
+
+        const cleanData = {
+            firstName,
+            lastName,
+            email,
+            password
+        };
+
+        const tempUser = await signupService(cleanData);
+
+        req.session.tempUser = tempUser;
+
+        return res.status(200).json({
+            success: true,
+            message: "OTP sent successfully",
+            email
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(400).json({
+            success: false,
+            message: err.message || "Signup failed"
+        });
     }
-
-
-    if (password !== confirmPassword) {
-      return res.status(400).json({
-        success: false,
-        message: "Passwords do not match"
-      });
-    }
-
-
-    const cleanData = {
-      firstName,
-      lastName,
-      email,
-      password
-    };
-
-    const tempUser = await signupService(cleanData);
-
-    req.session.tempUser = tempUser;
-
-    return res.status(200).json({
-      success: true,
-      message: "OTP sent successfully",
-      email
-    });
-
-  } catch (err) {
-    console.error(err);
-
-    return res.status(400).json({
-      success: false,
-      message: err.message || "Signup failed"
-    });
-  }
 };
 
 //verifyOtp
 export const verifyOtp = async (req, res) => {
-  try {
-    const { otp1, otp2, otp3, otp4 } = req.body;
-    const OTP = otp1 + otp2 + otp3 + otp4;
-    console.log(OTP)
-    const tempUser = req.session.tempUser;
+    try {
+        const { otp1, otp2, otp3, otp4 } = req.body;
+        const OTP = otp1 + otp2 + otp3 + otp4;
+        console.log(OTP)
+        const tempUser = req.session.tempUser;
 
 
-    if (!tempUser) {
-      return res.status(400).json({
-        success: false,
-        message: "Session expired. Please register again."
-      });
+        if (!tempUser) {
+            return res.status(400).json({
+                success: false,
+                message: "Session expired. Please register again."
+            });
+        }
+
+        const email = tempUser.email;
+
+        const otpDoc = await Otp.findOne({ email });
+
+
+        if (!otpDoc) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP expired"
+            });
+        }
+
+        const isMatch = await bcrypt.compare(OTP, otpDoc.otp);
+
+        if (!isMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid OTP"
+            });
+        }
+
+
+        const user = await User.create({
+            ...tempUser,
+            isVerified: true
+        });
+
+        req.session.user = user._id;
+
+        await Otp.deleteMany({ email });
+        delete req.session.tempUser;
+
+
+        return res.status(200).json({
+            success: true,
+            message: "OTP verified successfully"
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong"
+        });
     }
-
-    const email = tempUser.email;
-
-    const otpDoc = await Otp.findOne({ email });
-
-
-    if (!otpDoc) {
-      return res.status(400).json({
-        success: false,
-        message: "OTP expired"
-      });
-    }
-
-    const isMatch = await bcrypt.compare(OTP, otpDoc.otp);
-
-if (!isMatch) {
-  return res.status(400).json({
-    success: false,
-    message: "Invalid OTP"
-  });
-}
-
-
-    const user = await User.create({
-      ...tempUser,
-      isVerified: true
-    });
-
-    req.session.user = user._id;
-
-    await Otp.deleteMany({ email });
-    delete req.session.tempUser;
-
-
-    return res.status(200).json({
-      success: true,
-      message: "OTP verified successfully"
-    });
-
-  } catch (err) {
-    console.error(err);
-
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong"
-    });
-  }
 };
 
 // resend otp 
 
 export const resendSignupOtp = async (req, res) => {
-  try {
-    const tempUser = req.session.tempUser;
+    try {
+        const tempUser = req.session.tempUser;
 
-    // ❌ No session (user refreshed or expired)
-    if (!tempUser) {
-      return res.status(400).json({
-        success: false,
-        message: "Session expired. Please register again."
-      });
+
+        if (!tempUser) {
+            return res.status(400).json({
+                success: false,
+                message: "Session expired. Please register again."
+            });
+        }
+
+        const email = tempUser.email;
+
+
+        await sendOtpService(email);
+
+        return res.status(200).json({
+            success: true,
+            message: "OTP resent successfully"
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to resend OTP"
+        });
     }
-
-    const email = tempUser.email;
-
-    // ✅ Send new OTP
-    await sendOtpService(email);
-
-    return res.status(200).json({
-      success: true,
-      message: "OTP resent successfully"
-    });
-
-  } catch (err) {
-    console.error(err);
-
-    return res.status(500).json({
-      success: false,
-      message: "Failed to resend OTP"
-    });
-  }
 };
 //loadLogin
 
