@@ -229,7 +229,7 @@ form.addEventListener("submit", async (e) => {
   if (!isValid) return;
 
   try {
-    showToast("otp send ","success")
+    showToast("Sending OTP ... ","success")
     const res = await fetch("/register", {
       method: "POST",
       headers: {

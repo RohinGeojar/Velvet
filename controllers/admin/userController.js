@@ -22,7 +22,7 @@ export const loadUsers = async (req, res) => {
 
     const usersList = users.map(user => ({
       _id: user._id,
-      name: user.firstName,
+      name: user.firstName + " " +user.lastName,
       email: user.email,
       phone: user.phone || "N/A",
       joinDate: new Date(user.createdAt).toDateString(),
@@ -82,15 +82,19 @@ export const searchUsers = async (req, res) => {
     if (filter === "blocked") {
       query.isBlocked = true;
     }
+    
 
 
     let sortOption = { createdAt: -1 };  
-
+    if (filter === "oldest") {
+      sortOption = { createdAt: 1 };
+    }
     if (filter === "asc") sortOption = { firstName: 1 };
     if (filter === "desc") sortOption = { firstName: -1 };
 
 
     const users = await User.find(query)
+      .collation({ locale: "en", strength: 2 })
       .sort(sortOption)
       .skip(skip)
       .limit(limit);

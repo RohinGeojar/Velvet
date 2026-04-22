@@ -1,11 +1,26 @@
 import Joi from "joi";
 
 export const addressSchema = Joi.object({
-  country: Joi.string().required(),
+  country: Joi.string()
+  .pattern(/^[A-Za-z\s]+$/)
+  .required()
+  .messages({
+    "string.pattern.base": "Country must contain only letters"
+  }),
 
-  firstName: Joi.string().required(),
+  firstName: Joi.string()
+  .pattern(/^[A-Za-z]+$/)
+  .required()
+  .messages({
+    "string.pattern.base": "First name should contain only letters"
+  }),
 
-  lastName: Joi.string().required(),
+lastName: Joi.string()
+  .pattern(/^[A-Za-z]+$/)
+  .required()
+  .messages({
+    "string.pattern.base": "Last name should contain only letters"
+  }),
 
   addressLine1: Joi.string().min(5).required(),
 
@@ -13,7 +28,12 @@ export const addressSchema = Joi.object({
 
   landmark: Joi.string().allow("").optional(),
 
-  city: Joi.string().required(),
+  city: Joi.string()
+  .pattern(/^[A-Za-z\s]+$/)
+  .required()
+  .messages({
+    "string.pattern.base": "City must contain only letters"
+  }),
 
   postalCode: Joi.string()
     .pattern(/^[1-9][0-9]{5}$/)
@@ -26,5 +46,7 @@ export const addressSchema = Joi.object({
     .pattern(/^[6-9]\d{9}$/)
     .required(),
 
-  isDefault: Joi.boolean().optional()
+  isDefault: Joi.boolean()
+  .truthy("on")
+  .default(false)
 });

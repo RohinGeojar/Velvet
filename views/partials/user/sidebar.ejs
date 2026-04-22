@@ -1,3 +1,120 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Account Details</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <!-- Google Fonts (Inter for UI, Playfair Display for Logo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,600&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        kaushan: ['"Kaushan Script"', 'cursive'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#7a9575',// #7a9575,#475845  #7a9575,#475845 00674F ,#2e6f40
+                            dark: '#627a5e',
+                        },
+                        footer: {
+                            DEFAULT: '#4a4a4a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .cropper-view-box,
+        .cropper-face {
+            border-radius: 50%;
+            /* optional circle */
+        }
+
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .sidebar-link.active {
+            color: #7a9575;
+            font-weight: 500;
+        }
+
+        .sidebar-link.active .icon-container {
+            background-color: #7a9575;
+            color: white;
+        }
+
+        .sidebar-link:not(.active) .icon-container {
+            color: #9ca3af;
+        }
+
+        /* Fixed Heights and Independent Scrolling for Desktop */
+        @media (min-width: 768px) {
+            .main-container {
+                height: calc(100vh - 120px);
+                /* Adjust based on banner + header height */
+                overflow: hidden;
+            }
+
+            .sidebar-scroll {
+                height: 100%;
+                overflow-y: auto;
+            }
+
+            .content-scroll {
+                height: 100%;
+                overflow-y: auto;
+            }
+        }
+
+        /* Mobile Menu Transitions */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .menu-open #mobile-menu {
+            transform: translateX(0);
+        }
+
+        .menu-closed #mobile-menu {
+            transform: translateX(-100%);
+        }
+    </style>
+</head>
 <aside class="w-full md:w-72 lg:w-80 flex-shrink-0 border-r border-gray-100 bg-white h-full overflow-y-auto">
     <div class="px-4 lg:px-8 py-0">
         <!-- User Info -->
@@ -37,7 +154,7 @@
 
         <!-- Navigation Menu -->
         <nav class="space-y-1">
-            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+            <a href="/profile/overview" class="sidebar-link <%= currentPage === 'overview' ? 'active' : '' %> flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
                 <div
                     class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
                     <i class="ph ph-squares-four text-lg"></i>
@@ -46,7 +163,7 @@
             </a>
 
             <a href="/profile"
-                class="sidebar-link active flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+                class="sidebar-link <%= currentPage === 'profile' ? 'active' : '' %> flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
                 <div
                     class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
                     <i class="ph ph-user text-lg"></i>
@@ -54,7 +171,7 @@
                 <span class="text-sm">Account Details</span>
             </a>
 
-            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+            <a href="#" class="sidebar-link <%= currentPage === 'order' ? 'active' : '' %> flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
                 <div
                     class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
                     <i class="ph ph-bag text-lg"></i>
@@ -63,7 +180,7 @@
                     History</span>
             </a>
 
-            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+            <a href="#" class="sidebar-link <%= currentPage === 'wallet' ? 'active' : '' %> flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
                 <div
                     class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
                     <i class="ph ph-wallet text-lg"></i>
@@ -72,7 +189,7 @@
                     Wallet</span>
             </a>
 
-            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+            <a href="#" class="sidebar-link <%= currentPage === 'whistlist' ? 'active' : '' %> flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
                 <div
                     class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
                     <i class="ph ph-heart text-lg"></i>
@@ -81,7 +198,7 @@
             </a>
 
             <a href="/address"
-                class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+                class="sidebar-link <%= currentPage === 'address' ? 'active' : '' %> flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
                 <div
                     class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
                     <i class="ph ph-map-pin text-lg"></i>
@@ -89,7 +206,7 @@
                 <span class="text-gray-600 group-hover:text-gray-900 transition font-medium text-sm">Addresses</span>
             </a>
 
-            <a href="#" class="sidebar-link flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
+            <a href="#" class="sidebar-link <%= currentPage === 'cart' ? 'active' : '' %> flex items-center px-3 py-2.5 rounded-lg hover:bg-gray-50 transition group">
                 <div
                     class="icon-container w-9 h-9 rounded-md flex items-center justify-center mr-3 transition shadow-sm">
                     <i class="ph ph-shopping-cart text-lg"></i>

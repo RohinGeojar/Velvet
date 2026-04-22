@@ -3,6 +3,7 @@ import {  loadForgotPassword, loadHome, loadLogin, loadRegister, loadResetPasswo
 import { googleAuth, googleAuthCallback, isLogged, userAuth } from '../../middleware/auth.js';
 import { loginSchema, signupSchema } from '../../validators/authValidator.js';
 import { validate } from "../../middleware/validate.js";
+import { loadOverview } from '../../controllers/user/profileController.js';
 
 
 const router = express.Router()
@@ -12,6 +13,7 @@ router.use((req, res, next) => {
   next();
 });
 router.get("/", loadHome);
+
 
 router.get("/register",isLogged, loadRegister);
 router.post("/register",validate(signupSchema), signup);
