@@ -148,7 +148,7 @@
                 </div>
 
                 <!-- Table Section -->
-                <div class="bg-white rounded-[20px] shadow-sm border border-gray-50 overflow-hidden">
+                <div class="bg-white rounded-[20px] shadow-sm border border-gray-50 ">
                     <!-- Controls -->
                     <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div class="relative w-full md:w-[500px] gap-2 md:flex">
@@ -163,14 +163,31 @@
                             </button>
                         </div>
                         <div class="flex items-center gap-3">
-                            <button
-                                class="flex items-center gap-2 px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i data-lucide="list-filter" class="w-4 h-4"></i> Filter
-                            </button>
-                            <button
-                                class="bg-brand text-white flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity shadow-sm">
-                                <i data-lucide="plus" class="w-4 h-4"></i> Add User
-                            </button>
+                            
+                            <div class="relative z-50" id="filterWrapper">
+
+                                <button onclick="toggleFilterMenu()" class="px-4 py-2 border rounded-xl">
+                                    Filter ▼
+                                </button>
+
+                                <div id="filterMenu"
+                                    class="hidden absolute right-0 mt-2 bg-white shadow-lg rounded-xl z-50 p-4 w-48 z-50">
+
+                                    <div onclick="applyFilter('latest')" class="p-2 hover:bg-gray-100 cursor-pointer">
+                                        Latest Users</div>
+                                    <div onclick="applyFilter('oldest')" class="p-2 hover:bg-gray-100 cursor-pointer">
+                                        Oldest Users</div>
+                                    <div onclick="applyFilter('blocked')" class="p-2 hover:bg-gray-100 cursor-pointer">
+                                        Blocked Users</div>
+                                    <div onclick="applyFilter('asc')" class="p-2 hover:bg-gray-100 cursor-pointer">Name A → Z
+                                    </div>
+                                    <div onclick="applyFilter('desc')" class="p-2 hover:bg-gray-100 cursor-pointer">Name Z →
+                                        A</div>
+
+                                </div>
+
+                            </div>
+
                         </div>
                     </div>
 
@@ -265,13 +282,10 @@
                             Showing <%= pagination.currentRange %> of <%= pagination.totalResults %> results
                         </p>
 
-                        <div class="flex items-center gap-1">
+                        <div id="pagination" class="flex items-center gap-1">
 
                             <!-- Prev -->
-                            <a href="?page=<%= pagination.currentPage - 1 %>"
-                                class="p-2 text-gray-400 hover:text-gray-600 <%= pagination.currentPage === 1 ? 'pointer-events-none opacity-50' : '' %>">
-                                <i data-lucide="chevron-left" class="w-5 h-5"></i>
-                            </a>
+                           
 
                             <!-- Page Numbers -->
                             <% for (let i=1; i <=pagination.totalPages; i++) { %>
@@ -300,7 +314,7 @@
                     </div>
 
                     <!--  -->
-                    
+
                 </div>
             </div>
         </main>
@@ -321,11 +335,13 @@
             const input = document.getElementById("searchInput");
             const tableBody = document.getElementById("userTableBody");
 
+            let currentFilter = "latest";
             let currentPage = 1;
             let currentSearch = "";
 
             async function loadUsers(page = 1, search = "") {
-                const res = await fetch(`/admin/users/search?search=${search}&page=${page}`);
+                 currentPage = page
+                const res = await fetch(`/admin/users/search?search=${currentSearch}&page=${currentPage}&filter=${currentFilter}`);
                 const data = await res.json();
                 console.log(data)
                 tableBody.innerHTML = "";
@@ -390,58 +406,66 @@
             });
 
             function renderPagination(totalPages, currentPage) {
-                const container = document.getElementById("pagination");
-                container.innerHTML = "";
+    const container = document.getElementById("pagination");
+    container.innerHTML = "";
 
-                // PREV
-                container.innerHTML += `
-    <button onclick="loadUsers(${currentPage - 1}, '${currentSearch}')"
+    const maxVisible = 5;
+
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(totalPages, currentPage + 2);
+
+    // PREV
+    container.innerHTML += `
+    <button onclick="loadUsers(${currentPage - 1})"
       ${currentPage === 1 ? "disabled" : ""}
-      class="p-2 text-gray-400 hover:text-gray-600">
-      <i data-lucide="chevron-left" class="w-5 h-5"></i>
+      class="p-2 text-gray-400">
+      ‹
     </button>
   `;
 
-                // PAGE NUMBERS (LIMITED LIKE YOUR UI)
-                const pagesToShow = [1, 2, 3];
+    // FIRST PAGE
+    if (start > 1) {
+        container.innerHTML += `
+      <button onclick="loadUsers(1)" class="px-3 py-1">1</button>
+    `;
 
-                pagesToShow.forEach(i => {
-                    if (i <= totalPages) {
-                        container.innerHTML += `
-        <button onclick="loadUsers(${i}, '${currentSearch}')"
-          class="w-8 h-8 rounded-lg text-sm font-semibold flex items-center justify-center ${i === currentPage
-                                ? "bg-brand text-white shadow-sm"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }">
-          ${i}
-        </button>
-      `;
-                    }
-                });
+        if (start > 2) {
+            container.innerHTML += `<span class="px-2">...</span>`;
+        }
+    }
 
+    // MIDDLE PAGES
+    for (let i = start; i <= end; i++) {
+        container.innerHTML += `
+      <button onclick="loadUsers(${i})"
+        class="px-3 py-1 rounded ${i === currentPage ? "bg-brand text-white" : ""}">
+        ${i}
+      </button>
+    `;
+    }
 
-                if (totalPages > 3) {
-                    container.innerHTML += `<span class="px-1 text-gray-400">...</span>`;
+    // LAST PAGE
+    if (end < totalPages) {
+        if (end < totalPages - 1) {
+            container.innerHTML += `<span class="px-2">...</span>`;
+        }
 
-                    container.innerHTML += `
-      <button onclick="loadUsers(${totalPages}, '${currentSearch}')"
-        class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center">
+        container.innerHTML += `
+      <button onclick="loadUsers(${totalPages})" class="px-3 py-1">
         ${totalPages}
       </button>
     `;
-                }
+    }
 
-
-                container.innerHTML += `
-    <button onclick="loadUsers(${currentPage + 1}, '${currentSearch}')"
+    // NEXT
+    container.innerHTML += `
+    <button onclick="loadUsers(${currentPage + 1})"
       ${currentPage === totalPages ? "disabled" : ""}
-      class="p-2 text-gray-400 hover:text-gray-600">
-      <i data-lucide="chevron-right" class="w-5 h-5"></i>
+      class="p-2 text-gray-400">
+      ›
     </button>
   `;
-
-
-            }
+}
             let selectedUserId = null;
             let selectedAction = null;
 
@@ -499,6 +523,31 @@
                 activeEl.innerText = active;
                 blockedEl.innerText = blockedCount;
             }
+            function toggleFilterMenu() {
+                document.getElementById("filterMenu").classList.toggle("hidden");
+            }
+            document.addEventListener("click", function (e) {
+                const wrapper = document.getElementById("filterWrapper");
+
+                if (!wrapper.contains(e.target)) {
+                    document.getElementById("filterMenu").classList.add("hidden");
+                }
+            });
+           function applyFilter(filter) {
+    currentFilter = filter;
+    currentPage = 1;
+
+    document.querySelectorAll("#filterMenu div").forEach(el => {
+        el.classList.remove("bg-gray-200");
+    });
+
+    event.target.classList.add("bg-gray-200");
+
+    document.getElementById("filterMenu").classList.add("hidden");
+
+    loadUsers(currentPage, currentSearch);
+}
+
         </script>
 </body>
 

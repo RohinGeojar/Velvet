@@ -7,12 +7,12 @@ export const getUsersWithPagination = async (page, limit,  ) => {
 
   const skip = (page - 1) * limit;
 
-  const users = await User.find()
+  const users = await User.find({role:"user"})
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
 
-  const totalUsers = await User.countDocuments();
+  const totalUsers = await User.countDocuments({role:"user"});
 
   return {
     users,
