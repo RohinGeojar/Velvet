@@ -163,10 +163,10 @@
                             </button>
                         </div>
                         <div class="flex items-center gap-3">
-                            
+
                             <div class="relative z-50" id="filterWrapper">
 
-                                <button onclick="toggleFilterMenu()" class="px-4 py-2 border rounded-xl">
+                                <button id="filterBtn" onclick="toggleFilterMenu()" class="px-4 py-2 border rounded-xl">
                                     Filter ▼
                                 </button>
 
@@ -179,10 +179,18 @@
                                         Oldest Users</div>
                                     <div onclick="applyFilter('blocked')" class="p-2 hover:bg-gray-100 cursor-pointer">
                                         Blocked Users</div>
-                                    <div onclick="applyFilter('asc')" class="p-2 hover:bg-gray-100 cursor-pointer">Name A → Z
+                                    <div onclick="applyFilter('asc')" class="p-2 hover:bg-gray-100 cursor-pointer">Name
+                                        A → Z
                                     </div>
-                                    <div onclick="applyFilter('desc')" class="p-2 hover:bg-gray-100 cursor-pointer">Name Z →
+                                    <div onclick="applyFilter('desc')" class="p-2 hover:bg-gray-100 cursor-pointer">Name
+                                        Z →
                                         A</div>
+                                    <hr class="my-2">
+
+                                    <div onclick="clearFilter()"
+                                        class="p-2 text-red-500 hover:bg-red-50 cursor-pointer text-sm">
+                                        Clear Filter
+                                    </div>
 
                                 </div>
 
@@ -285,7 +293,7 @@
                         <div id="pagination" class="flex items-center gap-1">
 
                             <!-- Prev -->
-                           
+
 
                             <!-- Page Numbers -->
                             <% for (let i=1; i <=pagination.totalPages; i++) { %>
@@ -340,9 +348,12 @@
             let currentSearch = "";
 
             async function loadUsers(page = 1, search = "") {
-                 currentPage = page
+
+                currentPage = page
                 const res = await fetch(`/admin/users/search?search=${currentSearch}&page=${currentPage}&filter=${currentFilter}`);
                 const data = await res.json();
+                document.querySelector(".text-sm.text-gray-400").innerText =
+                    `Showing ${data.currentRange} of ${data.totalUsers} results`;
                 console.log(data)
                 tableBody.innerHTML = "";
 
@@ -406,16 +417,16 @@
             });
 
             function renderPagination(totalPages, currentPage) {
-    const container = document.getElementById("pagination");
-    container.innerHTML = "";
+                const container = document.getElementById("pagination");
+                container.innerHTML = "";
 
-    const maxVisible = 5;
+                const maxVisible = 5;
 
-    let start = Math.max(1, currentPage - 2);
-    let end = Math.min(totalPages, currentPage + 2);
+                let start = Math.max(1, currentPage - 2);
+                let end = Math.min(totalPages, currentPage + 2);
 
-    // PREV
-    container.innerHTML += `
+                // PREV
+                container.innerHTML += `
     <button onclick="loadUsers(${currentPage - 1})"
       ${currentPage === 1 ? "disabled" : ""}
       class="p-2 text-gray-400">
@@ -423,49 +434,49 @@
     </button>
   `;
 
-    // FIRST PAGE
-    if (start > 1) {
-        container.innerHTML += `
+                // FIRST PAGE
+                if (start > 1) {
+                    container.innerHTML += `
       <button onclick="loadUsers(1)" class="px-3 py-1">1</button>
     `;
 
-        if (start > 2) {
-            container.innerHTML += `<span class="px-2">...</span>`;
-        }
-    }
+                    if (start > 2) {
+                        container.innerHTML += `<span class="px-2">...</span>`;
+                    }
+                }
 
-    // MIDDLE PAGES
-    for (let i = start; i <= end; i++) {
-        container.innerHTML += `
+                // MIDDLE PAGES
+                for (let i = start; i <= end; i++) {
+                    container.innerHTML += `
       <button onclick="loadUsers(${i})"
         class="px-3 py-1 rounded ${i === currentPage ? "bg-brand text-white" : ""}">
         ${i}
       </button>
     `;
-    }
+                }
 
-    // LAST PAGE
-    if (end < totalPages) {
-        if (end < totalPages - 1) {
-            container.innerHTML += `<span class="px-2">...</span>`;
-        }
+                // LAST PAGE
+                if (end < totalPages) {
+                    if (end < totalPages - 1) {
+                        container.innerHTML += `<span class="px-2">...</span>`;
+                    }
 
-        container.innerHTML += `
+                    container.innerHTML += `
       <button onclick="loadUsers(${totalPages})" class="px-3 py-1">
         ${totalPages}
       </button>
     `;
-    }
+                }
 
-    // NEXT
-    container.innerHTML += `
+                // NEXT
+                container.innerHTML += `
     <button onclick="loadUsers(${currentPage + 1})"
       ${currentPage === totalPages ? "disabled" : ""}
       class="p-2 text-gray-400">
       ›
     </button>
   `;
-}
+            }
             let selectedUserId = null;
             let selectedAction = null;
 
@@ -533,21 +544,52 @@
                     document.getElementById("filterMenu").classList.add("hidden");
                 }
             });
-           function applyFilter(filter) {
-    currentFilter = filter;
-    currentPage = 1;
+            function applyFilter(filter) {
+                currentFilter = filter;
+                currentPage = 1;
 
-    document.querySelectorAll("#filterMenu div").forEach(el => {
-        el.classList.remove("bg-gray-200");
-    });
+                const filterMap = {
+                    latest: "Latest Users",
+                    oldest: "Oldest Users",
+                    blocked: "Blocked Users",
+                    asc: "Name A → Z",
+                    desc: "Name Z → A"
+                };
 
-    event.target.classList.add("bg-gray-200");
 
-    document.getElementById("filterMenu").classList.add("hidden");
+                const btn = document.getElementById("filterBtn");
+                btn.innerText = `Filter: ${filterMap[filter]}`;
 
-    loadUsers(currentPage, currentSearch);
-}
 
+                document.querySelectorAll("#filterMenu div").forEach(el => {
+                    el.classList.remove("bg-gray-200");
+                });
+
+                event.target.classList.add("bg-gray-200");
+
+
+                document.getElementById("filterMenu").classList.add("hidden");
+
+                loadUsers(currentPage, currentSearch);
+            }
+            function clearFilter() {
+                currentFilter = "latest"; // default
+                currentPage = 1;
+
+
+                document.getElementById("filterBtn").innerText = "Filter ▼";
+
+
+                document.querySelectorAll("#filterMenu div").forEach(el => {
+                    el.classList.remove("bg-gray-200");
+                });
+
+
+                document.getElementById("filterMenu").classList.add("hidden");
+
+
+                loadUsers(currentPage, currentSearch);
+            }
         </script>
 </body>
 

@@ -288,68 +288,62 @@ export const loadForgotPassword = async (req, res) => {
 // SEND OTP
 
 export const sendForgotOtp = async (req, res) => {
-    try {
-        const { email } = req.body
+  try {
+    const { email } = req.body;
 
-        const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
 
-        if (!user) {
-            return res.render("auth/forgotPassword", {
-                title: "Forgot password",
-                error: "User NOt Found",
-                showOtpModal: false,
-                showNavbar: false,
-                showSidebar: false
-            })
-        }
-        req.session.resetEmail = email
-
-        await sendOtpService(email)
-
-        return res.render("auth/forgotPassword", {
-            title: "Forgot password",
-            email: email,
-            error: null,
-            otpAction: "/verifyForgotOtp",
-            showOtpModal: true,
-            showNavbar: false,
-            showSidebar: false
-        })
-
-    } catch (err) {
-        console.log(err)
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
     }
-}
+
+    req.session.resetEmail = email;
+    
+    await sendOtpService(email);
+
+
+    return res.json({ requireOtp: true });
+
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message:err.message|| "Server error" });
+  }
+};
 
 // verify forgot otp
 export const verifyForgotOtp = async (req, res) => {
-    try {
-        const { otp1, otp2, otp3, otp4 } = req.body;
+  try {
+    const { otp1, otp2, otp3, otp4 } = req.body;
+    const enteredOtp = otp1 + otp2 + otp3 + otp4;
 
-        const enteredOtp = otp1 + otp2 + otp3 + otp4;
+    const email = req.session.resetEmail;
 
-        const email = req.session.resetEmail;
-        console.log(email)
+    const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
 
-        const otpDoc = await Otp.findOne({ email });
 
-        if (!otpDoc) {
-            return res.send("OTP expired");
-        }
-
-        if (otpDoc.otp !== enteredOtp) {
-            return res.send("Invalid OTP");
-        }
-
-        req.session.otpVerified = true;
-
-        return res.redirect("/resetPassword");
-
-    } catch (err) {
-        console.error(err);
+    if (!otpDoc) {
+      return res.status(400).json({ message: "OTP expired" });
     }
-};
 
+    const isMatch = await bcrypt.compare(enteredOtp, otpDoc.otp);
+
+
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+
+    req.session.otpVerified = true;
+    console.log("OTP verified")
+
+    return res.json({ success: true });
+    
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
 export const loadResetPassword = (req, res) => {
     if (!req.session.otpVerified) {
         return res.redirect("/forgotPassword");
@@ -365,7 +359,12 @@ export const loadResetPassword = (req, res) => {
 export const resetPassword = async (req, res) => {
     try {
         const { password, confirmPassword } = req.body;
-
+        if(password.length!=6){
+            return res.render("auth/resetPassword", {
+                title: "Reset Password",
+                error: "Password must contain altealst 6 characters"
+            });
+        }    
         if (!password || !confirmPassword) {
             return res.render("auth/resetPassword", {
                 title: "Reset Password",

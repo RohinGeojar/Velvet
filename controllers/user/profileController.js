@@ -18,12 +18,12 @@ export const loadOverview = async (req, res) => {
         if (!req.session.user) {
             return res.redirect("/login");
         }
-        const userId = req.session.user._id;
+        const userId = req.session.user;
 
 
       
         const user = await User.findById(userId).lean();
-        console.log(req.session.user._id)
+        console.log(req.session.user)
      
        
         const defaultAddress = await Address.findOne({

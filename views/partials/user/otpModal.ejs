@@ -96,8 +96,23 @@ const otpForm = document.getElementById("otpForm");
         }
 
         showToast("OTP verified successfully", "success");
-        location.reload();
+       setTimeout(() => {
 
+  if (currentOtpFlow === "signup") {
+    window.location.href = "/";
+    showToast("Registration Successful", "success");
+  } 
+  else if (currentOtpFlow === "forgot") {
+    window.location.href = "/resetPassword";
+    showToast("Password  updated", "success");
+  } 
+  else if (currentOtpFlow === "emailChange") {
+    
+    window.location.reload();
+    showToast("Email verified and updated", "success")
+  }
+
+}, 1000);
       } catch (err) {
         showToast("Something went wrong", "error");
       }
@@ -240,29 +255,29 @@ function openOtpModal(email, action, flow) {
   const modal = document.getElementById("otpModal");
   const otpForm = modal.querySelector("form");
 
-  // ✅ Show modal
+  
   modal.classList.remove("hidden");
 
-  // ✅ Set email
+
   const emailEl = document.getElementById("otpEmail");
   if (emailEl) emailEl.textContent = email;
 
-  // ✅ Set form action
+
   otpForm.action = action;
 
-  // ✅ Set flow (VERY IMPORTANT for resend)
+
   currentOtpFlow = flow;
 
-  // ✅ Reset inputs
+
   document.querySelectorAll("input[name^='otp']").forEach(input => {
     input.value = "";
   });
 
-  // ✅ Focus first box
+
   const firstInput = document.querySelector("input[name='otp1']");
   if (firstInput) firstInput.focus();
 
-  // ✅ Restart timer
+
   startTimer();
 }
   // ================= INIT =================

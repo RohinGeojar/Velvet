@@ -246,7 +246,7 @@ form.addEventListener("submit", async (e) => {
     
     document.getElementById("otpEmail").textContent = result.email;
     openOtpModal(result.email, "/verifyOtp", "signup");
-
+    
   } catch (err) {
     console.error(err);
     alert("Something went wrong");
