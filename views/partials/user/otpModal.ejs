@@ -1,3 +1,16 @@
+<<<<<<< HEAD
+=======
+
+<style>
+  @keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease;
+}
+</style>
+>>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
 <!-- Overlay -->
 <div id="otpModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
 
@@ -17,18 +30,26 @@
       We've sent a 4-digit code to your email
     </p>
 
+<<<<<<< HEAD
     <% if (typeof email !=="undefined" && email) { %>
       <div class="bg-primary-100 text-md text-primary-700 text-center">
         <%- email %>
       </div>
       <% } %>
+=======
+    <div id="otpEmail" class="bg-primary-100 text-md text-primary-700 text-center"></div>
+>>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
 
         <p class="text-gray-500 text-sm mt-2 mb-6">
           Please enter it below to verify your account.
         </p>
 
         <!-- OTP Inputs -->
+<<<<<<< HEAD
         <form method="POST">
+=======
+        <form id="otpForm" method="POST">
+>>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
           <div class="flex justify-center gap-3 mb-6">
             <input type="text" name="otp1" maxlength="1" class="w-12 h-12 text-center bg-[#e7eee6] rounded-lg">
             <input type="text" name="otp2" maxlength="1" class="w-12 h-12 text-center bg-[#e7eee6] rounded-lg">
@@ -57,7 +78,11 @@
   let currentOtpFlow = "";
 
   // ================= SAFE ELEMENTS =================
+<<<<<<< HEAD
   const otpForm = document.querySelector("#otpModal form");
+=======
+const otpForm = document.getElementById("otpForm");
+>>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
   const otpInputs = document.querySelectorAll("input[name^='otp']");
   const timerEl = document.getElementById("timer");
   const resendBtn = document.getElementById("resendBtn");
@@ -81,6 +106,10 @@
           method: "POST",
           body: new URLSearchParams(formData)
         });
+<<<<<<< HEAD
+=======
+        console.log("res ",res)
+>>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
 
         const data = await res.json();
 
@@ -89,8 +118,28 @@
         }
 
         showToast("OTP verified successfully", "success");
+<<<<<<< HEAD
         location.reload();
 
+=======
+       setTimeout(() => {
+
+  if (currentOtpFlow === "signup") {
+    window.location.href = "/";
+    showToast("Registration Successful", "success");
+  } 
+  else if (currentOtpFlow === "forgot") {
+    window.location.href = "/resetPassword";
+    showToast("Password  updated", "success");
+  } 
+  else if (currentOtpFlow === "emailChange") {
+    
+    window.location.reload();
+    showToast("Email verified and updated", "success")
+  }
+
+}, 1000);
+>>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
       } catch (err) {
         showToast("Something went wrong", "error");
       }
@@ -215,7 +264,55 @@
       }
     });
   }
+<<<<<<< HEAD
 
   // ================= INIT =================
   startTimer();
+=======
+   function showToast(message, type = "success") {
+            const toast = document.createElement("div");
+
+            toast.className = `
+        fixed top-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded text-white z-50 shadow-lg
+        ${type === "error" ? "bg-red-500" : "bg-green-600"}
+    `;
+
+            toast.innerText = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 3000);
+        }
+function openOtpModal(email, action, flow) {
+  const modal = document.getElementById("otpModal");
+  const otpForm = modal.querySelector("form");
+
+  
+  modal.classList.remove("hidden");
+
+
+  const emailEl = document.getElementById("otpEmail");
+  if (emailEl) emailEl.textContent = email;
+
+
+  otpForm.action = action;
+
+
+  currentOtpFlow = flow;
+
+
+  document.querySelectorAll("input[name^='otp']").forEach(input => {
+    input.value = "";
+  });
+
+
+  const firstInput = document.querySelector("input[name='otp1']");
+  if (firstInput) firstInput.focus();
+
+
+  startTimer();
+}
+  // ================= INIT =================
+
+>>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
 </script>

@@ -22,7 +22,7 @@ export const loadUsers = async (req, res) => {
 
     const usersList = users.map(user => ({
       _id: user._id,
-      name: user.firstName,
+      name: user.firstName + " " + user.lastName,
       email: user.email,
       phone: user.phone || "N/A",
       joinDate: new Date(user.createdAt).toDateString(),
@@ -40,8 +40,6 @@ export const loadUsers = async (req, res) => {
 
     res.render("admin/users", {
       layout: "partials/admin/adminLayout",
-      pageTitle: "User Management",
-      pageSubtitle: "Manage, search, and monitor your customer base.",
       activeNavLink: "Users",
       currentUser: admin,
       stats,
@@ -61,44 +59,63 @@ export const loadUsers = async (req, res) => {
 export const searchUsers = async (req, res) => {
   try {
     const search = req.query.search || "";
+    const filter = req.query.filter || "latest";
     const page = parseInt(req.query.page) || 1;
     const limit = 5;
-
     const skip = (page - 1) * limit;
 
-    const query = search
-      ? {
-        role: "user",
-        $or: [
-          { firstName: { $regex: search, $options: "i" } },
-          { lastName: { $regex: search, $options: "i" } },
-          { email: { $regex: search, $options: "i" } },
-          { phone: { $regex: search, $options: "i" } }
-        ]
-      }
-      : { role: "user" };
+
+    let query = { role: "user" };
+
+
+    if (search) {
+      query.$or = [
+        { firstName: { $regex: search, $options: "i" } },
+        { lastName: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { phone: { $regex: search, $options: "i" } }
+      ];
+    }
+
+
+    if (filter === "blocked") {
+      query.isBlocked = true;
+    }
+
+
+
+    let sortOption = { createdAt: -1 };
+    if (filter === "oldest") {
+      sortOption = { createdAt: 1 };
+    }
+    if (filter === "asc") sortOption = { firstName: 1 };
+    if (filter === "desc") sortOption = { firstName: -1 };
+
 
     const users = await User.find(query)
+      .collation({ locale: "en", strength: 2 })
+      .sort(sortOption)
       .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 });
+      .limit(limit);
 
     const totalUsers = await User.countDocuments(query);
 
-    const formattedUsers = users.map(user => ({
-      _id: user._id,
-      name: user.name || user.firstName || "User",
-      email: user.email,
-      phone: user.phone || "N/A",
-      joinDate: new Date(user.createdAt).toDateString(),
-      status: user.isBlocked ? "Blocked" : "Active"
-    }));
+    const start = totalUsers === 0 ? 0 : (page - 1) * limit + 1;
+    const end = Math.min(page * limit, totalUsers);
 
     res.json({
-      users: formattedUsers,
+      users: users.map(user => ({
+        _id: user._id,
+        name: user.firstName,
+        email: user.email,
+        phone: user.phone || "N/A",
+        joinDate: new Date(user.createdAt).toDateString(),
+        status: user.isBlocked ? "Blocked" : "Active"
+      })),
       totalUsers,
       totalPages: Math.ceil(totalUsers / limit),
-      currentPage: page
+      currentPage: page,
+      currentRange: `${start} - ${end}`
     });
 
   } catch (error) {
@@ -118,10 +135,10 @@ export const unblockUser = async (req, res) => {
   res.json({ success: true });
 };
 
-export const refreshStat =  async (req, res) => {
+export const refreshStat = async (req, res) => {
   const totalUsers = await User.countDocuments({ role: "user" });
-  const activeUsers = await User.countDocuments({ isBlocked: false });
-  const blockedUsers = await User.countDocuments({ isBlocked: true });
+  const activeUsers = await User.countDocuments({ role: "user", isBlocked: false });
+  const blockedUsers = await User.countDocuments({ role: "user", isBlocked: true });
 
   res.json({ totalUsers, activeUsers, blockedUsers });
 };

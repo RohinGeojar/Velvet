@@ -10,8 +10,42 @@ import { fileTypeFromBuffer } from "file-type";
 import { sendOtpService } from "../../services/user/otpService.js"
 import Otp from "../../models/otp.js";
 import bcrypt from "bcryptjs";
+import Address from "../../models/address.js";
+
+export const loadOverview = async (req, res) => {
+    try {
+        
+        if (!req.session.user) {
+            return res.redirect("/login");
+        }
+        const userId = req.session.user;
 
 
+      
+        const user = await User.findById(userId).lean();
+        console.log(req.session.user)
+     
+       
+        const defaultAddress = await Address.findOne({
+            user: userId,
+            isDefault: true
+        }).lean();
+        console.log(defaultAddress)
+
+        return res.render("user/overview", {
+            user,
+            defaultAddress,
+            currentPage: "overview",
+            showNavbar: true,
+            showSidebar: true,
+            
+        });
+
+    } catch (err) {
+        console.error("Overview Error:", err);
+        res.status(500).send("Server Error");
+    }
+};
 // ================= LOAD PROFILE =================
 export const loadProfile = async (req, res) => {
     try {
@@ -22,7 +56,8 @@ export const loadProfile = async (req, res) => {
         return res.render("user/profile", {
             user,
             showNavbar: true,
-            showSidebar: true
+            showSidebar: true,
+            currentPage: "profile"
         });
 
     } catch (err) {
@@ -57,9 +92,9 @@ export const updateProfile = async (req, res) => {
         res.json({ message: "Profile updated" });
 
     } catch (err) {
-    console.log("🔥 FULL ERROR:", err);  // 👈 ADD THIS
-    res.status(400).json({ message: err.message });
-}
+        console.log("🔥 FULL ERROR:", err);  // 👈 ADD THIS
+        res.status(400).json({ message: err.message });
+    }
 };
 
 // ================= CHANGE PASSWORD =================
@@ -174,20 +209,20 @@ export const verifyEmailChange = async (req, res) => {
             req.body.otp4;
 
         const record = await Otp.findOne({ email: user.tempEmail })
-    .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 });
 
         if (!record) {
-           return res.status(400).json({ message: "OTP not Found" });
+            return res.status(400).json({ message: "OTP not Found" });
         }
 
         if (record.expiresAt < new Date()) {
-           return res.status(400).json({ message: "OTP Expired" });
+            return res.status(400).json({ message: "OTP Expired" });
         }
 
         const isMatch = await bcrypt.compare(enteredOtp, record.otp);
 
         if (!isMatch) {
-           return res.status(400).json({ message: "Invalid OTP" });
+            return res.status(400).json({ message: "Invalid OTP" });
         }
 
         // ✅ update email
@@ -198,7 +233,7 @@ export const verifyEmailChange = async (req, res) => {
 
         await user.save();
         await Otp.deleteOne({ email: tempEmail });
-       res.json({ success: true });
+        res.json({ success: true });
 
     } catch (err) {
         console.log(err);

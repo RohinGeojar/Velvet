@@ -1,0 +1,172 @@
+<div class="main-container flex-grow">
+    <div class="mx-auto h-full flex flex-col md:flex-row w-full">
+
+        <!-- 🔹 Sidebar (IMPORTANT) -->
+
+
+        <!-- 🔹 Main Content -->
+        <div class="flex-1 content-scroll bg-white w-full">
+            <div class="px-4 sm:px-6 lg:px-10 py-8 sm:py-12 space-y-8 w-full max-w-none">
+
+             <nav class="flex items-center pl-10 gap-2 text-[11px] uppercase tracking-[0.05em] text-gray-400 mb-4">
+                            <a href="/" class="hover:text-gray-600">HOME</a>
+                            <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                            
+                            <span class="text-gray-500 font-semibold">OVERVIEW</span>
+                        </nav>
+                        <div class="pl-10">
+                            <h1 class="text-4xl font-bold text-[#1A1A1A] mb-2 tracking-tight">PROFILE OVERVIEW</h1>
+                            <p class="text-gray-500 text-[15px]">Your current profile</p>
+                        </div>
+
+                <!-- Profile Card -->
+                <div class="flex-1 ">
+
+                   
+                    <div class="border border-gray-100 rounded-xl shadow-sm max-w-4xl mx-11 bg-white">
+
+                        <div class=" flex justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/80">
+                            <h3 class="text-xs font-bold text-gray-500 tracking-widest uppercase">
+                                Profile 
+                            </h3>
+                            <a href="/profile">
+                                        <button type="button"
+                                            class="px-6 py-2 bg-brand text-white rounded-lg text-sm active:scale-95">
+                                            Make changes
+                                        </button>
+                                    </a>
+                        </div>
+
+                        <div class="p-6 sm:p-8 flex flex-col lg:flex-row gap-10">
+
+                            <!-- Profile Image -->
+                            <div class="flex flex-col items-center w-full lg:w-1/3">
+                                <img  src="<%= user?.profileImage || '/images/default.png' %>"
+                                    class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover shadow-inner">
+                            </div>
+
+                            <!-- User Details -->
+                            <div class="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
+
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">First
+                                        Name</p>
+                                    <p class="text-gray-800 mt-1">
+                                        <%= user?.firstName || '-' %>
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Last
+                                        Name</p>
+                                    <p class="text-gray-800 mt-1">
+                                        <%= user?.lastName || '-' %>
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Phone
+                                    </p>
+                                    <p class="text-gray-800 mt-1">
+                                        <%= user?.phone || '-' %>
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Email
+                                    </p>
+                                    <p class="text-gray-800 mt-1">
+                                        <%= user?.email || '-' %>
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- Default Address -->
+
+                </div>
+                <div class="flex-1 p-10 ">
+                    <% if (defaultAddress) { %>
+                        <div
+                            class="border-2 ml-6 border-[#72846D]  rounded-xl p-8 bg-white shadow-sm max-w-xl relative">
+
+                            <!-- Label -->
+                            <div class="absolute -top-[14px] left-4">
+                                <span
+                                    class="bg-[#72846D] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                    Default Address
+                                </span>
+                            </div>
+
+                            <!-- Header -->
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-xl font-bold text-[#1A1A1A]">
+                                        <%= defaultAddress?.name %>
+                                    </h3>
+
+                                    <div class="flex items-center gap-2 text-sm text-[#1A1A1A] mt-1 font-medium">
+                                        <i data-lucide="phone" class="w-4 h-4"></i>
+                                        <%= defaultAddress?.phone %>
+                                    </div>
+                                </div>
+
+                                <% if (defaultAddress && defaultAddress._id) { %>
+                                    <a href="/address/<%= defaultAddress._id %>/edit">
+                                        <button type="button"
+                                            class="px-6 py-2 bg-brand text-white rounded-lg text-sm active:scale-95">
+                                            Edit
+                                        </button>
+                                    </a>
+                                    <% } %>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="text-[15px] text-gray-600 space-y-1 leading-relaxed">
+                                <p>
+                                    <%= defaultAddress?.addressLine1 %>
+                                </p>
+
+                                <% if(defaultAddress?.addressLine2){ %>
+                                    <p>
+                                        <%= defaultAddress?.addressLine2 %>
+                                    </p>
+                                    <% } %>
+
+                                        <p>
+                                            <%= defaultAddress?.city %>
+                                        </p>
+                                        <p>
+                                            <%= defaultAddress?.postalCode %>
+                                        </p>
+
+                                        <p class="font-bold text-[#1A1A1A] mt-2 uppercase tracking-wide">
+                                            <%= defaultAddress?.country %>
+                                        </p>
+                            </div>
+
+                        </div>
+                        <% } else { %>
+                            <p class="text-gray-500">No default address found</p>
+                            <a href="/address/addAddress">
+    <div class="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer min-h-[320px] group hover:border-[#72846D] transition-all">
+      <div class="w-16 h-16 bg-[#F3F4F6] rounded-full flex items-center justify-center text-[#72846D] mb-6 group-hover:bg-[#72846D] group-hover:text-white transition-all">
+        <i data-lucide="plus" class="w-8 h-8"></i>
+      </div>
+      <h4 class="text-lg font-bold text-[#1A1A1A]">Add New Address</h4>
+      <p class="text-sm text-gray-400 mt-1">Add a shipping destination</p>
+    </div>
+  </a>
+                            <% } %>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="https://unpkg.com/lucide@latest"> </script>
+<script>
+     lucide.createIcons();
+</script>
