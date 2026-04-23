@@ -1,0 +1,185 @@
+<!-- OTP MODAL -->
+<div id="otpModal"
+  class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+  <div class="bg-white p-6 rounded-xl w-[350px] text-center">
+
+    <h2 class="text-lg font-semibold mb-2">Enter OTP</h2>
+    <p class="text-sm text-gray-500 mb-4">
+      Enter the 4-digit code sent to your email
+    </p>
+
+    <form id="otpForm" class="space-y-4">
+
+      <!-- OTP INPUTS -->
+      <div class="flex justify-center gap-3">
+        <input type="text" name="otp1" maxlength="1" class="otp-input w-12 h-12 border rounded text-center text-lg">
+        <input type="text" name="otp2" maxlength="1" class="otp-input w-12 h-12 border rounded text-center text-lg">
+        <input type="text" name="otp3" maxlength="1" class="otp-input w-12 h-12 border rounded text-center text-lg">
+        <input type="text" name="otp4" maxlength="1" class="otp-input w-12 h-12 border rounded text-center text-lg">
+      </div>
+
+      <!-- VERIFY -->
+      <button type="submit"
+        class="w-full bg-[#8D6E46] text-white py-2 rounded">
+        Verify OTP
+      </button>
+
+      <!-- RESEND -->
+      <button type="button" id="resendBtn"
+        class="text-sm text-[#8D6E46] underline">
+        Resend OTP (<span id="timer">2:00</span>)
+      </button>
+
+    </form>
+
+  </div>
+</div>
+<script>
+let currentOtpFlow = "";
+let resendInterval;
+let otpEmail = "";
+
+
+
+function openOtpModal(email, actionUrl, flow) {
+  const modal = document.getElementById("otpModal");
+  const form = document.getElementById("otpForm");
+
+  modal.classList.remove("hidden");
+  form.action = actionUrl;
+
+  currentOtpFlow = flow;
+  otpEmail = email; 
+
+  startTimer();
+}
+
+// 🔥 CLOSE MODAL (optional)
+function closeOtpModal() {
+  document.getElementById("otpModal").classList.add("hidden");
+}
+
+// 🔥 AUTO INPUT BEHAVIOR
+document.querySelectorAll(".otp-input").forEach((input, index, arr) => {
+
+  input.addEventListener("input", (e) => {
+    e.target.value = e.target.value.replace(/\D/g, '');
+
+    if (e.target.value && index < arr.length - 1) {
+      arr[index + 1].focus();
+    }
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace" && !input.value && index > 0) {
+      arr[index - 1].focus();
+    }
+  });
+});
+
+// 🔥 PASTE SUPPORT
+document.querySelector(".otp-input")?.addEventListener("paste", (e) => {
+  e.preventDefault();
+  const data = e.clipboardData.getData("text").slice(0, 4);
+  const inputs = document.querySelectorAll(".otp-input");
+
+  data.split("").forEach((char, i) => {
+    if (inputs[i]) inputs[i].value = char;
+  });
+
+  inputs[Math.min(data.length - 1, 3)].focus();
+});
+
+// 🔥 VERIFY OTP
+document.getElementById("otpForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const inputs = document.querySelectorAll(".otp-input");
+  const otp = Array.from(inputs).map(i => i.value).join("");
+
+  try {
+    const res = await fetch(e.target.action, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        otp1: otp[0],
+        otp2: otp[1],
+        otp3: otp[2],
+        otp4: otp[3]
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return showToast(data.message || "Invalid OTP", "error");
+    }
+
+    showToast("OTP verified", "success");
+
+   
+    if (currentOtpFlow === "adminForgot") {
+      setTimeout(() => {
+        window.location.href = "/adminAuth/resetPassword";
+      }, 1000);
+    }
+
+
+
+  } catch (err) {
+    showToast("Server error", "error");
+  }
+});
+
+
+function startTimer() {
+  let time = 120; 
+
+  const timerEl = document.getElementById("timer");
+  const btn = document.getElementById("resendBtn");
+
+
+  if (resendInterval) {
+    clearInterval(resendInterval);
+  }
+
+  btn.disabled = true;
+
+  resendInterval = setInterval(() => {
+    time--;
+
+    // 🔥 format as mm:ss
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+
+    timerEl.innerText = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    if (time <= 0) {
+      clearInterval(resendInterval);
+      btn.disabled = false;
+      timerEl.innerText = "0:00";
+    }
+  }, 1000);
+}
+
+
+document.getElementById("resendBtn").addEventListener("click", async () => {
+  try {
+    const res = await fetch("/adminAuth/resendOtp", { method: "POST" });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return showToast(data.message || "Failed", "error");
+    }
+
+    showToast("OTP resend", "success");
+    startTimer();
+
+  } catch (err) {
+    showToast("Error", "error");
+  }
+});
+</script>
+
