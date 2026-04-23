@@ -22,7 +22,7 @@ export const loadUsers = async (req, res) => {
 
     const usersList = users.map(user => ({
       _id: user._id,
-      name: user.firstName + " " +user.lastName,
+      name: user.firstName + " " + user.lastName,
       email: user.email,
       phone: user.phone || "N/A",
       joinDate: new Date(user.createdAt).toDateString(),
@@ -40,7 +40,7 @@ export const loadUsers = async (req, res) => {
 
     res.render("admin/users", {
       layout: "partials/admin/adminLayout",
-      
+
       activeNavLink: "Users",
       currentUser: admin,
       stats,
@@ -82,10 +82,10 @@ export const searchUsers = async (req, res) => {
     if (filter === "blocked") {
       query.isBlocked = true;
     }
-    
 
 
-    let sortOption = { createdAt: -1 };  
+
+    let sortOption = { createdAt: -1 };
     if (filter === "oldest") {
       sortOption = { createdAt: 1 };
     }
@@ -101,6 +101,9 @@ export const searchUsers = async (req, res) => {
 
     const totalUsers = await User.countDocuments(query);
 
+    const start = totalUsers === 0 ? 0 : (page - 1) * limit + 1;
+    const end = Math.min(page * limit, totalUsers);
+
     res.json({
       users: users.map(user => ({
         _id: user._id,
@@ -112,7 +115,8 @@ export const searchUsers = async (req, res) => {
       })),
       totalUsers,
       totalPages: Math.ceil(totalUsers / limit),
-      currentPage: page
+      currentPage: page,
+      currentRange: `${start} - ${end}`
     });
 
   } catch (error) {
@@ -132,10 +136,10 @@ export const unblockUser = async (req, res) => {
   res.json({ success: true });
 };
 
-export const refreshStat =  async (req, res) => {
+export const refreshStat = async (req, res) => {
   const totalUsers = await User.countDocuments({ role: "user" });
   const activeUsers = await User.countDocuments({ role: "user", isBlocked: false });
-  const blockedUsers = await User.countDocuments({  role: "user",isBlocked: true });
+  const blockedUsers = await User.countDocuments({ role: "user", isBlocked: true });
 
   res.json({ totalUsers, activeUsers, blockedUsers });
 };

@@ -8,7 +8,7 @@ import { validate } from "../../middleware/validate.js";
 const router = express.Router();
 
 router.get("/", userAuth, loadProfile);
-router.get("/overview", loadOverview)
+router.get("/overview",userAuth, loadOverview)
 router.post("/", userAuth, validate(profileUpdateSchema), updateProfile);
 
 router.post("/changePassword", userAuth,validate(changePasswordSchema), changePassword);
