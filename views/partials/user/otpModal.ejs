@@ -1,0 +1,285 @@
+
+<style>
+  @keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease;
+}
+</style>
+<!-- Overlay -->
+<div id="otpModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+
+  <!-- Modal Box -->
+  <div class="bg-white rounded-2xl shadow-xl w-[400px] p-8 text-center">
+
+    <!-- Icon -->
+    <div class="flex justify-center mb-4">
+      <div class="bg-gray-100 p-4 rounded-xl">🛡️</div>
+    </div>
+
+    <h2 class="text-2xl font-semibold">
+      Verify <span class="text-[#6b7f6a]">Email</span>
+    </h2>
+
+    <p class="text-gray-500 text-sm mt-2 mb-2">
+      We've sent a 4-digit code to your email
+    </p>
+
+    <div id="otpEmail" class="bg-primary-100 text-md text-primary-700 text-center"></div>
+
+        <p class="text-gray-500 text-sm mt-2 mb-6">
+          Please enter it below to verify your account.
+        </p>
+
+        <!-- OTP Inputs -->
+        <form id="otpForm" method="POST">
+          <div class="flex justify-center gap-3 mb-6">
+            <input type="text" name="otp1" maxlength="1" class="w-12 h-12 text-center bg-[#e7eee6] rounded-lg">
+            <input type="text" name="otp2" maxlength="1" class="w-12 h-12 text-center bg-[#e7eee6] rounded-lg">
+            <input type="text" name="otp3" maxlength="1" class="w-12 h-12 text-center bg-[#e7eee6] rounded-lg">
+            <input type="text" name="otp4" maxlength="1" class="w-12 h-12 text-center bg-[#e7eee6] rounded-lg">
+          </div>
+
+          <button class="w-full bg-[#6b7f6a] text-white py-3 rounded-lg">
+            Verify & Activate
+          </button>
+        </form>
+
+        <!-- Resend -->
+        <p class="text-sm text-gray-500 mt-5">
+          Didn't receive the code?
+          Resend in <span id="timer" class="text-red-500 font-medium">2:00</span><br>
+          <button type="button" id="resendBtn" disabled class="text-gray-400 cursor-not-allowed">
+            Resend New Code
+          </button>
+        </p>
+
+  </div>
+</div>
+
+<script>
+  let currentOtpFlow = "";
+
+  // ================= SAFE ELEMENTS =================
+const otpForm = document.getElementById("otpForm");
+  const otpInputs = document.querySelectorAll("input[name^='otp']");
+  const timerEl = document.getElementById("timer");
+  const resendBtn = document.getElementById("resendBtn");
+
+  let time = 120;
+  let interval;
+
+  // ================= OTP FORM =================
+  if (otpForm) {
+    otpForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!e.target.action) {
+        return showToast("Invalid verification flow", "error");
+      }
+
+      const formData = new FormData(e.target);
+
+      try {
+        const res = await fetch(e.target.action, {
+          method: "POST",
+          body: new URLSearchParams(formData)
+        });
+        console.log("res ",res)
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          return showToast(data.message, "error");
+        }
+
+        showToast("OTP verified successfully", "success");
+       setTimeout(() => {
+
+  if (currentOtpFlow === "signup") {
+    window.location.href = "/";
+    showToast("Registration Successful", "success");
+  } 
+  else if (currentOtpFlow === "forgot") {
+    window.location.href = "/resetPassword";
+    showToast("Password  updated", "success");
+  } 
+  else if (currentOtpFlow === "emailChange") {
+    
+    window.location.reload();
+    showToast("Email verified and updated", "success")
+  }
+
+}, 1000);
+      } catch (err) {
+        showToast("Something went wrong", "error");
+      }
+    });
+  }
+
+  // ================= INPUT HANDLING =================
+  if (otpInputs.length > 0) {
+    if (otpInputs.length > 0) {
+      otpInputs[0].focus();
+    }
+
+    otpInputs.forEach((input, index) => {
+
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/\D/g, "");
+
+        if (input.value && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+
+    });
+  }
+
+  // ================= TIMER =================
+  const otpModal = document.getElementById("otpModal");
+
+  if (otpInputs.length > 0) {
+
+    otpInputs[0].addEventListener("paste", (e) => {
+      e.preventDefault();
+
+      const paste = e.clipboardData.getData("text").trim();
+
+
+      if (!/^\d{4}$/.test(paste)) return;
+
+      paste.split("").forEach((digit, index) => {
+        if (otpInputs[index]) {
+          otpInputs[index].value = digit;
+        }
+      });
+
+      otpInputs[3].focus();
+    });
+
+  }
+
+  function startTimer() {
+    if (!timerEl || !resendBtn) return;
+
+    clearInterval(interval);
+    time = 120;
+
+    resendBtn.disabled = true;
+    resendBtn.classList.add("text-gray-400", "cursor-not-allowed");
+    resendBtn.classList.remove("text-[#6b7f6a]");
+
+    interval = setInterval(() => {
+      time--;
+
+      let minutes = Math.floor(time / 60);
+      let seconds = time % 60;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      timerEl.innerText = `${minutes}:${seconds}`;
+
+      if (time <= 0) {
+        clearInterval(interval);
+        resendBtn.disabled = false;
+        resendBtn.classList.remove("text-gray-400", "cursor-not-allowed");
+        resendBtn.classList.add("text-[#6b7f6a]");
+      }
+    }, 1000);
+  }
+
+  // ================= RESEND =================
+  if (resendBtn) {
+    resendBtn.addEventListener("click", async () => {
+      if (resendBtn.disabled) return;
+
+      resendBtn.innerText = "Sending...";
+
+      let resendUrl = "";
+
+      if (currentOtpFlow === "emailChange") {
+        resendUrl = "/profile/resendEmailOtp";
+      } else if (currentOtpFlow === "signup") {
+        resendUrl = "/resendSignupOtp";
+      } else if (currentOtpFlow === "forgot") {
+        resendUrl = "/resendForgotOtp";
+      }
+
+      if (!resendUrl) {
+        resendBtn.innerText = "Resend New Code";
+        return showToast("Invalid OTP flow", "error");
+      }
+
+      try {
+        const res = await fetch(resendUrl, { method: "POST" });
+        const data = await res.json();
+
+        if (!res.ok) {
+          resendBtn.innerText = "Resend New Code";
+          return showToast(data.message, "error");
+        }
+
+        resendBtn.innerText = "Resend New Code";
+        showToast("OTP resent successfully", "success");
+        startTimer();
+
+      } catch (err) {
+        resendBtn.innerText = "Resend New Code";
+        showToast("Something went wrong", "error");
+      }
+    });
+  }
+   function showToast(message, type = "success") {
+            const toast = document.createElement("div");
+
+            toast.className = `
+        fixed top-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded text-white z-50 shadow-lg
+        ${type === "error" ? "bg-red-500" : "bg-green-600"}
+    `;
+
+            toast.innerText = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 3000);
+        }
+function openOtpModal(email, action, flow) {
+  const modal = document.getElementById("otpModal");
+  const otpForm = modal.querySelector("form");
+
+  
+  modal.classList.remove("hidden");
+
+
+  const emailEl = document.getElementById("otpEmail");
+  if (emailEl) emailEl.textContent = email;
+
+
+  otpForm.action = action;
+
+
+  currentOtpFlow = flow;
+
+
+  document.querySelectorAll("input[name^='otp']").forEach(input => {
+    input.value = "";
+  });
+
+
+  const firstInput = document.querySelector("input[name='otp1']");
+  if (firstInput) firstInput.focus();
+
+
+  startTimer();
+}
+  // ================= INIT =================
+
+</script>

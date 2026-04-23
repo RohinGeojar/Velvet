@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Velvet Vogue Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9F9FB;
+        }
+
+        .sidebar {
+            background-color: #F4EDE6;
+        }
+
+        .active-nav {
+            background-color: #8B5E3C;
+            color: white !important;
+        }
+
+        .text-brand {
+            color: #8B5E3C;
+        }
+
+        .bg-brand {
+            background-color: #8B5E3C;
+        }
+
+        .badge-active {
+            background-color: #E6F4EA;
+            color: #1E7E34;
+        }
+
+        .badge-blocked {
+            background-color: #FCE8E6;
+            color: #D93025;
+        }
+
+        .btn-outline-danger {
+            border: 1px solid #FCE8E6;
+            background-color: #FFF5F5;
+            color: #D93025;
+        }
+
+        /* Custom scrollbar for table */
+        .table-container::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #E0E0E0;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="flex min-h-screen">
+
+    <!-- Sidebar -->
+
+    <%- include("../partials/admin/adminSidebar") %>
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col min-w-0 ">
+            <!-- Header -->
+            <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-8">
+                <div class="relative w-96">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                    <input type="text" placeholder="Search anything..."
+                        class="w-full bg-gray-50 border-none rounded-full py-2.5 pl-12 pr-4 focus:ring-2 focus:ring-brand/20 outline-none">
+                </div>
+
+                <div class="flex items-center gap-6">
+                    <button class="relative text-gray-500 hover:text-gray-700">
+                        <i data-lucide="bell" class="w-6 h-6"></i>
+                        <span
+                            class="absolute top-0 right-0 w-2 h-2 bg-red-500 border-2 border-white rounded-full"></span>
+                    </button>
+                    <div class="flex items-center gap-3 pl-6 border-l border-gray-200">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-semibold text-gray-900 leading-none">
+                                <%= name || "guest" %>
+                            </p>
+                            <p class="text-xs text-gray-500 mt-1">Administrator</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-teal-200 border-2 border-white shadow-sm overflow-hidden">
+                            <img src="https://ui-avatars.com/api/?name=Rohin+Geojar&background=82b1ff&color=fff"
+                                alt="Profile">
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="p-8">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900">User Management</h2>
+                    <p class="text-gray-500 mt-1">Manage, search, and monitor your customer base.</p>
+                </div>
+
+                <!-- Metrics Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+                    <!-- Total Users -->
+                    <div class="bg-white p-6 rounded-[20px] flex items-center gap-4 shadow-sm border border-gray-50">
+                        <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center">
+                            <i data-lucide="users-2" class="w-7 h-7 text-gray-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Total Users</p>
+                            <p id="totalUsers" class="text-3xl font-bold text-gray-900">
+                                <%= stats?.totalUsers || 0 %>
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <!-- Active Users -->
+                    <div class="bg-[#E6F4EA] p-6 rounded-[20px] flex items-center gap-4 border border-green-100">
+                        <div class="w-14 h-14 bg-white/50 rounded-2xl flex items-center justify-center">
+                            <i data-lucide="user-check" class="w-7 h-7 text-green-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Active Users</p>
+                            <p id="activeUsers" class="text-3xl font-bold text-gray-900">
+                                <%= stats?.activeUsers || 0 %>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Blocked Users -->
+                    <div class="bg-[#FCE8E6] p-6 rounded-[20px] flex items-center gap-4 border border-red-100">
+                        <div class="w-14 h-14 bg-white/50 rounded-2xl flex items-center justify-center">
+                            <i data-lucide="user-x" class="w-7 h-7 text-red-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500 font-medium">Blocked Users</p>
+                            <p id="blockedUsers" class="text-3xl font-bold text-gray-900">
+                                <%= stats?.blockedUsers || 0 %>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Table Section -->
+                <div class="bg-white rounded-[20px] shadow-sm border border-gray-50 ">
+                    <!-- Controls -->
+                    <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="relative w-full md:w-[500px] gap-2 md:flex">
+                            <i data-lucide="search"
+                                class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+
+                            <input id="searchInput" type="text" placeholder="Search by name, email or phone..."
+                                class="w-full  bg-gray-50 border border-gray-200 rounded-xl py-2.5 pl-12 pr-4">
+                            <button
+                                class="bg-brand  text-white flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity shadow-sm">
+                                <a href="/admin/users"> Cancel</a>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-3">
+
+                            <div class="relative z-50" id="filterWrapper">
+
+                                <button id="filterBtn" onclick="toggleFilterMenu()" class="px-4 py-2 border rounded-xl">
+                                    Filter ▼
+                                </button>
+
+                                <div id="filterMenu"
+                                    class="hidden absolute right-0 mt-2 bg-white shadow-lg rounded-xl z-50 p-4 w-48 z-50">
+
+                                    <div onclick="applyFilter('latest')" class="p-2 hover:bg-gray-100 cursor-pointer">
+                                        Latest Users</div>
+                                    <div onclick="applyFilter('oldest')" class="p-2 hover:bg-gray-100 cursor-pointer">
+                                        Oldest Users</div>
+                                    <div onclick="applyFilter('blocked')" class="p-2 hover:bg-gray-100 cursor-pointer">
+                                        Blocked Users</div>
+                                    <div onclick="applyFilter('asc')" class="p-2 hover:bg-gray-100 cursor-pointer">Name
+                                        A → Z
+                                    </div>
+                                    <div onclick="applyFilter('desc')" class="p-2 hover:bg-gray-100 cursor-pointer">Name
+                                        Z →
+                                        A</div>
+                                    <hr class="my-2">
+
+                                    <div onclick="clearFilter()"
+                                        class="p-2 text-red-500 hover:bg-red-50 cursor-pointer text-sm">
+                                        Clear Filter
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-container overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-[#F9F9FB] border-y border-gray-100">
+                                <tr>
+                                    <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                        Customer</th>
+                                    <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                        Email Address</th>
+                                    <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                        Join Date</th>
+                                    <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                        Status</th>
+                                    <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody" class="divide-y divide-gray-50">
+                                <% usersList.forEach(user=> { %>
+                                    <tr class="hover:bg-gray-50/50 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+
+                                                    <% if (user && user.profileImage) { %>
+
+                                                        <!-- Profile Image -->
+                                                        <img src="<%= user.profileImage %>" alt="Profile"
+                                                            class="w-full h-full object-cover">
+
+                                                        <% } else { %>
+
+                                                            <!-- Initials Avatar -->
+                                                            <div
+                                                                class="w-10 h-10 rounded-full bg-gray-100 overflow-hidden flex-shrink-0">
+                                                                <img src="https://ui-avatars.com/api/?name=<%= encodeURIComponent(user.name) %>&background=random"
+                                                                    alt="<%= user.name %>">
+                                                            </div>
+                                                            <% } %>
+
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm font-semibold text-gray-900 leading-tight">
+                                                        <%= user.name %>
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 mt-1">
+                                                        <%= user.phone %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-600">
+                                            <%= user.email %>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-600">
+                                            <%= user.joinDate %>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span
+                                                class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide <%= user.status === 'Active' ? 'badge-active' : 'badge-blocked' %>">
+                                                <%= user.status %>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <% if (user.status==='Active' ) { %>
+                                                <button onclick="toggleBlock('<%= user._id %>', true)"
+                                                    class="btn-outline-danger px-4 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">
+                                                    Block Access
+                                                </button>
+                                                <% } else { %>
+                                                    <button onclick="toggleBlock('<%= user._id %>', false)"
+                                                        class="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-lg text-xs font-semibold hover:bg-gray-200 transition-colors">
+                                                        Unblock
+                                                    </button>
+                                                    <% } %>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <!-- Pagination -->
+                    <div class="px-6 py-6 border-t border-gray-100 flex items-center justify-between">
+
+                        <!-- Showing text -->
+                        <p class="text-sm text-gray-400">
+                            Showing <%= pagination.currentRange %> of <%= pagination.totalResults %> results
+                        </p>
+
+                        <div id="pagination" class="flex items-center gap-1">
+
+                            <!-- Prev -->
+
+
+                            <!-- Page Numbers -->
+                            <% for (let i=1; i <=pagination.totalPages; i++) { %>
+
+                                <% if (i===pagination.currentPage) { %>
+                                    <a href="?page=<%= i %>"
+                                        class="w-8 h-8 rounded-lg bg-brand text-white text-sm font-semibold flex items-center justify-center shadow-sm">
+                                        <%= i %>
+                                    </a>
+                                    <% } else { %>
+                                        <a href="?page=<%= i %>"
+                                            class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center">
+                                            <%= i %>
+                                        </a>
+                                        <% } %>
+
+                                            <% } %>
+
+                                                <!-- Next -->
+                                                <a href="?page=<%= pagination.currentPage + 1 %>"
+                                                    class="p-2 text-gray-400 hover:text-gray-600 <%= pagination.currentPage === pagination.totalPages ? 'pointer-events-none opacity-50' : '' %>">
+                                                    <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                                                </a>
+
+                        </div>
+                    </div>
+
+                    <!--  -->
+
+                </div>
+            </div>
+        </main>
+        <div id="confirmModal" class="fixed inset-0 bg-black/40 hidden z-50 flex items-center justify-center">
+            <div class="bg-white rounded-xl p-6 w-[350px] shadow-lg">
+                <h2 class="text-lg font-semibold mb-3" id="modalTitle">Confirm Action</h2>
+                <p class="text-sm text-gray-500 mb-5" id="modalMessage"></p>
+
+                <div class="flex justify-end gap-3">
+                    <button onclick="closeModal()" class="px-4 py-2 text-sm bg-gray-100 rounded-lg">Cancel</button>
+                    <button id="confirmBtn" class="px-4 py-2 text-sm bg-red-500 text-white rounded-lg">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            lucide.createIcons();
+            const input = document.getElementById("searchInput");
+            const tableBody = document.getElementById("userTableBody");
+
+            let currentFilter = "latest";
+            let currentPage = 1;
+            let currentSearch = "";
+
+            async function loadUsers(page = 1, search = "") {
+
+                currentPage = page
+                const res = await fetch(`/admin/users/search?search=${currentSearch}&page=${currentPage}&filter=${currentFilter}`);
+                const data = await res.json();
+                document.querySelector(".text-sm.text-gray-400").innerText =
+                    `Showing ${data.currentRange} of ${data.totalUsers} results`;
+                console.log(data)
+                tableBody.innerHTML = "";
+
+                data.users.forEach(user => {
+                    tableBody.innerHTML += `
+<tr class="hover:bg-gray-50/50 transition-colors">
+  <td class="px-6 py-4">
+    <div class="flex items-center gap-4">
+      <div class="w-10 h-10 rounded-full bg-gray-100 overflow-hidden flex-shrink-0">
+        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random" alt="${user.name}">
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-900 leading-tight">
+          ${user.name}
+        </p>
+        <p class="text-xs text-gray-500 mt-1">
+          ${user.phone}
+        </p>
+      </div>
+    </div>
+  </td>
+
+  <td class="px-6 py-4 text-sm text-gray-600">
+    ${user.email}
+  </td>
+
+  <td class="px-6 py-4 text-sm text-gray-600">
+    ${user.joinDate}
+  </td>
+
+  <td class="px-6 py-4">
+    <span class="px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide ${user.status === "Active"
+                            ? "badge-active"
+                            : "badge-blocked"
+                        }">
+      ${user.status}
+    </span>
+  </td>
+
+  <td class="px-6 py-4">
+    ${user.status === "Active"
+                            ? `<button onclick="toggleBlock('${user._id}', true)" class="btn-outline-danger px-4 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">
+            Block Access
+          </button>`
+                            : `<button onclick="toggleBlock('${user._id}', false)" class="bg-gray-100 text-gray-700 px-4 py-1.5 rounded-lg text-xs font-semibold hover:bg-gray-200 transition-colors">
+            Unblock
+          </button>`
+                        }
+  </td>
+</tr>
+`;
+                });
+
+                renderPagination(data.totalPages, data.currentPage);
+            }
+
+            input.addEventListener("input", () => {
+                currentSearch = input.value;
+                currentPage = 1;
+                loadUsers(currentPage, currentSearch);
+            });
+
+            function renderPagination(totalPages, currentPage) {
+                const container = document.getElementById("pagination");
+                container.innerHTML = "";
+
+                const maxVisible = 5;
+
+                let start = Math.max(1, currentPage - 2);
+                let end = Math.min(totalPages, currentPage + 2);
+
+                // PREV
+                container.innerHTML += `
+    <button onclick="loadUsers(${currentPage - 1})"
+      ${currentPage === 1 ? "disabled" : ""}
+      class="p-2 text-gray-400">
+      ‹
+    </button>
+  `;
+
+                // FIRST PAGE
+                if (start > 1) {
+                    container.innerHTML += `
+      <button onclick="loadUsers(1)" class="px-3 py-1">1</button>
+    `;
+
+                    if (start > 2) {
+                        container.innerHTML += `<span class="px-2">...</span>`;
+                    }
+                }
+
+                // MIDDLE PAGES
+                for (let i = start; i <= end; i++) {
+                    container.innerHTML += `
+      <button onclick="loadUsers(${i})"
+        class="px-3 py-1 rounded ${i === currentPage ? "bg-brand text-white" : ""}">
+        ${i}
+      </button>
+    `;
+                }
+
+                // LAST PAGE
+                if (end < totalPages) {
+                    if (end < totalPages - 1) {
+                        container.innerHTML += `<span class="px-2">...</span>`;
+                    }
+
+                    container.innerHTML += `
+      <button onclick="loadUsers(${totalPages})" class="px-3 py-1">
+        ${totalPages}
+      </button>
+    `;
+                }
+
+                // NEXT
+                container.innerHTML += `
+    <button onclick="loadUsers(${currentPage + 1})"
+      ${currentPage === totalPages ? "disabled" : ""}
+      class="p-2 text-gray-400">
+      ›
+    </button>
+  `;
+            }
+            let selectedUserId = null;
+            let selectedAction = null;
+
+            function toggleBlock(userId, block) {
+                selectedUserId = userId;
+                selectedAction = block;
+
+                document.getElementById("modalTitle").innerText =
+                    block ? "Block User" : "Unblock User";
+
+                document.getElementById("modalMessage").innerText =
+                    block
+                        ? "Are you sure you want to block this user?"
+                        : "Are you sure you want to unblock this user?";
+
+                document.getElementById("confirmModal").classList.remove("hidden");
+            }
+            document.getElementById("confirmBtn").addEventListener("click", async () => {
+                const url = selectedAction
+                    ? `/admin/block-user/${selectedUserId}`
+                    : `/admin/unblock-user/${selectedUserId}`;
+
+                await fetch(url, { method: "PATCH" });
+
+                closeModal();
+
+                loadUsers(currentPage, currentSearch);
+                await refreshStats();
+            });
+            function closeModal() {
+                document.getElementById("confirmModal").classList.add("hidden");
+            }
+            async function refreshStats() {
+                const res = await fetch("/admin/user-stats");
+                const stats = await res.json();
+
+                document.getElementById("activeUsers").innerText = stats.activeUsers;
+                document.getElementById("blockedUsers").innerText = stats.blockedUsers;
+            }
+            function updateStats(blocked) {
+                const activeEl = document.getElementById("activeUsers");
+                const blockedEl = document.getElementById("blockedUsers");
+
+                let active = parseInt(activeEl.innerText);
+                let blockedCount = parseInt(blockedEl.innerText);
+
+                if (blocked) {
+                    active--;
+                    blockedCount++;
+                } else {
+                    active++;
+                    blockedCount--;
+                }
+
+                activeEl.innerText = active;
+                blockedEl.innerText = blockedCount;
+            }
+            function toggleFilterMenu() {
+                document.getElementById("filterMenu").classList.toggle("hidden");
+            }
+            document.addEventListener("click", function (e) {
+                const wrapper = document.getElementById("filterWrapper");
+
+                if (!wrapper.contains(e.target)) {
+                    document.getElementById("filterMenu").classList.add("hidden");
+                }
+            });
+            function applyFilter(filter) {
+                currentFilter = filter;
+                currentPage = 1;
+
+                const filterMap = {
+                    latest: "Latest Users",
+                    oldest: "Oldest Users",
+                    blocked: "Blocked Users",
+                    asc: "Name A → Z",
+                    desc: "Name Z → A"
+                };
+
+
+                const btn = document.getElementById("filterBtn");
+                btn.innerText = `Filter: ${filterMap[filter]}`;
+
+
+                document.querySelectorAll("#filterMenu div").forEach(el => {
+                    el.classList.remove("bg-gray-200");
+                });
+
+                event.target.classList.add("bg-gray-200");
+
+
+                document.getElementById("filterMenu").classList.add("hidden");
+
+                loadUsers(currentPage, currentSearch);
+            }
+            function clearFilter() {
+                currentFilter = "latest"; // default
+                currentPage = 1;
+
+
+                document.getElementById("filterBtn").innerText = "Filter ▼";
+
+
+                document.querySelectorAll("#filterMenu div").forEach(el => {
+                    el.classList.remove("bg-gray-200");
+                });
+
+
+                document.getElementById("filterMenu").classList.add("hidden");
+
+
+                loadUsers(currentPage, currentSearch);
+            }
+        </script>
+</body>
+
+</html>

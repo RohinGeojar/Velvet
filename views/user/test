@@ -292,3 +292,81 @@ function togglePassword(id, el) {
 </body>
 
 </html>
+<div class="px-6 py-6 border-t border-gray-100 flex items-center justify-between">
+                        <p class="text-sm text-gray-400">Showing 1 to 5 of 124 results</p>
+                        <div class="flex items-center gap-1">
+                            <button class="p-2 text-gray-400 hover:text-gray-600"><i data-lucide="chevron-left"
+                                    class="w-5 h-5"></i></button>
+                            <button
+                                class="w-8 h-8 rounded-lg bg-brand text-white text-sm font-semibold flex items-center justify-center shadow-sm">1</button>
+                            <button
+                                class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center">2</button>
+                            <button
+                                class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center">3</button>
+                            <span class="px-1 text-gray-400">...</span>
+                            <button
+                                class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center">25</button>
+                            <button class="p-2 text-gray-400 hover:text-gray-600"><i data-lucide="chevron-right"
+                                    class="w-5 h-5"></i></button>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+                    <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+                     <!-- Top Announcement Bar -->
+<div class="w-full bg-primary py-2 text-center">
+<p class="text-on-primary text-[10px] tracking-[0.2em] font-label font-light">ENJOY FREE SHIPPING ON ALL ORDERS</p>
+</div>
+<!-- Header / TopAppBar -->
+<header class="w-full top-0 sticky z-50 border-none bg-stone-50/80 dark:bg-stone-950/80 backdrop-blur-md shadow-sm shadow-[#1a1c1c]/5">
+<div class="flex flex-col items-center w-full px-12 py-6 max-w-[1920px] mx-auto">
+<!-- Brand & Icons Row -->
+<div class="w-full flex justify-between items-center mb-6">
+<!-- Spacer for balance -->
+<div class="w-1/3 flex text-start">
+  <h1 class="text-4xl font-serif tracking-tighter text-[#475845] dark:text-[#f9f9f9]">Velvet Vogue</h1><br>
+  <p class="text-[10px] tracking-[0.4em] uppercase text-secondary ">women clothing</p>
+</div>
+<!-- Logo -->
+<div class="w-1/3 text-start">
+
+</div>
+<!-- Actions -->
+<div class="w-1/3 flex justify-end items-center gap-6">
+<button class="hover:opacity-70 transition-opacity duration-300 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary" data-icon="search">search</span>
+</button>
+<button class="hover:opacity-70 transition-opacity duration-300 cursor-pointer active:scale-95 transition-transform">
+
+
+<span class="material-symbols-outlined text-primary" data-icon="person"><a  href="/profile">person</a></span>
+</button>
+<button class="hover:opacity-70 transition-opacity duration-300 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary" data-icon="favorite">favorite</span>
+</button>
+<button class="hover:opacity-70 transition-opacity duration-300 cursor-pointer active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+
+<% if (error) { %>
+      <a class="text-[#475845] mx-4 border-b-2 border-[#475845] pb-1 font-bold" href="/register"> signup</a></p>
+        <% } %>
+
+</div>
+<!-- Navigation Links -->
+<nav class="flex gap-12 font-['Noto_Serif'] text-sm tracking-widest uppercase">
+<a class="text-[#475845] border-b-2 border-[#475845] pb-1 font-bold" href="/register">Collection</a>
+<a class="text-[#6a5c4a] hover:text-[#475845] transition-colors duration-300" href="#">New In</a>
+<a class="text-[#6a5c4a] hover:text-[#475845] transition-colors duration-300" href="/profile">Wedding</a>
+<a class="text-[#6a5c4a] hover:text-[#475845] transition-colors duration-300" href="#">Plus Size</a>
+<a class="text-[#6a5c4a] hover:text-[#475845] transition-colors duration-300" href="#">Kids</a>
+</nav>
+</div>
+</header>

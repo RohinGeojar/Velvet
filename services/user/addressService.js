@@ -16,7 +16,7 @@ export const getUserAddresses = async (userId) => {
     .sort({ isDefault: -1, createdAt: -1 });
 };
 
-// 🔍 Get single address (for edit page)
+
 export const getAddressById = async (addressId, userId) => {
   const address = await Address.findOne({
     _id: addressId,
@@ -32,12 +32,13 @@ export const getAddressById = async (addressId, userId) => {
 
 
 export const updateAddress = async (addressId, userId, data) => {
+  
   const address = await Address.findOneAndUpdate(
     { _id: addressId, user: userId },
     data,
     { returnDocument: 'after' }
   );
-
+console.log("(address updated" ,address)
   if (!address) {
     throw new Error("Address not found");
   }

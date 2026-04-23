@@ -15,23 +15,37 @@ const userSchema = new mongoose.Schema({
 
   email: {
     type: String,
-    required: true,  
+    required: true,
     unique: true,
     trim: true,
     lowercase: true,
     match: [/^\S+@\S+\.\S+$/, "Please use a valid email"]
   },
-  phone:{
-    type:Number,
-    maxlength:10
+
+  phone: {
+    type: String,
+    required:false
   },
 
   password: {
     type: String,
-    required: true,
-    minlength: 6
+    minlength: 6,
+    required: function () {
+      return !this.googleId;
+    }
   },
 
+  googleId: {
+    type: String
+  },
+
+  profileImage: {
+    type: String
+  },
+  tempEmail: {
+  type: String,
+  default: null
+},
   role: {
     type: String,
     enum: ["user", "admin"],
@@ -50,4 +64,4 @@ const userSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model("User", userSchema);

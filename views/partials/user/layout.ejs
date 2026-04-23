@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= typeof title !== "undefined" ? title : "Velvet Vogue" %></title>
+  <script src="https://cdn.tailwindcss.com">
+    
+  </script>
+   <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <!-- Google Fonts (Inter for UI, Playfair Display for Logo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <% if (typeof showNavbar !== "undefined" && showNavbar) { %>
+    <%- include("navbar") %>
+  <% } %>
+
+  <!-- Main Content + Sidebar -->
+  <div class="flex flex-1">
+
+    <% if (typeof showSidebar !== "undefined" && showSidebar) { %>
+      <%- include("sidebar") %>
+    <% } %>
+
+    <main class="flex-1 overflow-y-auto ">
+      <%- body %>
+    </main>
+
+  </div>
+
+  <!-- Footer -->
+  <% if (typeof showFooter === "undefined" || showFooter) { %>
+    <%- include("footer") %>
+  <% } %>
+
+</body>
+</html>
