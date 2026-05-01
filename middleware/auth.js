@@ -33,14 +33,27 @@ export const userAuth = async (req, res, next) => {
 
 }
 
-export const googleAuth = passport.authenticate("google", { scope: ["profile", "email"] })
+export const googleAuth = passport.authenticate("google", { scope: ["profile", "email"],prompt: "select_account" })
 
-export const googleAuthCallback = [
-    passport.authenticate("google", {
-        failureRedirect: "/login",
-    }),
-    (req, res) => {
-        req.session.user = req.user;
-        res.redirect("/");
-    },
-];
+export const googleAuthCallback = (req, res, next) => {
+  passport.authenticate("google", (err, user, info) => {
+
+    if (err) return next(err);
+
+    if (!user) {
+      
+      return res.render("auth/login", {
+        title: "Login",
+        error: info?.message || "Google login failed",
+        showNavbar: false,
+        showSidebar: false,
+        showFooter:false
+      });
+    }
+
+   
+    req.session.user = user._id;
+    return res.redirect("/");
+
+  })(req, res, next);
+};

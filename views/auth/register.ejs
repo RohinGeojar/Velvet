@@ -17,18 +17,18 @@
 
               <form id="signupForm" method="POST" class="space-y-4 max-w-md mx-auto lg:mx-0">
 
-                <input type="text" name="firstName" placeholder="First Name " required minlength="3"
+                <input type="text" name="firstName" placeholder="First Name "  minlength="3"
                   class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
 
                 <input type="text" name="lastName" placeholder="Last Name" 
                   class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
 
-                <input type="email" name="email" placeholder="Email" required pattern="[^\s@]+@[^\s@]+\.[^\s@]+$"
+                <input type="email" name="email" placeholder="Email"  pattern="[^\s@]+@[^\s@]+\.[^\s@]+$"
                   class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
 
                 <!-- Password -->
                 <div class="relative">
-                  <input type="password" id="password" name="password" placeholder="Password" required minlength="6"
+                  <input type="password" id="password" name="password" placeholder="Password"  minlength="6"
                     class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
                   <span onclick="togglePassword('password', this)"
                     class="absolute right-3 top-3 cursor-pointer">👁</span>
@@ -37,7 +37,7 @@
                 <!-- Confirm Password -->
                 <div class="relative">
                   <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password"
-                    required minlength="6"
+                     minlength="6"
                     class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
                   <span onclick="togglePassword('confirmPassword', this)"
                     class="absolute right-3 top-3 cursor-pointer">👁</span>
@@ -226,7 +226,13 @@ form.addEventListener("submit", async (e) => {
   if (!isValid) return;
 
   try {
+    document.getElementById("otpModal").classList.remove("hidden");
+    
+    document.getElementById("otpEmail").textContent = data.email;
     showToast("Sending OTP ... ","success")
+    openOtpModal(data.email, "/verifyOtp", "signup");
+
+   
     const res = await fetch("/register", {
       method: "POST",
       headers: {
@@ -238,18 +244,17 @@ form.addEventListener("submit", async (e) => {
     const result = await res.json();
 
     if (!res.ok) {
+      document.getElementById("otpModal").classList.add("hidden");
+      showToast(result.message || "Email already exists", "error");
       return showFieldError(emailInput, result.message || "Signup failed");
     }
 
 
-    document.getElementById("otpModal").classList.remove("hidden");
-    
-    document.getElementById("otpEmail").textContent = result.email;
-    openOtpModal(result.email, "/verifyOtp", "signup");
+    showToast(`OTP has been send to ${result.email} `,"success")
     
   } catch (err) {
     console.error(err);
-    alert("Something went wrong");
+    alert(err,"Something went wrong");
   }
 });
  function showToast(message, type = "success") {

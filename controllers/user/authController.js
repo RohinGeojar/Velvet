@@ -14,7 +14,7 @@ export const loadHome = async (req, res) => {
             error: "no user",
             showNavbar: true,
             showSidebar: false,
-            showFooter:true,
+            showFooter: true,
         });
     }
     return res.render("user/home", {
@@ -22,7 +22,7 @@ export const loadHome = async (req, res) => {
         error: null,
         showNavbar: true,
         showSidebar: false,
-        
+
     });
 
 }
@@ -38,7 +38,7 @@ export const loadRegister = (req, res) => {
         title: "Create Account", error: null, showOtpModal: false,
         showNavbar: false,
         showSidebar: false,
-        showFooter:false
+        showFooter: false
     })
 }
 
@@ -86,6 +86,13 @@ export const signup = async (req, res) => {
         };
 
         const tempUser = await signupService(cleanData);
+        if (tempUser?.linked) {
+            req.session.user = user._id;
+            return res.status(200).json({
+                success: true,
+                message: "Account linked successfully"
+            });
+        }
 
         req.session.tempUser = tempUser;
 
@@ -112,6 +119,12 @@ export const verifyOtp = async (req, res) => {
         const OTP = otp1 + otp2 + otp3 + otp4;
         console.log(OTP)
         const tempUser = req.session.tempUser;
+        if (OTP == '' || null) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter the OTP."
+            });
+        }
 
 
         if (!tempUser) {
@@ -209,7 +222,8 @@ export const loadLogin = async (req, res) => {
         res.render("auth/login", {
             title: "Login", error: null,
             showNavbar: false,
-            showSidebar: false
+            showSidebar: false,
+            showFooter: false
         })
 
     } catch (err) {
@@ -232,7 +246,8 @@ export const login = async (req, res) => {
                 title: "Login",
                 error: "User Not Found",
                 showNavbar: false,
-                showSidebar: false
+                showSidebar: false,
+                showFooter: false
             })
         }
         if (user.isBlocked) {
@@ -240,9 +255,20 @@ export const login = async (req, res) => {
                 title: "Login",
                 error: "Your account Is Blocked",
                 showNavbar: false,
-                showSidebar: false
+                showSidebar: false,
+                showFooter: false
             })
         }
+        if (!user.password) {
+            return res.render("auth/login", {
+                title: "Login",
+                error: "This account was created using Google. Please login with Google.",
+                showNavbar: false,
+                showSidebar: false,
+                showFooter: false
+            });
+        }
+     
         const isMatch = await comparePassword(password, user.password)
 
         if (!isMatch) {
@@ -250,7 +276,8 @@ export const login = async (req, res) => {
                 title: "Login",
                 error: "Invalid password",
                 showNavbar: false,
-                showSidebar: false
+                showSidebar: false,
+                showFooter: false
             });
         }
 
@@ -265,7 +292,8 @@ export const login = async (req, res) => {
             title: "Login",
             error: "Something went wrong",
             showNavbar: false,
-            showSidebar: false
+            showSidebar: false,
+            showFooter: false
         });
     }
 }
@@ -278,7 +306,7 @@ export const loadForgotPassword = async (req, res) => {
             showOtpModal: false,
             showNavbar: false,
             showSidebar: false,
-            showFooter:false
+            showFooter: false
         })
     } catch (error) {
         console.error(error)
@@ -288,61 +316,61 @@ export const loadForgotPassword = async (req, res) => {
 // SEND OTP
 
 export const sendForgotOtp = async (req, res) => {
-  try {
-    const { email } = req.body;
+    try {
+        const { email } = req.body;
 
-    const user = await User.findOne({ email });
+        const user = await User.findOne({ email });
 
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        req.session.resetEmail = email;
+
+        await sendOtpService(email);
+
+
+        return res.json({ requireOtp: true });
+
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ message: err.message || "Server error" });
     }
-
-    req.session.resetEmail = email;
-    
-    await sendOtpService(email);
-
-
-    return res.json({ requireOtp: true });
-
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ message:err.message|| "Server error" });
-  }
 };
 
 // verify forgot otp
 export const verifyForgotOtp = async (req, res) => {
-  try {
-    const { otp1, otp2, otp3, otp4 } = req.body;
-    const enteredOtp = otp1 + otp2 + otp3 + otp4;
+    try {
+        const { otp1, otp2, otp3, otp4 } = req.body;
+        const enteredOtp = otp1 + otp2 + otp3 + otp4;
 
-    const email = req.session.resetEmail;
+        const email = req.session.resetEmail;
 
-    const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
+        const otpDoc = await Otp.findOne({ email }).sort({ createdAt: -1 });
 
 
-    if (!otpDoc) {
-      return res.status(400).json({ message: "OTP expired" });
+        if (!otpDoc) {
+            return res.status(400).json({ message: "OTP expired" });
+        }
+
+        const isMatch = await bcrypt.compare(enteredOtp, otpDoc.otp);
+
+
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+
+        req.session.otpVerified = true;
+        console.log("OTP verified")
+
+        return res.json({ success: true });
+
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Server error" });
     }
-
-    const isMatch = await bcrypt.compare(enteredOtp, otpDoc.otp);
-
-
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid OTP" });
-    }
-
-
-    req.session.otpVerified = true;
-    console.log("OTP verified")
-
-    return res.json({ success: true });
-    
-
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Server error" });
-  }
 };
 export const loadResetPassword = (req, res) => {
     if (!req.session.otpVerified) {
@@ -351,7 +379,8 @@ export const loadResetPassword = (req, res) => {
 
     return res.render("auth/resetPassword", {
         title: "Reset Password",
-        error: null
+        error: null,
+        showFooter:false
     });
 };
 
@@ -359,23 +388,27 @@ export const loadResetPassword = (req, res) => {
 export const resetPassword = async (req, res) => {
     try {
         const { password, confirmPassword } = req.body;
-        if(password.length!=6){
+        console.log("pass",password)
+        if (password.length < 6) {
             return res.render("auth/resetPassword", {
                 title: "Reset Password",
-                error: "Password must contain altealst 6 characters"
+                error: "Password must contain altealst 6 characters",
+                showFooter: false
             });
-        }    
+        }
         if (!password || !confirmPassword) {
             return res.render("auth/resetPassword", {
                 title: "Reset Password",
-                error: "All fields are required"
+                error: "All fields are required",
+                showFooter: false
             });
         }
 
         if (password !== confirmPassword) {
             return res.render("auth/resetPassword", {
                 title: "Reset Password",
-                error: "Passwords do not match"
+                error: "Passwords do not match",
+                showFooter: false
             });
         }
 
@@ -413,3 +446,10 @@ export const logout = (req, res) => {
     return res.redirect("/")
 
 }
+
+
+
+
+
+
+

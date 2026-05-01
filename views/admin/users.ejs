@@ -148,11 +148,7 @@
                 </div>
 
                 <!-- Table Section -->
-<<<<<<< HEAD
-                <div class="bg-white rounded-[20px] shadow-sm border border-gray-50 overflow-hidden">
-=======
                 <div class="bg-white rounded-[20px] shadow-sm border border-gray-50 ">
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
                     <!-- Controls -->
                     <div class="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div class="relative w-full md:w-[500px] gap-2 md:flex">
@@ -167,16 +163,6 @@
                             </button>
                         </div>
                         <div class="flex items-center gap-3">
-<<<<<<< HEAD
-                            <button
-                                class="flex items-center gap-2 px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                                <i data-lucide="list-filter" class="w-4 h-4"></i> Filter
-                            </button>
-                            <button
-                                class="bg-brand text-white flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity shadow-sm">
-                                <i data-lucide="plus" class="w-4 h-4"></i> Add User
-                            </button>
-=======
 
                             <div class="relative z-50" id="filterWrapper">
 
@@ -210,7 +196,6 @@
 
                             </div>
 
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
                         </div>
                     </div>
 
@@ -305,20 +290,10 @@
                             Showing <%= pagination.currentRange %> of <%= pagination.totalResults %> results
                         </p>
 
-<<<<<<< HEAD
-                        <div class="flex items-center gap-1">
-
-                            <!-- Prev -->
-                            <a href="?page=<%= pagination.currentPage - 1 %>"
-                                class="p-2 text-gray-400 hover:text-gray-600 <%= pagination.currentPage === 1 ? 'pointer-events-none opacity-50' : '' %>">
-                                <i data-lucide="chevron-left" class="w-5 h-5"></i>
-                            </a>
-=======
                         <div id="pagination" class="flex items-center gap-1">
 
                             <!-- Prev -->
 
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
 
                             <!-- Page Numbers -->
                             <% for (let i=1; i <=pagination.totalPages; i++) { %>
@@ -347,11 +322,6 @@
                     </div>
 
                     <!--  -->
-<<<<<<< HEAD
-                    
-=======
-
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
                 </div>
             </div>
         </main>
@@ -372,25 +342,17 @@
             const input = document.getElementById("searchInput");
             const tableBody = document.getElementById("userTableBody");
 
-<<<<<<< HEAD
-=======
             let currentFilter = "latest";
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
             let currentPage = 1;
             let currentSearch = "";
 
             async function loadUsers(page = 1, search = "") {
-<<<<<<< HEAD
-                const res = await fetch(`/admin/users/search?search=${search}&page=${page}`);
-                const data = await res.json();
-=======
 
                 currentPage = page
                 const res = await fetch(`/admin/users/search?search=${currentSearch}&page=${currentPage}&filter=${currentFilter}`);
                 const data = await res.json();
                 document.querySelector(".text-sm.text-gray-400").innerText =
                     `Showing ${data.currentRange} of ${data.totalUsers} results`;
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
                 console.log(data)
                 tableBody.innerHTML = "";
 
@@ -400,7 +362,9 @@
   <td class="px-6 py-4">
     <div class="flex items-center gap-4">
       <div class="w-10 h-10 rounded-full bg-gray-100 overflow-hidden flex-shrink-0">
-        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random" alt="${user.name}">
+       <img src="${user.profileImage ? user.profileImage : `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random`}" 
+     alt="${user.name}" 
+     class="w-full h-full object-cover">
       </div>
       <div>
         <p class="text-sm font-semibold text-gray-900 leading-tight">
@@ -457,41 +421,6 @@
                 const container = document.getElementById("pagination");
                 container.innerHTML = "";
 
-<<<<<<< HEAD
-                // PREV
-                container.innerHTML += `
-    <button onclick="loadUsers(${currentPage - 1}, '${currentSearch}')"
-      ${currentPage === 1 ? "disabled" : ""}
-      class="p-2 text-gray-400 hover:text-gray-600">
-      <i data-lucide="chevron-left" class="w-5 h-5"></i>
-    </button>
-  `;
-
-                // PAGE NUMBERS (LIMITED LIKE YOUR UI)
-                const pagesToShow = [1, 2, 3];
-
-                pagesToShow.forEach(i => {
-                    if (i <= totalPages) {
-                        container.innerHTML += `
-        <button onclick="loadUsers(${i}, '${currentSearch}')"
-          class="w-8 h-8 rounded-lg text-sm font-semibold flex items-center justify-center ${i === currentPage
-                                ? "bg-brand text-white shadow-sm"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }">
-          ${i}
-        </button>
-      `;
-                    }
-                });
-
-
-                if (totalPages > 3) {
-                    container.innerHTML += `<span class="px-1 text-gray-400">...</span>`;
-
-                    container.innerHTML += `
-      <button onclick="loadUsers(${totalPages}, '${currentSearch}')"
-        class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center">
-=======
                 const maxVisible = 5;
 
                 let start = Math.max(1, currentPage - 2);
@@ -535,24 +464,11 @@
 
                     container.innerHTML += `
       <button onclick="loadUsers(${totalPages})" class="px-3 py-1">
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
         ${totalPages}
       </button>
     `;
                 }
 
-<<<<<<< HEAD
-
-                container.innerHTML += `
-    <button onclick="loadUsers(${currentPage + 1}, '${currentSearch}')"
-      ${currentPage === totalPages ? "disabled" : ""}
-      class="p-2 text-gray-400 hover:text-gray-600">
-      <i data-lucide="chevron-right" class="w-5 h-5"></i>
-    </button>
-  `;
-
-
-=======
                 // NEXT
                 container.innerHTML += `
     <button onclick="loadUsers(${currentPage + 1})"
@@ -561,7 +477,6 @@
       ›
     </button>
   `;
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
             }
             let selectedUserId = null;
             let selectedAction = null;
@@ -620,8 +535,6 @@
                 activeEl.innerText = active;
                 blockedEl.innerText = blockedCount;
             }
-<<<<<<< HEAD
-=======
             function toggleFilterMenu() {
                 document.getElementById("filterMenu").classList.toggle("hidden");
             }
@@ -678,7 +591,6 @@
 
                 loadUsers(currentPage, currentSearch);
             }
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
         </script>
 </body>
 

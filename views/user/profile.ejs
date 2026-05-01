@@ -173,8 +173,8 @@
                             <span class="text-gray-500 font-semibold">EDIT PROFILE</span>
                         </nav>
                         <div class="pl-10">
-                            <h1 class="text-4xl font-bold text-[#1A1A1A] mb-2 tracking-tight">Edit Profile</h1>
-                            <p class="text-gray-500 text-[15px]">Manage your profile and security.</p>
+                            <h1 class="text-4xl font-bold text-[#1A1A1A] mb-2 tracking-tight">EDIT PROFILE</h1>
+                            <p class="text-gray-500 text-[15px]">Manage your profile and password security.</p>
                         </div>
                         <!-- Breadcrumbs (Mobile only, hidden desktop for cleaner app look) -->
                         <div class="md:hidden flex items-center gap-2 text-xs text-gray-400 mb-4">
@@ -448,12 +448,12 @@
                 saveBtn.disabled = true;
                 saveBtn.classList.add("opacity-50", "cursor-not-allowed");
 
-                cancelBtn.classList.remove("hidden"); // 🔥 show cancel
+                cancelBtn.classList.remove("hidden"); 
                 editBtn.style.display = "none";
             });
             cancelBtn.addEventListener("click", () => {
 
-                // 🔥 restore old values
+               
                 inputs.forEach(input => {
                     input.value = initialData[input.name];
                     input.disabled = true;
@@ -464,8 +464,8 @@
                 saveBtn.innerText = "Save Changes";
                 saveBtn.classList.add("opacity-50", "cursor-not-allowed");
 
-                cancelBtn.classList.add("hidden"); // 🔥 hide again
-                editBtn.style.display = "block";   // 🔥 show edit
+                cancelBtn.classList.add("hidden"); // 
+                editBtn.style.display = "block";   // 
             });
 
             document.addEventListener('DOMContentLoaded', () => {
@@ -569,7 +569,7 @@
                         viewMode: 1,
                         dragMode: 'move',
 
-                        autoCropArea: 0.8, // 🔥 ensures crop box visible
+                        autoCropArea: 0.8, 
 
                         responsive: true,
                         restore: false
@@ -646,56 +646,71 @@
             });
 
             document.querySelector("form[action='/profile']").addEventListener("submit", async (e) => {
-                e.preventDefault();
-                showToast("Sending OTP", "success");
-                const formData = new FormData(e.target);
-                const body = Object.fromEntries(formData.entries());
+    e.preventDefault();
 
-                try {
-                    const res = await fetch("/profile", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(body)
-                    });
+    const modal = document.getElementById("otpModal");
 
-                    const data = await res.json();
+    
+    modal.classList.remove("hidden");
+                startTimer()
+    showToast("Sending OTP", "success");
 
-                    if (!res.ok) {
-                        return showToast(data.message, "error");
-                    }
+    const formData = new FormData(e.target);
+    const body = Object.fromEntries(formData.entries());
 
+    try {
+        const res = await fetch("/profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
 
-                    if (data.requireOtp) {
+        const data = await res.json();
 
-                        const modal = document.getElementById("otpModal");
-                        modal.classList.remove("hidden");
+     
+        if (!res.ok) {
+            modal.classList.add("hidden"); 
+            return showToast(data.message, "error");
+        }
 
-                        const form = modal.querySelector("form");
+     
+        if (data.requireOtp) {
+            showToast(`OTP has been send  `,"success")
+            const form = modal.querySelector("form");
 
-                        currentOtpFlow = "emailChange";
-                        form.action = "/profile/verifyEmailChange";
+            currentOtpFlow = "emailChange";
+            form.action = "/profile/verifyEmailChange";
+            if (data.reused) {
+  showToast("OTP already sent. Please check your email.", "success");
+}
+            
+            return;
+        }
 
-                        return;
-                    }
+        // ✅ normal profile update (NO OTP)
+        modal.classList.add("hidden"); // 🔥 close modal if not needed
 
-                    showToast("Profile updated successfully", "success");
-                    saveBtn.disabled = true;
+        showToast("Profile updated successfully", "success");
 
-                    inputs.forEach(input => input.disabled = true);
+        saveBtn.disabled = true;
 
-                    inputs.forEach(input => {
-                        initialData[input.name] = input.value;
-                    });
+        inputs.forEach(input => input.disabled = true);
 
-                    cancelBtn.classList.add("hidden");
-                    editBtn.style.display = "block";
+        inputs.forEach(input => {
+            initialData[input.name] = input.value;
+        });
 
-                } catch (err) {
-                    saveBtn.disabled = false;
-                    saveBtn.innerText = "Save Changes";
-                    showToast("Something went wrong", "error");
-                }
-            });
+        cancelBtn.classList.add("hidden");
+        editBtn.style.display = "block";
+
+    } catch (err) {
+        // ❌ network / unexpected error
+        modal.classList.add("hidden"); // 🔥 close modal
+        saveBtn.disabled = false;
+        saveBtn.innerText = "Save Changes";
+        showToast("Something went wrong", "error");
+    }
+});
             document.getElementById("passwordForm").addEventListener("submit", async (e) => {
                 e.preventDefault();
 
@@ -738,6 +753,33 @@
 
                 setTimeout(() => toast.remove(), 3000);
             }
+            function startTimer() {
+    if (!timerEl || !resendBtn) return;
+
+    clearInterval(interval);
+    time = 120;
+
+    resendBtn.disabled = true;
+    resendBtn.classList.add("text-gray-400", "cursor-not-allowed");
+    resendBtn.classList.remove("text-[#6b7f6a]");
+
+    interval = setInterval(() => {
+      time--;
+
+      let minutes = Math.floor(time / 60);
+      let seconds = time % 60;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      timerEl.innerText = `${minutes}:${seconds}`;
+
+      if (time <= 0) {
+        clearInterval(interval);
+        resendBtn.disabled = false;
+        resendBtn.classList.remove("text-gray-400", "cursor-not-allowed");
+        resendBtn.classList.add("text-[#6b7f6a]");
+      }
+    }, 1000);
+  }
         </script>
 </body>
 

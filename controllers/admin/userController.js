@@ -27,7 +27,7 @@ export const loadUsers = async (req, res) => {
       phone: user.phone || "N/A",
       joinDate: new Date(user.createdAt).toDateString(),
       status: user.isBlocked ? "Blocked" : "Active",
-      avatar: user.avatar || ""
+      profileImage: user.profileImage || "" 
     }));
 
 
@@ -106,11 +106,12 @@ export const searchUsers = async (req, res) => {
     res.json({
       users: users.map(user => ({
         _id: user._id,
-        name: user.firstName,
+        name: user.firstName + " " + user.lastName,
         email: user.email,
         phone: user.phone || "N/A",
         joinDate: new Date(user.createdAt).toDateString(),
-        status: user.isBlocked ? "Blocked" : "Active"
+        status: user.isBlocked ? "Blocked" : "Active",
+        profileImage: user.profileImage || "" 
       })),
       totalUsers,
       totalPages: Math.ceil(totalUsers / limit),

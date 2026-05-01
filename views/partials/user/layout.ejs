@@ -2,27 +2,6 @@
 <html>
 <head>
   <title><%= typeof title !== "undefined" ? title : "Velvet Vogue" %></title>
-<<<<<<< HEAD
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class=" overflow-hidden">
-  
- 
- <% if (typeof showNavbar !== "undefined" && showNavbar) { %>
-    <%- include("navbar") %>
-<% } %>
-  <main class="flex  h-[calc(100vh-100px)] overflow-hidden  pb -10">
-      <% if (typeof showSidebar !== "undefined" && showSidebar) { %>
-    <%- include("sidebar") %>
-<% } %>
-   
-
-    <div class=" pb-10">
-      <%- body %>
-    </div>
-
-  </main>
-=======
   <script src="https://cdn.tailwindcss.com">
     
   </script>
@@ -65,7 +44,6 @@
   <% if (typeof showFooter === "undefined" || showFooter) { %>
     <%- include("footer") %>
   <% } %>
->>>>>>> b92553a0e4070f87e2b383edee62ac0158c0f03b
 
 </body>
 </html>

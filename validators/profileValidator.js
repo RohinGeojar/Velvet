@@ -1,9 +1,13 @@
 import Joi from "joi";
 
 export const profileUpdateSchema = Joi.object({
-  firstName: Joi.string().min(3).max(30).required(),
+  firstName: Joi.string().pattern(/^[A-Za-z]+$/).min(3).max(30).required().messages({
+    "string.pattern.base": "First name must contain only letters"
+  }),
 
-  lastName: Joi.string().min(1).max(30).required(),
+  lastName: Joi.string().pattern(/^[A-Za-z ]+$/).min(1).max(30).required().messages({
+    "string.pattern.base": "Last name must contain only letters"
+  }),
 
   email: Joi.string().email().required(),
 

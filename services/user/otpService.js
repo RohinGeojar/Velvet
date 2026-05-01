@@ -25,7 +25,9 @@ export const sendOtpService = async (email) => {
     const existingOtp = await Otp.findOne({ email });
 
     if (existingOtp && existingOtp.expiresAt > new Date()) {
-        throw new Error("Please wait before requesting a new OTP");
+       return {
+    reused: true
+  };
     }
 
     const otp = generateOTP();

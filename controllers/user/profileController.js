@@ -11,6 +11,7 @@ import { sendOtpService } from "../../services/user/otpService.js"
 import Otp from "../../models/otp.js";
 import bcrypt from "bcryptjs";
 import Address from "../../models/address.js";
+import { capitalizeName } from "../../utils/capitalizer.js";
 
 export const loadOverview = async (req, res) => {
     try {
@@ -70,29 +71,37 @@ export const loadProfile = async (req, res) => {
 // ================= UPDATE PROFILE =================
 export const updateProfile = async (req, res) => {
     try {
+        let   { firstName, lastName } = req.body
+
+        firstName= capitalizeName(firstName)
+        lastName= capitalizeName(lastName)
+
+        const data = {firstName , lastName ,...req.body}
+
         const user = await User.findById(req.session.user);
 
-        // 🔥 EMAIL CHANGED
+       
         if (req.body.email && req.body.email !== user.email) {
 
             user.tempEmail = req.body.email;
             await user.save();
 
 
-            await sendOtpService(user.tempEmail);
+          const otpResult=  await sendOtpService(user.tempEmail);
 
             return res.json({
-                requireOtp: true
+                requireOtp: true,
+                reused: otpResult?.reused || false
             });
         }
 
-        // ✅ normal update
-        await updateUserProfile(user._id, req.body);
+        
+        await updateUserProfile(user._id,body);
 
         res.json({ message: "Profile updated" });
 
     } catch (err) {
-        console.log("🔥 FULL ERROR:", err);  // 👈 ADD THIS
+        console.log("FULL ERROR:", err); 
         res.status(400).json({ message: err.message });
     }
 };
@@ -121,7 +130,7 @@ export const uploadProfilePhoto = async (req, res) => {
             return res.status(400).json({ message: "No file uploaded" });
         }
 
-        // 🔥 Strict file validation
+    
         const type = await fileTypeFromBuffer(req.file.buffer);
 
         if (!type || !type.mime.startsWith("image/")) {
