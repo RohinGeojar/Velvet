@@ -223,10 +223,10 @@
                                             <div class="flex items-center gap-4">
                                                 <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
 
-                                                    <% if (user && user.profileImage) { %>
+                                                    <% if (user && user.profileImage.url) { %>
 
                                                         <!-- Profile Image -->
-                                                        <img src="<%= user.profileImage %>" alt="Profile"
+                                                        <img src="<%= user.profileImage.url %>" alt="Profile"
                                                             class="w-full h-full object-cover">
 
                                                         <% } else { %>
@@ -324,6 +324,7 @@
                     <!--  -->
                 </div>
             </div>
+            
         </main>
         <div id="confirmModal" class="fixed inset-0 bg-black/40 hidden z-50 flex items-center justify-center">
             <div class="bg-white rounded-xl p-6 w-[350px] shadow-lg">

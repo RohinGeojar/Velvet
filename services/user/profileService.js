@@ -1,9 +1,16 @@
+import { MessagePort } from "worker_threads";
 import User from "../../models/user.js";
+import { AppError } from "../../utils/AppError.js";
 import { comparePassword, hashPassword } from "../../utils/hash.js";
 import bcrypt from "bcryptjs";
+import { MESSAGES } from "../../utils/messages.js";
+import { STATUS } from "../../utils/statusCodes.js";
 
 export const getUserProfile = async (userId) => {
     return await User.findById(userId)
+    if (!user) {
+        throw new AppError(MESSAGES.USER_NOT_FOUND, STATUS.NOT_FOUND);
+    }
 }
 
 export const updateUserProfile = async (userId, data) => {
@@ -12,7 +19,7 @@ export const updateUserProfile = async (userId, data) => {
     const existing = await User.findOne({ email });
 
     if (existing && existing._id.toString() !== userId.toString()) {
-        throw new Error("Email already in use");
+        throw new AppError(MESSAGES.EMAIL_IN_USE,STATUS.BAD_REQUEST);
     }
 
     const updatedUser = await User.findByIdAndUpdate(
@@ -20,7 +27,7 @@ export const updateUserProfile = async (userId, data) => {
         { firstName, lastName, email, phone },
         { new: true }
     );
-    console.log("user updated")
+    
 
     return updatedUser;
 }
@@ -31,25 +38,25 @@ export const changePasswordService = async (userId, data) => {
     const { currentPassword, newPassword, confirmPassword } = data;
 
     if (newPassword !== confirmPassword) {
-        throw new Error("Passwords do not match");
+        throw new AppError(MESSAGES.PASSWORDS_NOT_MATCH,STATUS.BAD_REQUEST)
     }
 
     const user = await User.findById(userId);
 
     if (!user) {
-        throw new Error("User not found");
+        throw new AppError(MESSAGES.USER_NOT_FOUND, STATUS.NOT_FOUND);
     }
 
     const isMatch = await comparePassword(currentPassword, user.password);
 
     if (!isMatch) {
-        throw new Error("Current password is incorrect");
+        throw new AppError(MESSAGES.CURRENT_PASSWORD_INCORRECT,STATUS.BAD_REQUEST);
     }
 
    const isSame = await comparePassword(newPassword, user.password);
 
     if (isSame) {
-        throw new Error("New password cannot be same as old password");
+        throw new AppError(MESSAGES.PASSWORD_SAME_AS_OLD,STATUS.BAD_REQUEST);
     }
 
     const hashedPassword = await hashPassword(newPassword, 10);

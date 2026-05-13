@@ -15,6 +15,7 @@ import adminUserRoutes from "./routes/admin/userRoutes.js";
 import adminAuth from "./routes/admin/adminAuth.js"
 import { setAdmin } from "./middleware/admin/authMiddilware.js";
 import passport from "./config/passport.js";
+import categoryRoutes from "./routes/admin/categoryRoutes.js"
 
 dotenv.config();
 
@@ -74,6 +75,7 @@ app.use("/profile", profileRoutes);
 app.use("/address",addressRoutes)
 app.use("/admin", adminUserRoutes);
 app.use("/adminAuth",adminAuth)
+app.use("/admin/category",categoryRoutes)
 
 
 app.listen(3000, () => {

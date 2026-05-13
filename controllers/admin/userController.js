@@ -13,7 +13,7 @@ export const loadUsers = async (req, res) => {
       totalPages,
       currentPage
     } = await userService.getUsersWithPagination(page, limit);
-
+    
     const admin = await userService.getAdminById(req.session.admin);
     const name = admin.firstName + " " + admin.lastName
     const stats = await userService.getUserStats();

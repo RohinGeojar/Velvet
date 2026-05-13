@@ -1,4 +1,4 @@
- import Joi from "joi";
+ import Joi from "joi"
 
  export const signupSchema = Joi.object({
     firstName: Joi.string().min(3).required(),

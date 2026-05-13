@@ -197,7 +197,7 @@
                                 <!-- Photo Update Column -->
 
                                 <div class="flex flex-col items-center space-y-6 w-full lg:w-1/3">
-                                    <img id="profilePreview" src="<%= user?.profileImage || 'images/default.png' %>"
+                                    <img id="profilePreview" src="<%= user?.profileImage?.url || 'images/default.png' %>"
                                         class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover shadow-inner">
                                     <form action="/profile/uploadPhoto" method="POST" enctype="multipart/form-data">
 

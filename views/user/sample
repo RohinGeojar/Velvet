@@ -570,3 +570,289 @@
 </body>
 
 </html>
+
+    <script>
+
+            async function toggleCategory(id, makeActive) {
+
+                const url = makeActive
+                    ? `/admin/category/unblock/${id}`
+                    : `/admin/category/block/${id}`
+
+                const res = await fetch(url, {
+                    method: "PATCH"
+                })
+
+                const data = await res.json()
+
+                if (data.success) {
+
+                    // STATUS
+                    const statusEl = document.getElementById(`status-${id}`)
+
+                    if (makeActive) {
+                        statusEl.innerText = "Active"
+                        statusEl.classList.remove("status-inactive")
+                        statusEl.classList.add("status-active")
+                    } else {
+                        statusEl.innerText = "Inactive"
+                        statusEl.classList.remove("status-active")
+                        statusEl.classList.add("status-inactive")
+                    }
+
+                    // ACTION BUTTON
+                    const actionEl = document.getElementById(`action-${id}`)
+
+                    actionEl.innerHTML = `
+      <a href="/admin/category/edit/${id}">
+        <i data-lucide="edit-3" class="w-4 h-4"></i>
+      </a>
+
+      ${makeActive
+                            ?
+                            `<button 
+          onclick="toggleCategory('${id}', false)"
+          class="text-orange-500"
+        >
+          <i data-lucide="ban" class="w-4 h-4"></i>
+        </button>`
+                            :
+                            `<button 
+          onclick="toggleCategory('${id}', true)"
+          class="text-green-500"
+        >
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+        </button>`
+                        }
+    `
+
+                    lucide.createIcons()
+                }
+            }
+            let currentPage = 1
+
+            const searchInput = document.getElementById("searchInput")
+            const filterSelect = document.getElementById("filterSelect")
+            const tableBody = document.getElementById("categoryTableBody")
+            const paginationContainer = document.getElementById("paginationContainer")
+            const clearBtn = document.getElementById("clearSearch")
+
+            // DEBOUNCE
+            function debounce(func, delay) {
+
+                let timeout
+
+                return (...args) => {
+
+                    clearTimeout(timeout)
+
+                    timeout = setTimeout(() => {
+                        func(...args)
+                    }, delay)
+                }
+            }
+
+            // FETCH CATEGORY
+            async function fetchCategories(page = 1) {
+
+                currentPage = page
+
+                const search = searchInput.value
+                const filter = filterSelect.value
+
+                const res = await fetch(
+                    `/admin/category/search?search=${search}&filter=${filter}&page=${page}`
+                )
+
+                const data = await res.json()
+
+                renderTable(data.categories)
+
+                renderPagination(data.totalPages,
+                    data.currentPage,
+                    data.totalResults)
+            }
+
+            // RENDER TABLE
+           function renderTable(categories) {
+
+    tableBody.innerHTML = categories.map(cat => `
+
+        <tr class="hover:bg-stone-50/50 transition-colors">
+
+            <td class="px-6 py-4">
+                <div class="w-12 h-12 rounded-lg overflow-hidden border">
+                    <img
+                        src="${cat.image?.url}"
+                        class="w-full h-full object-cover"
+                    >
+                </div>
+            </td>
+
+            <td class="px-6 py-4">
+                <div class="flex flex-col">
+                    <span class="font-semibold text-sm">
+                        ${cat.name}
+                    </span>
+
+                    <span class="text-xs text-stone-400">
+                        Slug: ${cat.slug}
+                    </span>
+                </div>
+            </td>
+
+            <td class="px-6 py-4">
+                <p class="text-sm text-stone-500 truncate">
+                    ${cat.description}
+                </p>
+            </td>
+
+            <td class="px-6 py-4 text-center">
+                <span class="text-sm font-semibold">
+                    ${cat.productCount || 0}
+                </span>
+            </td>
+
+            <td class="px-6 py-4">
+                <span class="status-pill ${cat.isActive ? "status-active" : "status-inactive"}">
+                    ${cat.isActive ? "Active" : "Inactive"}
+                </span>
+            </td>
+
+            <td class="px-6 py-4 text-right">
+
+                <div   id="action-${cat._id}" class="flex justify-end gap-2">
+
+                    <a href="/admin/category/edit/${cat._id}">
+                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+                    </a>
+
+                    ${cat.isActive
+
+                        ? `
+
+                            <button
+                                type="button"
+                                onclick="toggleCategory('${cat._id}', false)"
+                                class="text-orange-500 p-1"
+                            >
+                                <i
+                                    data-lucide="ban"
+                                    class="w-4 h-4 pointer-events-none"
+                                ></i>
+                            </button>
+
+                        `
+
+                        : `
+
+                            <button
+                                type="button"
+                                onclick="toggleCategory('${cat._id}', true)"
+                                class="text-green-500 p-1"
+                            >
+                                <i
+                                    data-lucide="rotate-ccw"
+                                    class="w-4 h-4 pointer-events-none"
+                                ></i>
+                            </button>
+
+                        `
+                    }
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    `).join("");
+
+    lucide.createIcons();
+}
+
+            // PAGINATION
+          function renderPagination(totalPages, currentPage, totalResults) {
+
+    // SHOWING TEXT
+    const limit = 5;
+
+    const start = ((currentPage - 1) * limit) + 1;
+
+    let end = currentPage * limit;
+
+    if (end > totalResults) {
+        end = totalResults;
+    }
+
+    document.getElementById("paginationInfo").innerText =
+        `Showing ${start} - ${end} of ${totalResults} results`;
+
+    // BUTTONS
+    let buttons = "";
+
+    // PAGE NUMBERS
+    for (let i = 1; i <= totalPages; i++) {
+
+        buttons += currentPage === i
+
+            ? `
+                <button
+                    onclick="fetchCategories(${i})"
+                    class="w-8 h-8 rounded-lg bg-[#936639] text-white text-sm font-semibold flex items-center justify-center shadow-sm"
+                >
+                    ${i}
+                </button>
+            `
+
+            : `
+                <button
+                    onclick="fetchCategories(${i})"
+                    class="w-8 h-8 rounded-lg text-gray-600 text-sm font-semibold hover:bg-gray-100 flex items-center justify-center"
+                >
+                    ${i}
+                </button>
+            `;
+    }
+
+    // NEXT BUTTON
+    buttons += `
+        <button
+            onclick="fetchCategories(${currentPage + 1})"
+            class="p-2 text-gray-400 hover:text-gray-600 ${currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}"
+        >
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+        </button>
+    `;
+
+    paginationContainer.innerHTML = buttons;
+
+    lucide.createIcons();
+}
+            window.addEventListener("DOMContentLoaded", () => {
+
+                fetchCategories(1)
+
+                lucide.createIcons()
+            })
+            const debouncedSearch = debounce(() => {
+    fetchCategories(1)
+}, 500)
+
+searchInput.addEventListener("input", debouncedSearch)
+
+// FILTER
+filterSelect.addEventListener("change", () => {
+    fetchCategories(1)
+})
+
+// CLEAR
+clearBtn.addEventListener("click", () => {
+
+    searchInput.value = ""
+
+    filterSelect.value = "All"
+
+    fetchCategories(1)
+})
+        </script>

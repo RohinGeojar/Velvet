@@ -368,3 +368,81 @@ function togglePassword(id, el) {
 </nav>
 </div>
 </header>
+
+
+
+
+<script>
+lucide.createIcons();
+
+ // Simulating EJS local data
+        const categories = [
+            { id: 'CAT-001', name: 'Premium Silk', desc: 'Handwoven luxury silk collections from...', products: 142, status: 'Active', img: 'https://images.unsplash.com/photo-1591084728795-1149f32d9866?w=100&h=100&fit=crop' },
+            { id: 'CAT-002', name: 'Velvet Footwear', desc: 'Heels, flats and formal evening shoes', products: 86, status: 'Active', img: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=100&h=100&fit=crop' },
+            { id: 'CAT-003', name: 'Winter Coats', desc: 'Seasonal wool and cashmere winter es...', products: 45, status: 'Inactive', img: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=100&h=100&fit=crop' },
+            { id: 'CAT-004', name: 'Designer Totes', desc: 'Everyday luxury leather bags and totes', products: 218, status: 'Active', img: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=100&h=100&fit=crop' },
+            { id: 'CAT-005', name: 'Linen Collection', desc: 'Breathable organic linen summer wear', products: 94, status: 'Active', img: 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=100&h=100&fit=crop' }
+        ];
+
+        function populateTable() {
+            const tableBody = document.getElementById('categoryTableBody');
+            tableBody.innerHTML = categories.map(cat => `
+                <tr class="hover:bg-stone-50/50 transition-colors">
+                    <td class="px-6 py-4">
+                        <div class="w-12 h-12 rounded-lg bg-stone-100 overflow-hidden border border-stone-100">
+                            <img src="${cat.img}" alt="${cat.name}" class="w-full h-full object-cover">
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-col">
+                            <span class="font-semibold text-stone-800 text-sm">${cat.name}</span>
+                            <span class="text-[10px] font-mono text-stone-400 uppercase tracking-tighter">ID: ${cat.id}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-sm text-stone-500 max-w-xs truncate">${cat.desc}</p>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="text-sm font-semibold text-stone-700">${cat.products}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="status-pill ${cat.status === 'Active' ? 'status-active' : 'status-inactive'} flex items-center gap-1 w-fit">
+                            <span class="w-1.5 h-1.5 rounded-full ${cat.status === 'Active' ? 'bg-green-500' : 'bg-slate-400'}"></span>
+                            ${cat.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <button class="p-1.5 text-stone-400 hover:text-gold hover:bg-gold/5 rounded transition-colors" title="Edit">
+                                <i data-lucide="edit-3" class="w-4 h-4"></i>
+                            </button>
+                            <button class="p-1.5 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded transition-colors" title="Disable">
+                                <i data-lucide="ban" class="w-4 h-4"></i>
+                            </button>
+                            <button class="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors" title="Delete">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Re-initialize lucide icons for dynamic content
+            lucide.createIcons();
+        }
+
+        // Initialize icons and table on load
+        window.onload = () => {
+            lucide.createIcons();
+            populateTable();
+        };
+        </script>
+
+        <form method="POST" action="/admin/category/delete/<%= cat._id %>">
+            <button type="submit">
+              <i data-lucide="trash-2" class="w-4 h-4 text-red-500"></i>
+            </button>
+          </form>
+
+
+          

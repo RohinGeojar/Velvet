@@ -14,3 +14,11 @@ export const capitalizeName = (name) => {
     })
     .join(" ");
 }
+export const normalizeText = (text) => {
+
+    return text
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ")
+        .replace(/(^\w)|([.!?]\s*\w)/g, char => char.toUpperCase());
+};

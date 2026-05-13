@@ -12,6 +12,8 @@ import Otp from "../../models/otp.js";
 import bcrypt from "bcryptjs";
 import Address from "../../models/address.js";
 import { capitalizeName } from "../../utils/capitalizer.js";
+import { deleteFromCloudinary } from "../../utils/cloudinaryDelete.js";
+import { uploadToCloudinary } from "../../utils/cloudinaryUpload.js";
 
 export const loadOverview = async (req, res) => {
     try {
@@ -125,66 +127,43 @@ export const changePassword = async (req, res) => {
 
 // ================= UPLOAD PROFILE PHOTO =================
 export const uploadProfilePhoto = async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ message: "No file uploaded" });
-        }
 
-    
-        const type = await fileTypeFromBuffer(req.file.buffer);
-
-        if (!type || !type.mime.startsWith("image/")) {
-            return res.status(400).json({ message: "Only image files allowed" });
-        }
-
-        const userId = req.session.user;
-
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-
-        const filename = Date.now() + "." + type.ext;
-
-
-        const uploadDir = path.join("public/uploads");
-
-        if (!fs.existsSync(uploadDir)) {
-            fs.mkdirSync(uploadDir, { recursive: true });
-        }
-
-        const filePath = path.join(uploadDir, filename);
-
-        await fs.promises.writeFile(filePath, req.file.buffer);
-
-        const newImagePath = "/uploads/" + filename;
-
-
-        if (user.profileImage && user.profileImage.startsWith("/uploads/")) {
-            const oldPath = path.join(process.cwd(), "public", user.profileImage);
-
-            if (fs.existsSync(oldPath)) {
-                fs.unlinkSync(oldPath);
-            }
-        }
-
-
-        await User.findByIdAndUpdate(userId, {
-            profileImage: newImagePath
-        });
-
-        return res.status(200).json({
-            message: "Profile image updated",
-            imagePath: newImagePath
-        });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Upload failed"
+    if (!req.file) {
+        return res.status(400).json({
+            success: false,
+            message: "No file uploaded"
         });
     }
+
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+
+
+    if (user.profileImage?.public_id) {
+        await deleteFromCloudinary(user.profileImage.public_id);
+    }
+
+
+    user.profileImage = {
+        url: req.file.path,
+        public_id: req.file.filename
+    };
+
+    await user.save();
+
+    return res.status(200).json({
+        success: true,
+        message: "Profile image updated",
+        imagePath: req.file.path
+    });
 };
 
 export const resendEmailOtp = async (req, res) => {

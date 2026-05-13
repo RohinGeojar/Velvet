@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Add Category</title>
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f9fafb;
+        }
+
+        /* Custom styling for the toggle to match brand exactly */
+        .custom-toggle {
+            width: 44px;
+            height: 24px;
+            background-color: #8B5E3C;
+            border-radius: 999px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .custom-toggle::after {
+            content: '';
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        .custom-toggle.inactive {
+            background-color: #e5e7eb;
+        }
+
+        .custom-toggle.inactive::after {
+            right: auto;
+            left: 2px;
+        }
+
+        /* Custom Select Arrow */
+        .custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.25rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <%- include("../partials/admin/adminSidebar") %>
+        <!-- Header Wrapper -->
+        <header class="flex items-center justify-between px-4 md:px-8 py-4 bg-white border-b">
+            <!-- Search Bar -->
+            <div class="relative w-full md:w-1/2 max-w-lg">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                <input type="text" placeholder="Search anything..."
+                    class="w-full bg-gray-100 rounded-full pl-12 pr-4 py-2.5 border border-transparent focus:border-blue-500 focus:bg-white outline-none transition-all text-sm">
+            </div>
+
+            <!-- User Profile -->
+            <div class="flex items-center gap-6">
+                <button class="relative text-gray-500 hover:text-gray-700 transition-colors">
+                    <i data-lucide="bell" class="w-6 h-6"></i>
+                    <span class="absolute top-0 right-0.5 w-2 h-2 bg-red-500 border-2 border-white rounded-full"></span>
+                </button>
+                <div class="flex items-center gap-3">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-bold text-gray-900 leading-none mb-1">Rohin Geojar</p>
+                        <p class="text-xs text-gray-500">Administrator</p>
+                    </div>
+                    <!-- Avatar -->
+                    <div
+                        class="w-10 h-10 rounded-full bg-[#A3D1C6] border-2 border-white shadow-sm flex items-center justify-center text-white font-bold overflow-hidden">
+                        <img src="https://ui-avatars.com/api/?name=Rohin+Geojar&background=A3D1C6&color=fff" alt="RG">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="max-w-6xl mx-auto px-4 md:px-10 pb-20 pt-8">
+
+            <!-- Breadcrumb Wrapper -->
+            <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+                <a href="/adminAuth/dashboard" class="hover:text-gray-900 transition-colors">Dashboard</a>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
+                <a href="/admin/category" class="hover:text-gray-900 transition-colors">Categories</a>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
+                <span class="font-semibold text-gray-900">Add Category</span>
+            </nav>
+
+            <div class="mb-10">
+                <h1 class="text-3xl font-bold text-gray-900">Add Category</h1>
+            </div>
+
+            <!-- Form Card Container -->
+            <form id="categoryForm" action="/admin/category/add" method="POST" enctype="multipart/form-data"
+                class="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+                <div class="p-6 md:p-10">
+                    <!-- Form Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-10">
+
+                        <!-- Left Column -->
+                        <div class="space-y-8">
+                            <!-- Category Name Input -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Category Name</label>
+                                <input type="text" name="name" placeholder="e.g. Summer Collection"
+                                    class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#8B5E3C]/10 focus:border-[#8B5E3C] outline-none transition-all placeholder:text-gray-400"
+                                    required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Category Slug</label>
+                                <input type="text" id="slugPreview" readonly
+                                    placeholder="Slug will be created automatically"
+                                    class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#8B5E3C]/10 focus:border-[#8B5E3C] outline-none transition-all placeholder:text-gray-400"
+                                    required>
+                            </div>
+
+                            <!-- Description Textarea -->
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+                                <textarea name="description"
+                                    placeholder="Briefly describe the category and its intended audience..."
+                                    class="w-full px-4 py-3.5 rounded-xl border border-gray-200 h-44 resize-none focus:ring-2 focus:ring-[#8B5E3C]/10 focus:border-[#8B5E3C] outline-none transition-all placeholder:text-gray-400"></textarea>
+                            </div>
+
+                            <!-- Parent Category Select -->
+                          
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="flex flex-col h-full">
+                            <!-- Image Upload Dropzone -->
+                            <div class="flex-grow">
+
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                    Category Image
+                                </label>
+
+                                <input type="file" name="image" id="imageInput" accept="image/*" class="hidden">
+
+                                <div id="uploadBox" onclick="document.getElementById('imageInput').click()"
+                                    class="border-2 border-dashed border-gray-200 rounded-3xl bg-[#F9FAFB] overflow-hidden h-[320px] cursor-pointer relative">
+
+                                    <!-- Preview Image -->
+                                    <img id="previewImage" class="hidden w-full h-full object-contain bg-white" />
+
+                                    <!-- Placeholder Content -->
+                                    <div id="uploadPlaceholder"
+                                        class="absolute inset-0 flex flex-col items-center justify-center text-center p-10">
+
+                                        <div class="bg-white p-5 rounded-2xl shadow-sm mb-4">
+                                            <i data-lucide="image" class="w-8 h-8 text-[#8B5E3C]"></i>
+                                        </div>
+
+                                        <button type="button"
+                                            class="bg-[#8B5E3C] text-white px-8 py-2.5 rounded-xl font-semibold mb-3">
+                                            Add Image
+                                        </button>
+
+                                        <p class="text-sm text-gray-500 font-medium">
+                                            or drag and drop here
+                                        </p>
+
+                                        <p class="text-xs text-gray-400 mt-2">
+                                            Recommended: 800×800 JPG/PNG
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="cropperModal"
+                                class="hidden fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+
+                                <div class="bg-white rounded-2xl p-6 w-full max-w-3xl">
+
+                                    <h2 class="text-2xl font-bold mb-6">
+                                        Crop Image
+                                    </h2>
+
+                                    <!-- FIXED CONTAINER -->
+                                    <div class="w-full h-[500px] bg-gray-100 rounded-xl overflow-hidden">
+
+                                        <img id="cropperImage" class="block max-w-full" />
+
+                                    </div>
+
+                                    <div class="flex justify-end gap-4 mt-6">
+
+                                        <button type="button" id="cancelCrop" class="px-6 py-2 border rounded-xl">
+                                            Cancel
+                                        </button>
+
+                                        <button type="button" id="cropImageBtn"
+                                            class="px-6 py-2 bg-[#8B5E3C] text-white rounded-xl">
+                                            Crop Image
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Status Toggle -->
+                            <div
+                                class="bg-[#F9FAFB] p-6 rounded-2xl flex justify-between items-center mt-8 border border-gray-50">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-900">Category Status</p>
+                                    <p class="text-xs text-gray-500">Toggle to set category active or inactive</p>
+                                </div>
+                                <input type="hidden" name="isActive" id="statusInput" value="true">
+                                <div onclick="toggleStatus()" id="statusToggle" class="custom-toggle"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Actions -->
+                    <div class="flex justify-end gap-4 mt-12 pt-8 border-t border-gray-100">
+
+                        <a href="/admin/category"
+                            class="px-10 py-3.5 border border-gray-200 rounded-xl font-bold text-gray-700 hover:bg-gray-50 transition-colors">Cancel</a>
+                        <button type="submit"
+                            class="px-10 py-3.5 bg-[#8B5E3C] text-white rounded-xl font-bold hover:bg-[#724d31] transition-all shadow-lg shadow-[#8B5E3C]/20">
+                            Save Category
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Page Footer -->
+            <div class="flex justify-center gap-8 mt-12 text-sm text-gray-400 font-medium">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                    Secure Connection
+                </div>
+                <div class="flex items-center gap-2">
+                    <i data-lucide="cloud" class="w-3.5 h-3.5"></i>
+                    Autosave enabled
+                </div>
+            </div>
+        </main>
+
+        <script>
+            const form = document.getElementById("categoryForm");
+
+            form.addEventListener("submit", async function (e) {
+
+                e.preventDefault();
+
+                const formData = new FormData(form);
+
+                try {
+
+                    const response = await fetch("/admin/category/add", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+
+                    if (!data.success) {
+
+                        Toastify({
+                            text: data.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            backgroundColor: "#dc2626"
+                        }).showToast();
+
+                        return;
+                    }
+
+
+                    Toastify({
+                        text: data.message,
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "#16a34a"
+                    }).showToast();
+
+
+                    setTimeout(() => {
+                        window.location.href = "/admin/category";
+                    }, 1500);
+
+                } catch (error) {
+
+                    Toastify({
+                        text: "Something went wrong",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "center",
+                        backgroundColor: "#dc2626"
+                    }).showToast();
+                }
+
+            });
+
+
+            const nameInput = document.querySelector('input[name="name"]')
+            const slugPreview = document.getElementById("slugPreview")
+
+            nameInput.addEventListener("input", function () {
+
+                const slug = this.value
+                    .toLowerCase()
+                    .trim()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, "-")
+                    .replace(/-+/g, "-")
+
+                slugPreview.value = slug
+
+            })
+            lucide.createIcons();
+
+            function toggleStatus() {
+                const toggle = document.getElementById('statusToggle');
+                const input = document.getElementById('statusInput');
+                const isInactive = toggle.classList.toggle('inactive');
+                input.value = !isInactive;
+            }
+
+            // ================= GLOBALS =================
+
+            let cropper;
+            let croppedCanvas;
+
+            const imageInput =
+                document.getElementById("imageInput");
+
+            const cropperModal =
+                document.getElementById("cropperModal");
+
+            const cropperImage =
+                document.getElementById("cropperImage");
+
+            const previewImage =
+                document.getElementById("previewImage");
+
+            const uploadPlaceholder =
+                document.getElementById("uploadPlaceholder");
+
+
+
+            // ================= SELECT IMAGE =================
+
+            imageInput.addEventListener("change", function (e) {
+
+                const file = e.target.files[0];
+
+                if (!file) return;
+
+                if (!file.type.startsWith("image/")) {
+
+                    Toastify({
+                        text: "Only image files are allowed",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "#dc2626"
+                    }).showToast();
+
+                    imageInput.value = "";
+
+                    return;
+                }
+
+                if (file.size > 2 * 1024 * 1024) {
+
+                    Toastify({
+                        text: "Image must be less than 2MB",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "#dc2626"
+                    }).showToast();
+
+                    imageInput.value = "";
+
+                    return;
+                }
+
+                const imageURL = URL.createObjectURL(file);
+
+                cropperImage.src = imageURL;
+
+                cropperModal.classList.remove("hidden");
+
+                setTimeout(() => {
+
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+
+                    cropper = new Cropper(cropperImage, {
+
+                        aspectRatio: 1,
+
+                        viewMode: 1,
+
+                        dragMode: "move",
+
+                        autoCropArea: 1,
+
+                        responsive: true,
+
+                        restore: false,
+
+                        background: false,
+
+                        movable: true,
+
+                        zoomable: true,
+
+                        scalable: true,
+
+                        cropBoxMovable: true,
+
+                        cropBoxResizable: true
+                    });
+
+                }, 100);
+
+            });
+
+            // ================= CANCEL CROP =================
+
+            document
+                .getElementById("cancelCrop")
+                .addEventListener("click", function () {
+
+                    cropperModal.classList.add("hidden");
+
+                    imageInput.value = "";
+
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                });
+
+
+
+            // ================= SAVE CROPPED IMAGE =================
+
+            document
+                .getElementById("cropImageBtn")
+                .addEventListener("click", function () {
+
+                    if (!cropper) return;
+
+
+                    croppedCanvas = cropper.getCroppedCanvas({
+
+                        width: 800,
+
+                        height: 800
+                    });
+
+
+                    // ✅ SHOW PREVIEW
+                    previewImage.src =
+                        croppedCanvas.toDataURL();
+
+                    previewImage.classList.remove("hidden");
+
+                    uploadPlaceholder.classList.add("hidden");
+
+
+                    // ✅ REPLACE ORIGINAL FILE
+                    croppedCanvas.toBlob((blob) => {
+
+                        const croppedFile = new File(
+                            [blob],
+                            "cropped-category.png",
+                            {
+                                type: "image/png"
+                            }
+                        );
+
+                        const dataTransfer =
+                            new DataTransfer();
+
+                        dataTransfer.items.add(croppedFile);
+
+                        imageInput.files =
+                            dataTransfer.files;
+
+                    }, "image/png");
+
+
+                    // ✅ CLOSE MODAL
+                    cropperModal.classList.add("hidden");
+
+                });
+
+
+
+            // ================= SLUG PREVIEW =================
+
+
+            // ================= STATUS TOGGLE =================
+
+            function toggleStatus() {
+
+                const toggle =
+                    document.getElementById('statusToggle');
+
+                const input =
+                    document.getElementById('statusInput');
+
+                const isInactive =
+                    toggle.classList.toggle('inactive');
+
+                input.value = !isInactive;
+            }
+
+
+
+            // ================= LUCIDE ICONS =================
+
+            lucide.createIcons();
+
+        </script>
+</body>
+
+</html>

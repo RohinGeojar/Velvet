@@ -44,8 +44,9 @@ const userSchema = new mongoose.Schema({
   },
 
   profileImage: {
-    type: String
-  },
+  url: String,
+  public_id: String
+},
   tempEmail: {
   type: String,
   default: null
