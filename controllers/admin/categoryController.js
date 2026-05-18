@@ -10,7 +10,7 @@ export const loadCategory = async (req, res) => {
 
   const result = await getCategories({
     page,
-    limit: 10,
+    limit: 5,
     search
   });
   const totalCategories = await Category.countDocuments()

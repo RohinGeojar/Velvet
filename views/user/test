@@ -446,3 +446,252 @@ lucide.createIcons();
 
 
           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Variants Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1a202c; }
+        .dashed-border {
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%23e2e8f0' stroke-width='2' stroke-dasharray='8%2c 8' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+        }
+    </style>
+</head>
+<body class="p-4 md:p-12">
+
+    <script>
+        // This script simulates the EJS context for the preview functionality
+        const mockData = {
+            variants: [
+                {
+                    id: 1,
+                    name: "White",
+                    sku: "VV-WHT-001",
+                    colorName: "White",
+                    regularPrice: "0.00",
+                    salePrice: null, // Test conditional rendering
+                    images: [null], // One placeholder
+                    sizes: [
+                        { name: "S", stock: 15 },
+                        { name: "M", stock: 21 }
+                    ]
+                }
+            ]
+        };
+    </script>
+
+    <div class="max-w-4xl mx-auto">
+        <header class="flex items-start gap-3 mb-8">
+            <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100 mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#a67c52]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-[#1a202c]">Product Variants</h1>
+                <p class="text-sm text-[#718096]">Manage product variants like color, size, price, stock, and images.</p>
+            </div>
+        </header>
+
+        <main id="template-container">
+            <!-- 
+                EJS LOGIC START 
+                <% variants.forEach(function(variant) { %> 
+            -->
+            
+            <div class="bg-white border border-[#e2e8f0] rounded-[20px] shadow-sm p-6 md:p-8 mb-6 transition-all hover:shadow-md">
+                
+                <!-- Top Bar: Info and Actions -->
+                <div class="flex justify-between items-center mb-8">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center bg-gray-50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-gray-900 text-lg">Variant: <span class="text-gray-900"><%= variant.name %></span></h2>
+                            <p class="text-xs font-mono text-[#718096] uppercase tracking-wider">SKU: <%= variant.sku %></p>
+                        </div>
+                    </div>
+                    <button class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600">Color Name</label>
+                        <input type="text" value="<%= variant.colorName %>" class="w-full bg-[#fcfcfc] border border-[#e2e8f0] rounded-xl px-4 py-3 focus:ring-2 focus:ring-[#c084fc]/20 focus:border-[#c084fc] outline-none transition-all">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600">Regular Price</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                            <input type="text" value="<%= variant.regularPrice %>" class="w-full bg-[#fcfcfc] border border-[#e2e8f0] rounded-xl pl-8 pr-4 py-3 focus:ring-2 focus:ring-[#c084fc]/20 focus:border-[#c084fc] outline-none transition-all">
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-gray-600">Sale Price (Optional)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                            <input type="text" value="<%= variant.salePrice ? variant.salePrice : '0.00' %>" class="w-full bg-[#fcfcfc] border border-[#e2e8f0] rounded-xl pl-8 pr-4 py-3 focus:ring-2 focus:ring-[#c084fc]/20 focus:border-[#c084fc] outline-none transition-all <%= !variant.salePrice ? 'text-gray-300' : '' %>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-10">
+                    <label class="text-sm font-semibold text-gray-600 block mb-4">Variant Images</label>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="w-24 h-24 border-2 border-dashed border-[#e9dccf] rounded-xl flex flex-col items-center justify-center bg-[#fdf8f6] cursor-pointer hover:bg-[#f9f1ea] transition-colors group">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#a67c52] mb-1 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                            <span class="text-[10px] font-bold text-[#a67c52] uppercase">Upload</span>
+                        </div>
+                        <% variant.images.forEach(function(img) { %>
+                            <div class="w-24 h-24 bg-[#e2e8f0]/40 rounded-xl border border-[#e2e8f0]"></div>
+                        <% }); %>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#a67c52]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                            <h3 class="text-sm font-bold text-gray-800">Stock Per Size</h3>
+                        </div>
+                        <button class="flex items-center gap-2 px-4 py-1.5 bg-[#fdf8f6] border border-[#e9dccf] rounded-full text-[#a67c52] text-xs font-bold hover:bg-[#f9f1ea] transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                            Add Size
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-12 gap-4 px-2 mb-2">
+                        <div class="col-span-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Size Name</div>
+                        <div class="col-span-5 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Stock Quantity</div>
+                        <div class="col-span-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest text-center">Action</div>
+                    </div>
+
+                    <!-- Size Rows Container -->
+                    <div class="space-y-3">
+                        <% variant.sizes.forEach(function(size) { %>
+                        <div class="grid grid-cols-12 gap-4 items-center bg-[#fcfcfc] border border-[#e2e8f0]/60 rounded-xl p-2">
+                            <div class="col-span-5 px-3">
+                                <input type="text" value="<%= size.name %>" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-gray-700 outline-none">
+                            </div>
+                            <div class="col-span-5 border-l border-[#e2e8f0] px-4">
+                                <input type="number" value="<%= size.stock %>" class="w-full bg-transparent border-none focus:ring-0 text-sm font-bold text-gray-900 outline-none <%= size.stock === 0 ? 'text-red-500' : '' %>">
+                            </div>
+                            <div class="col-span-2 flex justify-center border-l border-[#e2e8f0]">
+                                <button class="p-2 text-gray-300 hover:text-red-400 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <% }); %>
+
+                        <!-- New Size Draft Row -->
+                        <div class="grid grid-cols-12 gap-4 items-center bg-[#fcfcfc] border border-[#e2e8f0]/60 rounded-xl p-2 opacity-60">
+                            <div class="col-span-5 px-3">
+                                <input type="text" placeholder="New Size..." class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-gray-400 italic outline-none">
+                            </div>
+                            <div class="col-span-5 border-l border-[#e2e8f0] px-4">
+                                <input type="text" placeholder="Quantity" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-gray-400 outline-none">
+                            </div>
+                            <div class="col-span-2 flex justify-center border-l border-[#e2e8f0]">
+                                <button class="p-2 text-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+                <% }); %> 
+                EJS LOGIC END 
+            -->
+
+            <button class="w-full h-32 rounded-2xl dashed-border flex flex-col items-center justify-center group hover:bg-white transition-all hover:scale-[1.01] active:scale-100">
+                <div class="bg-white p-2 rounded-lg border border-[#e9dccf] mb-3 group-hover:shadow-md transition-shadow">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#a67c52]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                </div>
+                <span class="text-sm font-bold text-gray-900">Add New Product Variant</span>
+            </button>
+        </main>
+    </div>
+
+    <script>
+        /**
+         * NOTE FOR DEVELOPERS:
+         * This script is for PREVIEW PURPOSES ONLY within this interactive environment.
+         * In a real Express/EJS environment, you would use standard EJS tags (<%= ... %>).
+         * Here, I'm manually performing the replacement logic to show you how it looks with data.
+         */
+        window.addEventListener('load', () => {
+            const container = document.getElementById('template-container');
+            let html = container.innerHTML;
+
+            // Simple mock "EJS" replacement logic
+            const variant = mockData.variants[0];
+            
+            html = html.replace(/<%=\s*variant\.name\s*%>/g, variant.name);
+            html = html.replace(/<%=\s*variant\.sku\s*%>/g, variant.sku);
+            html = html.replace(/<%=\s*variant\.colorName\s*%>/g, variant.colorName);
+            html = html.replace(/<%=\s*variant\.regularPrice\s*%>/g, variant.regularPrice);
+            
+            // Conditional sale price logic
+            const salePriceValue = variant.salePrice ? variant.salePrice : '0.00';
+            html = html.replace(/<%=\s*variant\.salePrice\s*\?\s*variant\.salePrice\s*:\s*'0.00'\s*%>/g, salePriceValue);
+            
+            // Conditional class logic
+            const saleClass = !variant.salePrice ? 'text-gray-300' : '';
+            html = html.replace(/<%=\s*!variant\.salePrice\s*\?\s*'text-gray-300'\s*:\s*''\s*%>/g, saleClass);
+
+            // Size loop simulation
+            const sizeRows = variant.sizes.map(size => {
+                return `
+                <div class="grid grid-cols-12 gap-4 items-center bg-[#fcfcfc] border border-[#e2e8f0]/60 rounded-xl p-2">
+                    <div class="col-span-5 px-3">
+                        <input type="text" value="${size.name}" class="w-full bg-transparent border-none focus:ring-0 text-sm font-medium text-gray-700 outline-none">
+                    </div>
+                    <div class="col-span-5 border-l border-[#e2e8f0] px-4">
+                        <input type="number" value="${size.stock}" class="w-full bg-transparent border-none focus:ring-0 text-sm font-bold text-gray-900 outline-none ${size.stock === 0 ? 'text-red-500' : ''}">
+                    </div>
+                    <div class="col-span-2 flex justify-center border-l border-[#e2e8f0]">
+                        <button class="p-2 text-gray-300 hover:text-red-400 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            // Replace the sizes loop block (simplified for preview)
+            const loopStart = html.indexOf('<% variant.sizes.forEach');
+            const loopEnd = html.indexOf('<% }); %>') + 9;
+            if(loopStart !== -1) {
+                const before = html.substring(0, loopStart);
+                const after = html.substring(loopEnd);
+                html = before + sizeRows + after;
+            }
+
+            container.innerHTML = html;
+        });
+    </script>
+
+</body>
+</html>

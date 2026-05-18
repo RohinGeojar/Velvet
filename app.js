@@ -16,6 +16,7 @@ import adminAuth from "./routes/admin/adminAuth.js"
 import { setAdmin } from "./middleware/admin/authMiddilware.js";
 import passport from "./config/passport.js";
 import categoryRoutes from "./routes/admin/categoryRoutes.js"
+import productRoutes from "./routes/admin/productRoutes.js"
 
 dotenv.config();
 
@@ -31,17 +32,8 @@ app.set("views", path.join(process.cwd(), "views"));
 
 
 app.use(expressLayouts)
- app.use((req, res, next) => {
-  if (
-    req.originalUrl.startsWith("/admin") ||
-    req.originalUrl.startsWith("/adminAuth")
-  ) {
-    res.locals.layout = "partials/admin/adminLayout";
-  } else {
-    res.locals.layout = "partials/user/layout";
-  }
-  next();
-});
+app.set("layout", "partials/user/layout");
+ 
 app.use(express.static("public"));
 
 
@@ -76,6 +68,7 @@ app.use("/address",addressRoutes)
 app.use("/admin", adminUserRoutes);
 app.use("/adminAuth",adminAuth)
 app.use("/admin/category",categoryRoutes)
+app.use("/products",productRoutes)
 
 
 app.listen(3000, () => {

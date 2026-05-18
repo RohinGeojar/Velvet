@@ -3,10 +3,14 @@
 .sidebar { background-color: #F4EDE6; }
 .active-nav { background-color: #8B5E3C; color: white; }
 .no-active-nav { background-color: #F4EDE6;  }
+.brand {
+    color:#8B5E3C
+}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+ <script src="https://unpkg.com/lucide@latest"></script>
 
 
 <aside class="sidebar w-[260px] hidden lg:flex flex-col border-r border-gray-200 fixed top-0 left-0 h-screen z-50">
@@ -15,7 +19,7 @@
                 <i data-lucide="sparkles" class="w-5 h-5"></i>
             </div>
             <div>
-                <h1 class="text-brand font-bold text-xl leading-tight">Velvet Vogue</h1>
+                <h1 class="text-brand  brand font-bold text-xl leading-tight">Velvet Vogue</h1>
                 <p class="text-xs text-gray-500 uppercase tracking-widest">Admin Panel</p>
             </div>
         </div>
@@ -24,7 +28,7 @@
             <a href="/adminAuth/dashboard" class="<%= activeNavLink === 'Dashboard' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50 '%> flex items-center gap-3 px-4 py-3  rounded-xl  transition-colors">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl hover:bg-white/50 transition-colors">
+            <a href="/products" class="<%= activeNavLink === 'Products' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50'%> flex items-center gap-3 px-4 py-3 rounded-xl  transition-colors">
                 <i data-lucide="package" class="w-5 h-5"></i> Products
             </a>
             <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl hover:bg-white/50 transition-colors">
