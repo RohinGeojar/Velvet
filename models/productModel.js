@@ -27,6 +27,10 @@ const variantSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    colorCode: {
+        type: String,
+        required: true
+    },
 
     regularPrice: {
         type: Number,
@@ -39,7 +43,8 @@ const variantSchema = new mongoose.Schema({
     },
 
     images: [{
-        type: String
+        public_id: String,
+        url: String
     }],
 
     sizes: [sizeSchema]
@@ -90,6 +95,15 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
 
     variants: [variantSchema]
 
@@ -97,4 +111,4 @@ const productSchema = new mongoose.Schema({
 
     timestamps: true
 });
-export default mongoose.model("Product",productSchema)
+export default mongoose.model("Product", productSchema)

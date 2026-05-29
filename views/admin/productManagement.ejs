@@ -1,360 +1,1335 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Management - Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: #111827; }
-        .accent-brown { background-color: #8B5E3C; }
-        .text-accent-brown { color: #8B5E3C; }
-        .border-accent-brown { border-color: #8B5E3C; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: #111827;
+        }
+
+        .accent-brown {
+            background-color: #8B5E3C;
+        }
+
+        .text-accent-brown {
+            color: #8B5E3C;
+        }
+
+        .border-accent-brown {
+            border-color: #8B5E3C;
+        }
+
         /* Custom scrollbar for table container */
-        .custom-scrollbar::-webkit-scrollbar { height: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 10px;
+        }
     </style>
 </head>
+
 <body class="min-h-screen">
- <%- include("../partials/admin/adminSidebar") %>
-    <!-- Main Container -->
-    <div class=" ml-[260px] max-w-[1400px] mx-auto px-4 md:px-8 py-6">
-        
-        <!-- Top Navigation Bar -->
-        <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-10">
-            <!-- Search Bar -->
-            <div class="relative w-full md:w-96">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </span>
-                <input type="text" placeholder="Search anything..." class="block w-full pl-10 pr-3 py-2.5 bg-gray-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-accent-brown focus:bg-white transition-all outline-none">
-            </div>
 
-            <!-- User Info & Notifications -->
-            <div class="flex items-center gap-6 self-end md:self-auto">
-                <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                    <span class="absolute top-2 right-2 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-                </button>
-                <div class="flex items-center gap-3">
-                    <div class="text-right hidden sm:block">
-                        <p class="text-sm font-bold text-gray-900 leading-tight">Rohin Geojar</p>
-                        <p class="text-xs text-gray-500">Administrator</p>
-                    </div>
-                    <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
-                        <img src="https://ui-avatars.com/api/?name=Rohin+Geojar&background=6EE7B7&color=fff" alt="User Profile">
-                    </div>
-                </div>
-            </div>
-        </header>
+    <%- include("../partials/admin/adminSidebar") %>
 
-        <!-- Page Header Section -->
-        <section class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
-            <div>
-                <nav class="flex text-xs font-medium text-gray-400 mb-2 gap-1.5 items-center">
-                    <span>Dashboard</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5l7 7-7 7" stroke-width="3" /></svg>
-                    <span>Products</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5l7 7-7 7" stroke-width="3" /></svg>
-                    <span class="text-accent-brown">Product Management</span>
-                </nav>
-                <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Product Management</h1>
-                <p class="text-gray-500 mt-1">Manage and organize all store products</p>
-            </div>
-           <a href="/products/add"> <button class="accent-brown text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-all shadow-lg shadow-brown-900/20 active:scale-95">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                Add Product
-            </button></a>
-        </section>
+        <!-- Main Container -->
+        <div class="ml-[260px] max-w-[1400px] mx-auto px-4 md:px-8 py-6">
 
-        <!-- Stats Overview Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            <!-- Total Products -->
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-500 mb-1">Total Products</p>
-                        <h3 class="text-2xl font-bold text-gray-900">1,240</h3>
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-blue-50 text-blue-500 group-hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-                    </div>
-                </div>
-                <div class="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" /></svg>
-                    <span class="text-xs font-bold text-green-500">+4% from last month</span>
-                </div>
-            </div>
+            <!-- Top Navigation Bar -->
+            <header class="flex flex-col md:flex-row justify-between items-center gap-4 mb-10">
+                <!-- Search Bar -->
+                <form action="/admin/products" method="GET" class="relative w-full md:w-96">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </span>
+                    <input type="text" name="search"
+                        value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                        placeholder="Search anything..."
+                        class="block w-full pl-10 pr-3 py-2.5 bg-gray-100 border-none rounded-xl text-sm focus:ring-2 focus:ring-accent-brown focus:bg-white transition-all outline-none">
+                </form>
 
-            <!-- Active Products -->
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-500 mb-1">Active Products</p>
-                        <h3 class="text-2xl font-bold text-gray-900">1,180</h3>
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-green-50 text-green-500 group-hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <!-- User Info & Notifications -->
+                <div class="flex items-center gap-6 self-end md:self-auto">
+                    <button class="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span
+                            class="absolute top-2 right-2 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+                    </button>
+                    <div class="flex items-center gap-3">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-bold text-gray-900 leading-tight">Rohin Geojar</p>
+                            <p class="text-xs text-gray-500">Administrator</p>
+                        </div>
+                        <div
+                            class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
+                            <img src="https://ui-avatars.com/api/?name=Rohin+Geojar&background=6EE7B7&color=fff"
+                                alt="User Profile">
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center gap-1">
-                    <span class="text-xs font-medium text-gray-400">95% of total inventory</span>
-                </div>
-            </div>
+            </header>
 
-            <!-- Out of Stock -->
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-500 mb-1">Out of Stock</p>
-                        <h3 class="text-2xl font-bold text-gray-900">12</h3>
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-red-50 text-red-500 group-hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-                    </div>
+            <!-- Page Header Section -->
+            <section class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
+                <div>
+                    <nav class="flex text-xs font-medium text-gray-400 mb-2 gap-1.5 items-center">
+                        <span>Dashboard</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path d="M9 5l7 7-7 7" stroke-width="3" />
+                        </svg>
+                        <span>Products</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path d="M9 5l7 7-7 7" stroke-width="3" />
+                        </svg>
+                        <span class="text-accent-brown">Product Management</span>
+                    </nav>
+                    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Product Management</h1>
+                    <p class="text-gray-500 mt-1">Manage and organize all store products</p>
                 </div>
-                <div class="flex items-center gap-1">
-                    <span class="text-xs font-bold text-red-500 underline underline-offset-2 cursor-pointer hover:text-red-600 transition-colors">Restock needed now</span>
-                </div>
-            </div>
+                <a href="/products/add">
+                    <button
+                        class="accent-brown text-white px-5 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-all shadow-lg shadow-brown-900/20 active:scale-95">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add Product
+                    </button>
+                </a>
+            </section>
 
-            <!-- Categories -->
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
-                <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-500 mb-1">Categories</p>
-                        <h3 class="text-2xl font-bold text-gray-900">24</h3>
+            <!-- Stats Overview Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                <!-- Total Products -->
+                <div
+                    class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-500 mb-1">Total Products</p>
+                            <h3 class="text-2xl font-bold text-gray-900">
+                                <%= totalProductsCount.toLocaleString() %>
+                            </h3>
+                        </div>
+                        <div
+                            class="p-2.5 rounded-xl bg-blue-50 text-blue-500 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
                     </div>
-                    <div class="p-2.5 rounded-xl bg-purple-50 text-purple-500 group-hover:scale-110 transition-transform">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                    <div class="flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-green-500" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-xs font-bold text-green-500">+4% from last month</span>
                     </div>
                 </div>
-                <div class="flex items-center gap-1">
-                    <span class="text-xs font-medium text-gray-400">Across 4 main departments</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- Product Table Card -->
-        <div class="bg-white border border-gray-100 rounded-[20px] shadow-sm overflow-hidden mb-6">
-            <!-- Table Controls -->
-            <div class="p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-                    <div class="relative w-full sm:w-64">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                <!-- Active Products -->
+                <div
+                    class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-500 mb-1">Active Products</p>
+                            <h3 class="text-2xl font-bold text-gray-900">
+                                <%= activeProductsCount.toLocaleString() %>
+                            </h3>
+                        </div>
+                        <div
+                            class="p-2.5 rounded-xl bg-green-50 text-green-500 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs font-medium text-gray-400">
+                            <%= totalProductsCount> 0 ? Math.round((activeProductsCount / totalProductsCount) * 100) : 0
+                                %> % of total inventory
                         </span>
-                        <input type="text" placeholder="Search product by name" class="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:border-accent-brown focus:ring-1 focus:ring-accent-brown outline-none transition-all">
                     </div>
-                    <button class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
-                        Filter
-                    </button>
                 </div>
-                <div class="flex items-center gap-2 text-sm font-medium text-gray-500 self-end sm:self-auto">
-                    <span>Show:</span>
-                    <select class="bg-gray-50 border border-gray-200 rounded-lg px-2 py-1 text-gray-900 focus:ring-1 focus:ring-accent-brown outline-none cursor-pointer">
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
-                    </select>
+
+                <!-- Out of Stock -->
+                <div
+                    class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-500 mb-1">Out of Stock</p>
+                            <h3 class="text-2xl font-bold text-gray-900">
+                                <%= outOfStockCount %>
+                            </h3>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-red-50 text-red-500 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <% if (outOfStockCount> 0) { %>
+                            <span
+                                class="text-xs font-bold text-red-500 underline underline-offset-2 cursor-pointer hover:text-red-600 transition-colors">Restock
+                                needed now</span>
+                            <% } else { %>
+                                <span class="text-xs font-medium text-gray-400">Inventory healthy</span>
+                                <% } %>
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div
+                    class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-500 mb-1">Categories</p>
+                            <h3 class="text-2xl font-bold text-gray-900">
+                                <%= categoriesCount %>
+                            </h3>
+                        </div>
+                        <div
+                            class="p-2.5 rounded-xl bg-purple-50 text-purple-500 group-hover:scale-110 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-xs font-medium text-gray-400">Across your setup departments</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Table -->
-            <div class="overflow-x-auto custom-scrollbar">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-50/50 border-y border-gray-100">
-                            <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Product</th>
-                            <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Category</th>
-                            <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Price</th>
-                            <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Stock</th>
-                            <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider text-center">Status</th>
-                            <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-50">
-                        <!-- Product Row 1 -->
-                        <tr class="hover:bg-gray-50/80 transition-colors group">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
-                                        <img src="https://images.unsplash.com/photo-1539008835657-9e8e9680c956?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Silk Evening Dress">
-                                    </div>
-                                    <span class="text-sm font-bold text-gray-900">Silk Evening Dress</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-medium text-gray-500">Women / Dresses</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-extrabold text-gray-900">$120.00</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-bold text-gray-500">45 units</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex justify-center">
-                                    <span class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-green-50 text-green-600 uppercase tracking-wide">Active</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <button class="p-2 text-gray-400 hover:text-accent-brown transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                                    </button>
-                                    <button class="p-2 text-gray-400 hover:text-red-500 transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+            <!-- Product Table Card -->
+            <div class="bg-white border border-gray-100 rounded-[20px] shadow-sm overflow-hidden mb-6">
+                <!-- Table Controls -->
+                <div class="p-5 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                        <form action="/products" method="GET" class="relative w-full sm:w-64">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </span>
+                            <input type="text" id="searchInput" name="tableSearch" placeholder="Search product by name"
+                                class="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:border-accent-brown focus:ring-1 focus:ring-accent-brown outline-none transition-all">
+                        </form>
+                        <button
+                            class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+                            <select id="filterSelect">
 
-                        <!-- Product Row 2 -->
-                        <tr class="hover:bg-gray-50/80 transition-colors group">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
-                                        <img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Cashmere Sweater">
-                                    </div>
-                                    <span class="text-sm font-bold text-gray-900">Cashmere Sweater</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-medium text-gray-500">Unisex / Tops</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-extrabold text-gray-900">$85.00</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-bold text-red-400">8 units</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex justify-center">
-                                    <span class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-green-50 text-green-600 uppercase tracking-wide">Active</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <button class="p-2 text-gray-400 hover:text-accent-brown transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                                    </button>
-                                    <button class="p-2 text-gray-400 hover:text-red-500 transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                                <option value="All" <%=filter==="All" ? "selected" : "" %>>
+                                    All Products
+                                </option>
 
-                        <!-- Product Row 3 -->
-                        <tr class="hover:bg-gray-50/80 transition-colors group">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
-                                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Minimalist Sneakers">
-                                    </div>
-                                    <span class="text-sm font-bold text-gray-900">Minimalist Sneakers</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-medium text-gray-500">Footwear / Shoes</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-extrabold text-gray-900">$145.00</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-bold text-gray-500">112 units</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex justify-center">
-                                    <span class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-gray-100 text-gray-600 uppercase tracking-wide">Draft</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <button class="p-2 text-gray-400 hover:text-accent-brown transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                                    </button>
-                                    <button class="p-2 text-gray-400 hover:text-red-500 transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                                <option value="Active" <%=filter==="Active" ? "selected" : "" %>>
+                                    Active
+                                </option>
 
-                        <!-- Product Row 4 -->
-                        <tr class="hover:bg-gray-50/80 transition-colors group">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
-                                        <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=100&h=100&fit=crop" class="w-full h-full object-cover" alt="Classic Analog Watch">
-                                    </div>
-                                    <span class="text-sm font-bold text-gray-900">Classic Analog Watch</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-medium text-gray-500">Accessories / Watches</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-extrabold text-gray-900">$210.00</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-sm font-bold text-red-500">0 units</span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex justify-center">
-                                    <span class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-red-50 text-red-600 uppercase tracking-wide">Out of Stock</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-2">
-                                    <button class="p-2 text-gray-400 hover:text-accent-brown transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>
-                                    </button>
-                                    <button class="p-2 text-gray-400 hover:text-red-500 transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                <option value="Blocked" <%=filter==="Blocked" ? "selected" : "" %>>
+                                    Blocked
+                                </option>
 
-            <!-- Table Pagination/Footer -->
-            <div class="px-6 py-5 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
-                <span class="text-sm font-medium text-gray-400">
-                    Showing <span class="text-gray-700 font-semibold">1</span> to <span class="text-gray-700 font-semibold">4</span> of <span class="text-gray-700 font-semibold">1,240</span> entries
-                </span>
-                <div class="flex items-center gap-1.5">
-                    <button class="p-2 text-gray-300 cursor-not-allowed">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M15 19l-7-7 7-7" /></svg>
-                    </button>
-                    <button class="w-8 h-8 rounded-full accent-brown text-white text-xs font-extrabold shadow-sm">1</button>
-                    <button class="w-8 h-8 rounded-full text-gray-500 hover:bg-gray-100 text-xs font-bold transition-colors">2</button>
-                    <button class="w-8 h-8 rounded-full text-gray-500 hover:bg-gray-100 text-xs font-bold transition-colors">3</button>
-                    <span class="px-2 text-gray-300">...</span>
-                    <button class="w-8 h-8 rounded-full text-gray-500 hover:bg-gray-100 text-xs font-bold transition-colors">124</button>
-                    <button class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7" /></svg>
-                    </button>
+                                <option value="OutOfStock" <%=filter==="OutOfStock" ? "selected" : "" %>>
+                                    Out Of Stock
+                                </option>
+                                <option value="Deleted" <%=filter==="Deleted" ? "selected" : "" %>>
+                                    Deleted
+                                </option>
+
+
+                            </select>
+
+                        </button>
+                        <a href="/products"><button id="clearSearch"
+                                class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+                                Clear </button></a>
+                    </div>
+                   
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50/50 border-y border-gray-100">
+                                <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                    Product</th>
+                                <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                    Category</th>
+                                <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Price
+                                </th>
+                                <th class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider">Stock
+                                </th>
+                                <th
+                                    class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider text-center">
+                                    Status</th>
+                                <th
+                                    class="px-6 py-4 text-[11px] font-bold text-gray-400 uppercase tracking-wider text-right">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody" class="divide-y divide-gray-50">
+                            <% if (products && products.length> 0) { %>
+                                <% products.forEach(function(product) { %>
+                                    <tr class="hover:bg-gray-50/80 transition-colors group">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center gap-4">
+                                                <div
+                                                    class="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden flex-shrink-0">
+                                                    <!-- Uses a fallback placeholder if product has no image array -->
+                                                    <img src="<%= product.variants?.[0]?.images?.[0]?.url %>"
+                                                        class="w-full h-full object-cover"
+                                                        alt="<%= product.productName %>">
+                                                </div>
+                                                <span class="text-sm font-bold text-gray-900">
+                                                    <%= product.productName %>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="text-sm font-medium text-gray-500">
+                                                <%= typeof product.category==='object' ? product.category.name :
+                                                    product.category %>
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="text-sm font-extrabold text-gray-900">$<%= Number(
+                                                    product.variants?.[0]?.salePrice || 0 ).toFixed(2) %></span>
+                                        </td>
+                                        <td class="px-6 py-4">
+
+                                            <% const totalStock=product.variants.reduce( (total, variant)=>
+
+                                                total +
+
+                                                variant.sizes.reduce(
+
+                                                (sum, size) =>
+
+                                                sum + size.stock,
+
+                                                0
+                                                ),
+
+                                                0
+                                                );
+
+                                                %>
+
+                                                <% if (totalStock===0) { %>
+
+                                                    <span class="text-sm font-bold text-red-500">
+                                                        0 units
+                                                    </span>
+
+                                                    <% } else if (totalStock <=10) { %>
+
+                                                        <span class="text-sm font-bold text-red-400">
+                                                            <%= totalStock %> units
+                                                        </span>
+
+                                                        <% } else { %>
+
+                                                            <span class="text-sm font-bold text-gray-500">
+                                                                <%= totalStock %> units
+                                                            </span>
+
+                                                            <% } %>
+
+                                        </td>
+                                        <td class="px-6 py-4">
+
+                                            <div class="flex justify-center">
+
+                                                <% if(!product.isActive){ %>
+
+                                                    <span
+                                                        class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-orange-50 text-orange-600 uppercase tracking-wide">
+
+                                                        Blocked
+
+                                                    </span>
+
+                                                    <% } else if(totalStock> 0){ %>
+
+                                                        <span
+                                                            class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-green-50 text-green-600 uppercase tracking-wide">
+
+                                                            In Stock
+
+                                                        </span>
+
+                                                        <% } else { %>
+
+                                                            <span
+                                                                class="px-2.5 py-1 text-[11px] font-bold rounded-full bg-red-50 text-red-600 uppercase tracking-wide">
+
+                                                                Out Of Stock
+
+                                                            </span>
+
+                                                            <% } %>
+
+                                            </div>
+
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+
+                                            <div class="flex justify-end gap-3">
+
+                                                <% if(!product.isDeleted){ %>
+
+                                                    <!-- EDIT -->
+                                                    <a href="/products/edit/<%= product._id %>">
+
+                                                        <i data-lucide="edit-3" class="w-4 h-4"></i>
+
+                                                    </a>
+
+                                                    <!-- BLOCK / UNBLOCK -->
+
+                                                    <% if(!product.isActive){ %>
+
+                                                        <button onclick="toggleProduct('<%= product._id %>',true)"
+                                                            class="text-green-500 p-1">
+
+                                                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+
+                                                        </button>
+
+                                                        <% } else { %>
+
+                                                            <button onclick="toggleProduct('<%= product._id %>',false )"
+                                                                class="text-orange-500 p-1">
+
+                                                                <i data-lucide="ban" class="w-4 h-4"></i>
+
+                                                            </button>
+
+                                                            <% } %>
+
+                                                                <!-- DELETE -->
+
+                                                                <button onclick="deleteProduct('<%= product._id %>')"
+                                                                    class="text-red-500 p-1">
+
+                                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+
+                                                                </button>
+
+                                                                <% } else { %>
+
+                                                                    <!-- RESTORE -->
+
+                                                                    <button
+                                                                        onclick="restoreProduct('<%= product._id %>')"
+                                                                        class="text-blue-500 p-1 flex items-center gap-1">
+
+                                                                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+
+                                                                        Restore
+
+                                                                    </button>
+
+                                                                    <% } %>
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="6" class="px-6 py-10 text-center text-sm text-gray-500">
+                                                    No products found matching your store criteria.
+                                                </td>
+                                            </tr>
+                                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table Pagination/Footer -->
+                
+                <div class="px-6 py-5 border-t border-gray-100 flex justify-between items-center">
+    
+                    <p id="paginationInfo" class="text-sm text-gray-500">
+                        Showing
+                        <%= ((currentPage - 1) * limit) + 1 %>
+                            -
+                            <%= Math.min(currentPage * limit, totalResults) %>
+                                of
+                                <%= totalResults %>
+                                    results
+    
+    
+    
+                    </p>
+    
+                    <div id="paginationContainer" class="flex items-center gap-2">
+    
+                        <% if (currentPage> 1) { %>
+    
+                            <button onclick="loadProducts(<%= currentPage - 1 %>)"
+                                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100">
+    
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+    
+                            </button>
+    
+                            <% } %>
+    
+                                <% for(let i=1; i <=totalPages; i++) { %>
+    
+                                    <button onclick="loadProducts(<%= i %>)" class="
+                w-8 h-8 rounded-lg text-sm font-medium
+                <%= currentPage === i
+                    ? 'bg-[#A06B36] text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                %>
+            ">
+    
+                                        <%= i %>
+    
+                                    </button>
+    
+                                    <% } %>
+    
+                                        <% if (currentPage < totalPages) { %>
+    
+                                            <button onclick="loadProducts(<%= currentPage + 1 %>)"
+                                                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100">
+    
+                                                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+    
+                                            </button>
+    
+                                            <% } %>
+    
+                    </div>
+    
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Padding for bottom of page -->
-    <div class="h-10"></div>
+
+
+        <!-- Padding for bottom of page -->
+        <div class="h-10"></div>
+        <div id="confirmModal" class="fixed inset-0 bg-black/40 hidden z-50 flex items-center justify-center">
+
+            <div class="bg-white rounded-xl p-6 w-[350px] shadow-lg">
+
+                <h2 class="text-lg font-semibold mb-3" id="modalTitle">
+                    Confirm Action
+                </h2>
+
+                <p class="text-sm text-gray-500 mb-5" id="modalMessage">
+                </p>
+
+                <div class="flex justify-end gap-3">
+
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 text-sm bg-gray-100 rounded-lg">
+                        Cancel
+                    </button>
+
+                    <button type="button" id="confirmBtn" onclick="handleConfirmAction()"
+                        class="px-4 py-2 text-sm bg-red-500 text-white rounded-lg">
+                        Confirm
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <script>
+
+
+
+
+            let selectedProductId = null;
+
+            let selectedAction = null;
+
+            const searchInput =
+                document.getElementById("searchInput");
+
+            const filterSelect =
+                document.getElementById("filterSelect");
+
+            const tableBody =
+                document.getElementById("productTableBody");
+
+            const paginationContainer =
+                document.getElementById("paginationContainer");
+
+            const clearBtn =
+                document.getElementById("clearSearch");
+
+
+
+
+            function debounce(func, delay) {
+
+                let timeout;
+
+                return (...args) => {
+
+                    clearTimeout(timeout);
+
+                    timeout = setTimeout(() => {
+
+                        func(...args);
+
+                    }, delay);
+                };
+            }
+
+
+
+
+            function toggleProduct(id, isBlocked) {
+
+                selectedProductId = id;
+
+                selectedAction =
+                    isBlocked
+                        ? "unblock"
+                        : "block";
+
+                openModal(
+                    isBlocked
+                        ? "Unblock Product"
+                        : "Block Product",
+
+                    isBlocked
+                        ? "Are you sure you want to unblock this product?"
+                        : "Are you sure you want to block this product?",
+
+                    isBlocked
+                        ? "Unblock"
+                        : "Block",
+
+                    isBlocked
+                        ? "bg-green-500"
+                        : "bg-orange-500"
+                );
+            }
+
+
+
+            function deleteProduct(id) {
+
+                selectedProductId = id;
+
+                selectedAction = "delete";
+
+                openModal(
+                    "Delete Product",
+                    "Are you sure you want to delete this product?",
+                    "Delete",
+                    "bg-red-500"
+                );
+            }
+
+            function restoreProduct(id) {
+
+                selectedProductId = id;
+
+                selectedAction = "restore";
+
+                openModal(
+                    "Restore Product",
+                    "Are you sure you want to restore this product?",
+                    "Restore",
+                    "bg-blue-500"
+                );
+            }
+
+
+
+
+
+
+
+
+
+            // =====================================================
+            // =====================================================
+
+
+            function openModal(title, message, buttonText, buttonColor) {
+
+                document.getElementById(
+                    "modalTitle"
+                ).innerText = title;
+
+                document.getElementById(
+                    "modalMessage"
+                ).innerText = message;
+
+                const confirmBtn =
+                    document.getElementById(
+                        "confirmBtn"
+                    );
+
+                confirmBtn.innerText =
+                    buttonText;
+
+                confirmBtn.className =
+                    `px-4 py-2 text-sm text-white rounded-lg ${buttonColor}`;
+
+                document
+                    .getElementById(
+                        "confirmModal"
+                    )
+                    .classList
+                    .remove("hidden");
+            }
+
+            function closeModal() {
+
+                document
+                    .getElementById(
+                        "confirmModal"
+                    )
+                    .classList
+                    .add("hidden");
+            }
+
+
+
+            async function handleConfirmAction() {
+
+                if (!selectedProductId || !selectedAction) return;
+
+                const url =
+                    `/products/${selectedAction}/${selectedProductId}`;
+
+                try {
+
+                    const response = await fetch(url, {
+                        method: "PATCH"
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+
+                        closeModal();
+
+                        showToast(data.message, "success");
+
+                        setTimeout(() => {
+
+                            loadProducts(currentPage);
+
+                        }, 300);
+
+                    } else {
+
+                        showToast(
+                            data.message || "Something went wrong",
+                            "error"
+                        );
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showToast("Server error", "error");
+                }
+            }
+            function showToast(message, icon = "success") {
+
+                Swal.fire({
+
+                    toast: true,
+
+                    position: "top-end",
+
+                    icon,
+
+                    title: message,
+
+                    showConfirmButton: false,
+
+                    timer: 2000,
+
+                    timerProgressBar: true
+                });
+            }
+
+
+            lucide.createIcons();
+            let currentPage = 1;
+
+            let currentSearch = "";
+
+            let currentFilter = "All";
+
+
+            function debounce(func, delay) {
+
+                let timeout;
+
+                return (...args) => {
+
+                    clearTimeout(timeout);
+
+                    timeout = setTimeout(() => {
+
+                        func(...args);
+
+                    }, delay);
+                };
+            }
+
+
+            // =========================
+            // LOAD PRODUCTS
+            // =========================
+
+            async function loadProducts(page = 1) {
+                 lucide.createIcons();
+
+                currentPage = page;
+
+                currentSearch =
+                    searchInput.value;
+
+                currentFilter =
+                    filterSelect.value;
+
+                const res = await fetch(`/products/search?page=${currentPage}&search=${currentSearch}&filter=${currentFilter}`);
+
+                const data = await res.json();
+
+                tableBody.innerHTML = "";
+
+
+                // =========================
+                // TABLE RENDER
+                // =========================
+
+                if (!data.products.length) {
+
+                    tableBody.innerHTML = `
+
+<tr>
+
+<td colspan="6"
+class="px-6 py-10 text-center text-sm text-gray-500">
+
+No products found
+
+</td>
+
+</tr>
+`;
+
+                    return;
+                }
+
+
+                data.products.forEach(product => {
+
+                    let totalStock = 0;
+
+                    product.variants.forEach(variant => {
+
+                        variant.sizes.forEach(size => {
+
+                            totalStock += size.stock;
+                        });
+                    });
+
+
+                    tableBody.innerHTML += `
+
+<tr class="hover:bg-gray-50/80 transition-colors">
+
+<td class="px-6 py-4">
+
+<div class="flex items-center gap-4">
+
+<div class="w-12 h-12 rounded-xl overflow-hidden">
+
+<img
+src="${product.variants?.[0]?.images?.[0]?.url}"
+class="w-full h-full object-cover"
+>
+
+</div>
+
+<span class="text-sm font-bold text-gray-900">
+
+${product.productName}
+
+</span>
+
+</div>
+
+</td>
+
+
+<td class="px-6 py-4">
+
+<span class="text-sm text-gray-500">
+
+${product.category?.name || "No Category"}
+
+</span>
+
+</td>
+
+
+<td class="px-6 py-4">
+
+<span class="text-sm font-bold text-gray-900">
+
+₹ ${product.variants?.[0]?.salePrice || 0}
+
+</span>
+
+</td>
+
+
+<td class="px-6 py-4">
+
+${totalStock === 0
+
+                            ? `
+
+<span class="text-red-500 font-bold">
+
+0 units
+
+</span>
+`
+
+                            : `
+
+<span class="text-sm font-bold text-gray-500">
+
+${totalStock} units
+
+</span>
+`
+                        }
+
+</td>
+
+
+<td class="px-6 py-4">
+
+<div class="flex justify-center">
+
+${product.isDeleted
+
+                            ? `
+
+<span
+class="px-2.5 py-1 text-[11px]
+font-bold rounded-full
+bg-red-50 text-red-600 uppercase">
+
+Deleted
+
+</span>
+`
+
+                            : !product.isActive
+
+                                ? `
+
+<span
+class="px-2.5 py-1 text-[11px]
+font-bold rounded-full
+bg-orange-50 text-orange-600 uppercase">
+
+Blocked
+
+</span>
+`
+
+                                : totalStock === 0
+
+                                    ? `
+
+<span
+class="px-2.5 py-1 text-[11px]
+font-bold rounded-full
+bg-red-50 text-red-600 uppercase">
+
+Out Of Stock
+
+</span>
+`
+
+                                    : `
+
+<span
+class="px-2.5 py-1 text-[11px]
+font-bold rounded-full
+bg-green-50 text-green-600 uppercase">
+
+In Stock
+
+</span>
+`
+                        }
+
+</div>
+
+</td>
+
+
+<td class="px-6 py-4 text-right">
+
+<div class="flex justify-end gap-3">
+
+${!product.isDeleted
+
+                            ? `
+
+<a href="/products/edit/${product._id}">
+
+<i data-lucide="edit-3"
+class="w-4 h-4"></i>
+
+</a>
+`
+
+                            : ""
+                        }
+
+
+${!product.isDeleted
+
+                            ? product.isActive
+
+                                ? `
+
+<button
+onclick="toggleProduct('${product._id}', false)"
+class="text-orange-500 p-1">
+
+<i data-lucide="ban"
+class="w-4 h-4"></i>
+
+</button>
+`
+
+                                : `
+
+<button
+onclick="toggleProduct('${product._id}', true)"
+class="text-green-500 p-1">
+
+<i data-lucide="rotate-ccw"
+class="w-4 h-4"></i>
+
+</button>
+`
+
+                            : `
+`
+                        }
+
+
+${!product.isDeleted
+
+                            ? `
+
+<button
+onclick="deleteProduct('${product._id}')"
+class="text-red-500 p-1">
+
+<i data-lucide="trash-2"
+class="w-4 h-4"></i>
+
+</button>
+`
+
+                            : `
+
+<button
+onclick="restoreProduct('${product._id}')"
+class="text-blue-500 p-1">
+
+Restore
+
+</button>
+`
+                        }
+
+</div>
+
+</td>
+
+</tr>
+`;
+                });
+
+
+                lucide.createIcons();
+
+                renderPagination(
+                    data.totalPages,
+                    data.currentPage,
+                    data.totalResults
+                );
+            }
+
+
+            // =========================
+            // SEARCH
+            // =========================
+
+            const debouncedSearch = debounce(() => {
+
+                loadProducts(1);
+
+            }, 400);
+
+
+            searchInput.addEventListener(
+                "input",
+                debouncedSearch
+            );
+
+
+            // =========================
+            // FILTER
+            // =========================
+
+            filterSelect.addEventListener("change", () => {
+
+                loadProducts(1);
+            }
+            );
+
+
+            // =========================
+            // CLEAR
+            // =========================
+
+            clearBtn.addEventListener(
+                "click",
+                (e) => {
+
+                    e.preventDefault();
+
+                    searchInput.value = "";
+
+                    filterSelect.value = "All";
+
+                    currentSearch = "";
+
+                    currentFilter = "All";
+
+                    loadProducts(1);
+                }
+            );
+
+
+            // =========================
+            // PAGINATION
+            // =========================
+
+
+
+            async function refreshStats() {
+
+                const res =
+                    await fetch("/products/stats");
+
+                const data =
+                    await res.json();
+
+
+            }
+
+
+
+            lucide.createIcons();
+
+
+
+
+
+
+
+
+
+
+
+            // =========================
+            // PAGINATION RENDER
+            // =========================
+
+            function renderPagination(totalPages, currentPage, totalResults) {
+
+                const limit = 5;
+
+                const start = ((currentPage - 1) * limit) + 1;
+
+                let end = currentPage * limit;
+
+                if (end > totalResults) {
+                    end = totalResults;
+                }
+
+                document.getElementById("paginationInfo").innerText =
+                    `Showing ${start} - ${end} of ${totalResults} results`;
+
+                let buttons = ""
+                if (currentPage > 1) {
+
+        buttons += `
+            <button
+                onclick="loadProducts(${currentPage - 1})"
+                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+        `;
+    }
+
+                const startPage = Math.max(1, currentPage - 2);
+
+                const endPage = Math.min(totalPages, currentPage + 2);
+
+                for (let i = startPage; i <= endPage; i++) {
+
+                    buttons += currentPage === i
+
+                        ? `
+            <button
+                    onclick="loadProducts(${i})"
+                    class="w-8 h-8 rounded-lg bg-[#A06B36] text-white text-sm font-medium">
+                    ${i}
+                </button>`
+
+                        : `
+             <button
+                    onclick="loadProducts(${i})"
+                    class="w-8 h-8 rounded-lg hover:bg-gray-100 text-sm font-medium">
+                    ${i}
+                </button>
+            `;
+                }
+                 if (currentPage <= totalPages) {
+
+        buttons += `
+            <button
+                onclick="loadProducts(${currentPage + 1})"
+                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+        `;
+    }
+
+                paginationContainer.innerHTML = buttons;
+                lucide.createIcons();
+            }
+
+
+
+            // =========================
+            // ACTION HANDLER
+            // =========================
+
+            async function handleAction(id, action) {
+
+                const confirmed =
+                    confirm(
+                        `Are you sure you want to ${action} this product?`
+                    );
+
+                if (!confirmed) return;
+
+                const res = await fetch(
+                    `/products/${action}/${id}`,
+                    {
+                        method: "PATCH"
+                    }
+                );
+
+                const data = await res.json();
+
+                if (data.success) {
+
+                    loadProducts(currentPage);
+                }
+            }
+
+
+            // =========================
+            // FILTER MENU
+            // =========================
+
+
+
+            document.addEventListener("click", function (e) {
+
+                const wrapper =
+                    document.getElementById("filterWrapper");
+
+                if (!wrapper.contains(e.target)) {
+
+                    document.getElementById(
+                        "filterMenu"
+                    ).classList.add("hidden");
+                }
+            });
+
+        </script>
 
 </body>
+
 </html>

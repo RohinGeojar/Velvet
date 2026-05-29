@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Vogue - Luxury Product Listing</title>
+    <!-- Google Fonts: Playfair Display (Serif) & DM Sans (Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#7a9575',// #7a9575,#475845  #7a9575,#475845 00674F ,#2e6f40
+                            dark: '#627a5e',
+                        },
+                        text: {
+                            dark: '#1A1A1A',
+                            muted: '#707070',
+                            footer: '#FFFFFF'
+                        },
+                        border: {
+                            light: '#E5E5E5'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"DM Sans"', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        aside {
+            position: sticky;
+            top: 100px;
+            align-self: start;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #4F6352;
+            border-color: #4F6352;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 370px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+
+        .product-card {
+            width: 290px;
+        }
+
+        /* Smooth transitions */
+        .transition-all-300 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+
+<body class="bg-white font-sans text-text-dark min-h-screen antialiased">
+
+
+
+    <!-- Mobile Drawer Navigation Overlay -->
+    <div id="mobileMenu"
+        class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0">
+        <div class="bg-white w-[85%] max-w-xs h-full p-6 flex flex-col justify-between shadow-2xl transition-transform duration-300 -translate-x-full"
+            id="mobileMenuContent">
+            <div>
+                <div class="flex justify-between items-center pb-6 border-b border-border-light">
+                    <span class="font-serif italic text-xl">Velvet Vogue</span>
+                    <button onclick="toggleMobileMenu()" class="text-text-dark hover:text-brand p-1">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <nav
+                    class="mt-8 flex flex-col space-y-6 text-xs font-semibold uppercase tracking-widest text-text-dark">
+                    <a href="#" onclick="toggleMobileMenu()" class="hover:text-brand">Collection</a>
+                    <a href="#" onclick="toggleMobileMenu()" class="hover:text-brand">New In</a>
+                    <a href="#" onclick="toggleMobileMenu()" class="hover:text-brand">Wedding</a>
+                    <a href="#" onclick="toggleMobileMenu()" class="hover:text-brand">Plus Size</a>
+                    <a href="#" onclick="toggleMobileMenu()" class="hover:text-brand">Kids</a>
+                </nav>
+            </div>
+            <div class="pt-6 border-t border-border-light text-xs text-text-muted flex flex-col gap-3">
+                <a href="#" class="hover:text-brand uppercase tracking-wider">Sign In / Register</a>
+                <a href="#" class="hover:text-brand uppercase tracking-wider">Store Locations</a>
+                <a href="#" class="hover:text-brand uppercase tracking-wider">Support</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="w-full px-3 sm:px-4 lg:px-5 overflow-visible ">
+
+        <!-- Results Counter -->
+        <div class="text-center mb-8">
+            <h2 id="items-counter" class="text-sm font-sans uppercase tracking-[0.25em] font-medium text-text-dark">
+               <%= products.length %> Items
+            </h2>
+            <div class="w-10 h-[1px] bg-brand mx-auto mt-2"></div>
+        </div>
+
+        <!-- Main Workspace Grid: Filters Sidebar + Product Grid -->
+        <div class="flex gap-8 w-full items-start min-h-[200vh]">
+
+            <!-- SIDEBAR FILTERS (approx. 1/4 width) -->
+            <aside class="w-[260px] sticky top-24 shrink-0 self-start space-y-6 p-6 bg-white h-fit">
+
+                <!-- Filters Top header with clear control -->
+                <div class="flex justify-between items-center border-b border-border-light pb-4">
+                    <h3
+                        class="font-sans text-lg font-bold tracking-wider uppercase text-text-dark flex items-center gap-2">
+                        <i data-lucide="sliders-horizontal" class="w-4.5 h-4.5"></i> Filters
+                    </h3>
+                    <button onclick="clearAllFilters()"
+                        class="text-[11px] uppercase tracking-wider text-text-muted hover:text-brand underline font-semibold transition">
+                        Clear All Filters
+                    </button>
+                </div>
+
+                <!-- Active Tags / Chips Selection Container (Matches '03.jpg') -->
+                <div class="flex flex-wrap gap-2 py-1" id="active-chips-container">
+                    <!-- Dynamic active chips are generated here -->
+                </div>
+
+                <!-- Accordions Container -->
+                <div class="space-y-4 font-sans divide-y divide-border-light">
+
+                    <!-- Accordion: Sort By -->
+                    <div class="pt-4 first:pt-0">
+                        <button onclick="toggleAccordion('sort-by-content', 'sort-by-icon')"
+                            class="w-full flex justify-between items-center py-1 text-xs sm:text-sm font-semibold uppercase tracking-widest text-text-dark hover:text-brand">
+                            <span>Sort By</span>
+                            <span id="sort-by-icon" class="text-text-muted font-light transition-transform"><%= sort ? '-' : '+' %></span>
+                        </button>
+                        <div id="sort-by-content"  class="<%= sort ? '' : 'hidden' %> mt-3 pl-1 space-y-2.5">
+                            <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+                                <input type="radio" name="sort"  <%= !sort || sort === "default" ? "checked" : "" %> onchange="applyFilter('sort','default')"
+                                    class="w-4.5 h-4.5 text-brand focus:ring-brand border-gray-300 accent-[#4F6352] rounded-full" />
+                                <span class="text-text-muted group-hover:text-text-dark transition">Default
+                                    Recommended</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+                                 <input type="radio" name="sort" <%= sort === "price_asc" ? "checked" : "" %> onchange="applyFilter('sort','price_asc')"
+                                    class="w-4.5 h-4.5 text-brand focus:ring-brand border-gray-300 accent-[#4F6352] rounded-full" />
+                                <span class="text-text-muted group-hover:text-text-dark transition">Price: Low to
+                                    High</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+                                <input type="radio" name="sort" <%= sort === "price_desc" ? "checked" : "" %>  onchange="applyFilter('sort','price_desc')"
+                                    class="w-4.5 h-4.5 text-brand focus:ring-brand border-gray-300 accent-[#4F6352] rounded-full" />
+                                <span class="text-text-muted group-hover:text-text-dark transition">Price: High to
+                                    Low</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+    <input
+        type="radio"
+        name="sort"
+        <%= sort === "a_z" ? "checked" : "" %>
+        onchange="applyFilter('sort','a_z')"
+        class="w-4.5 h-4.5 accent-[#4F6352]">
+
+    <span class="text-text-muted group-hover:text-text-dark transition">
+        Name: A - Z
+    </span>     
+</label>
+
+<label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+    <input
+        type="radio"
+        name="sort"
+        <%= sort === "z_a" ? "checked" : "" %>
+        onchange="applyFilter('sort','z_a')"
+        class="w-4.5 h-4.5 accent-[#4F6352]">
+
+    <span class="text-text-muted group-hover:text-text-dark transition">
+        Name: Z - A
+    </span>
+</label>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Size (Default Expanded) -->
+                    <div class="pt-4">
+                        <button onclick="toggleAccordion('size-content', 'size-icon')"
+                            class="w-full flex justify-between items-center py-1 text-xs sm:text-sm font-semibold uppercase tracking-widest text-text-dark hover:text-brand">
+                            <span>Size</span>
+                            <span id="size-icon" class="text-text-muted font-light transition-transform">-</span>
+                        </button>
+                        <div id="size-content" class="mt-3 pl-1 space-y-3">
+
+                            <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+                                <input type="checkbox" <%=size==="S" ? "checked" : "" %>
+                                onchange="applyFilter('size','S')"
+                                class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand
+                                accent-[#4F6352]" />
+                                <span
+                                    class="text-text-muted group-hover:text-text-dark font-bold text-text-dark transition">S
+                                    / US (4-6)</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+                                <input type="checkbox" <%= size === "M" ? "checked" : "" %>
+                                    onchange="applyFilter('size','M')"
+
+                                    class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand accent-[#4F6352]" />
+                                <span class="text-text-muted group-hover:text-text-dark transition">M / US (6-10)</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+                                <input type="checkbox"<%= size === "L" ? "checked" : "" %>
+                                    onchange="applyFilter('size','L')"
+
+                                    class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand accent-[#4F6352]" />
+                                <span class="text-text-muted group-hover:text-text-dark transition">L / US
+                                    (10-14)</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+                                <input type="checkbox" <%= size === "XL" ? "checked" : "" %>
+                                    onchange="applyFilter('size','XL')"
+
+                                    class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand accent-[#4F6352]" />
+                                <span class="text-text-muted group-hover:text-text-dark transition">XL / US
+                                    (12-16)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Color -->
+                  
+
+                    <!-- Accordion: Collection (Default Expanded) -->
+                    <div class="pt-4">
+                        <button onclick="toggleAccordion('collection-content', 'collection-icon')"
+                            class="w-full flex justify-between items-center py-1 text-xs sm:text-sm font-semibold uppercase tracking-widest text-text-dark hover:text-brand">
+                            <span>Collection</span>
+                            <span id="collection-icon" class="text-text-muted font-light transition-transform">-</span>
+                        </button>
+                        <div id="collection-content" class="mt-3 pl-1 space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer">
+
+    <input
+        type="checkbox"
+        <%= stock === "in" ? "checked" : "" %>
+        onchange="applyFilter('stock','in')"
+        class="custom-checkbox w-4 h-4">
+
+    <span>In Stock</span>
+
+</label>
+
+<label class="flex items-center gap-3 cursor-pointer">
+
+    <input
+        type="checkbox"
+        <%= stock === "out" ? "checked" : "" %>
+        onchange="applyFilter('stock','out')"
+        class="custom-checkbox w-4 h-4">
+
+    <span>Out Of Stock</span>
+
+</label>
+                        </div>
+                    </div>
+
+                    <!-- Accordion: Fabric (Default Expanded) -->
+                  
+
+                </div>
+            </aside>
+
+            <!-- PRODUCT CATALOG Showcase Grid (3/4 width) -->
+            <div class=" flex-1 p-8 pr-2 ">
+                <div class="grid grid-cols-2  lg:grid-cols-3 gap-x-8 gap-y-10">
+
+                    <% products.forEach(product=> { %>
+
+                        <div class="group relative flex flex-col ">
+
+                            <!-- Product Image -->
+                            <a href="/shop/product/<%= product.slug %>"
+                                class="relative w-[200px] h-[300px] md:w-[260px] md:h-[370px] lg:w-[320px] lg:h-[450px] bg-[#F3F2EE] overflow-hidden rounded-md transition-all duration-300 group-hover:shadow-lg">
+
+                                <img src="<%= product.variants?.[0]?.images?.[0]?.url || '/images/default-product.jpg' %>"
+                                    alt="<%= product.productName %>"
+                                    class="w-[200px] h-[300px] md:w-[260px] md:h-[370px] lg:w-[320px] lg:h-[450px] object-cover group-hover:scale-105 transition duration-500">
+
+                                <!-- Wishlist -->
+                                <button
+                                    class="absolute top-4 right-4 bg-white hover:bg-gray-50 text-text-dark p-2 rounded-full shadow-md transition-transform duration-200 hover:scale-110">
+
+                                    <i data-lucide="heart" class="w-[17px] h-[17px] stroke-[1.5]">
+                                    </i>
+
+                                </button>
+
+                            </a>
+
+                            <!-- Product Details -->
+                            <div class="mt-4 flex flex-col gap-4">
+
+                                <div class="flex justify-between items-start gap-2 w-[320px]">
+
+                                    <div class="flex-1 min-w-0">
+
+                                        <h4
+                                            class="font-sans font-bold text-xs sm:text-sm text-text-dark group-hover:text-brand transition-colors">
+                                            <%= product.productName %>
+                                        </h4>
+
+                                        <p class="text-xs text-text-muted mt-0.5">
+                                            <%= product.category?.name || "Category" %>
+                                        </p>
+
+                                    </div>
+
+                                    <span
+                                        class="font-sans font-semibold text-xs sm:text-sm text-text-dark whitespace-nowrap ml-auto">
+
+                                        ₹<%= product.displayPrice  || 0 %>
+
+                                    </span>
+
+                                </div>
+
+                                <!-- Color Swatches -->
+                                <div class="flex items-center gap-2 mt-1">
+                                    <% const colorMap={ black: "#000000" , white: "#ffffff" , red: "#ff0000" ,
+                                        blue: "#0000ff" , green: "#008000" , yellow: "#ffff00" , pink: "#ffc0cb" ,
+                                        purple: "#800080" , brown: "#8b4513" , grey: "#808080" , gray: "#808080" } 
+                                        %>
+
+                                        <% product.variants.forEach(variant=> { %>
+
+                                            <span class="w-4 h-4 rounded-full border border-gray-300"
+                                                style="background-color:<%= variant.colorCode %>;">
+                                            </span>
+                                            <% }) %>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <% }) %>
+
+                </div>
+                <!-- ============= -->
+                 <% if(totalPages > 1){ %>
+
+<div class="flex justify-center items-center gap-2 mt-16">
+
+    <% if(currentPage > 1){ %>
+        <a href="?page=<%= currentPage - 1 %>&sort=<%= sort || '' %>&size=<%= size || '' %>"
+            class="px-4 py-2 border rounded hover:bg-brand hover:text-white">
+            Prev
+        </a>
+    <% } %>
+
+    <% for(let i = Math.max(1,currentPage-2); i <= Math.min(totalPages,currentPage+2); i++){ %>
+
+        <a href="?page=<%= i %>&sort=<%= sort || '' %>&size=<%= size || '' %>"
+            class="w-10 h-10 flex items-center justify-center rounded border
+            <%= currentPage === i
+                ? 'bg-brand text-white border-brand'
+                : 'hover:bg-brand hover:text-white'
+            %>">
+            <%= i %>
+        </a>
+
+    <% } %>
+
+    <% if(currentPage < totalPages){ %>
+        <a href="?page=<%= currentPage + 1 %>&sort=<%= sort || '' %>&size=<%= size || '' %>"
+            class="px-4 py-2 border rounded hover:bg-brand hover:text-white">
+            Next
+        </a>
+    <% } %>
+
+</div>
+
+<% } %>
+            </div>
+
+        </div>
+    </main>
+
+
+    <!-- Interactive Toast Message -->
+    <div id="toastMessage"
+        class="fixed bottom-6 right-6 bg-gray-900 text-white text-xs sm:text-sm py-3 px-5 rounded-lg shadow-2xl translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2.5 z-50">
+        <span id="toastIcon"></span>
+        <span id="toastText"></span>
+    </div>
+
+    <!-- ---------------------------------------------------- -->
+    <!-- CONTROLLER LOGIC: Core dataset and interactions -->
+    <!-- ---------------------------------------------------- -->
+    <script>
+
+    lucide.createIcons();
+
+    // ACCORDION
+    function toggleAccordion(panelId, iconId) {
+
+        const panel = document.getElementById(panelId);
+        const icon = document.getElementById(iconId);
+
+        panel.classList.toggle("hidden");
+
+        icon.textContent =
+            panel.classList.contains("hidden") ? "+" : "-";
+    }
+
+    // APPLY FILTER
+    function applyFilter(key, value) {
+
+        const params =
+            new URLSearchParams(window.location.search);
+
+        if (params.get(key) === value) {
+
+            params.delete(key);
+
+        } else {
+
+            params.set(key, value);
+
+        }
+
+        params.set("page", 1);
+        localStorage.setItem("openAccordion", "sort");
+
+        window.location.href =
+            `${window.location.pathname}?${params.toString()}`;
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+
+    const openAccordion =
+        localStorage.getItem("openAccordion");
+
+    if(openAccordion === "sort"){
+
+        const panel =
+            document.getElementById("sort-by-content");
+
+        const icon =
+            document.getElementById("sort-by-icon");
+
+        panel.classList.remove("hidden");
+        icon.textContent = "-";
+    }
+
+});
+
+    // CLEAR FILTERS
+    function clearAllFilters() {
+
+        window.location.href =
+            window.location.pathname;
+
+    }
+
+</script>
+</body>
+
+</html>

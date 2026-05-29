@@ -1,0 +1,102 @@
+<div
+                    class="px-6 py-5 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <span class="text-sm font-medium text-gray-400">
+                        Showing <span class="text-gray-700 font-semibold">
+                            <%= products.length> 0 ? (currentPage - 1) * limit + 1 : 0 %>
+                        </span> to <span class="text-gray-700 font-semibold">
+                            <%= Math.min(currentPage * limit, totalProductsCount) %>
+                        </span> of <span class="text-gray-700 font-semibold">
+                            <%= totalProductsCount.toLocaleString() %>
+                        </span> entries
+                    </span>
+
+                    <% if (totalPages> 1) { %>
+                        <div id="paginationContainer" class="flex items-center gap-1.5">
+                            <!-- Previous Button -->
+                            <% if (currentPage> 1) { %>
+                                <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>"
+                                    class="p-2 text-gray-500 hover:text-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                        <path d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </a>
+                                <% } else { %>
+                                    <button class="p-2 text-gray-300 cursor-not-allowed" disabled>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                            <path d="M15 19l-7-7 7-7" />
+                                        </svg>
+                                    </button>
+                                    <% } %>
+
+                                        <!-- First Page element wrapper if far ahead -->
+                                        <% if (currentPage> 2) { %>
+                                            <a href="?page=1&limit=<%= limit %>"
+                                                class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 text-xs font-bold transition-colors">1</a>
+                                            <% if (currentPage> 3) { %><span class="px-1 text-gray-300">...</span>
+                                                <% } %>
+                                                    <% } %>
+
+                                                        <!-- Dynamic contextual numbering loop -->
+                                                        <% for(let i=Math.max(1, currentPage - 1); i<=Math.min(totalPages, currentPage + 1); i++) { %>
+                                                            <% if (i===currentPage) { %>
+                                                                <button
+                                                                    class="w-8 h-8 rounded-full accent-brown text-white text-xs font-extrabold shadow-sm">
+                                                                    <%= i %>
+                                                                </button>
+                                                                <% } else { %>
+                                                                    <a href="?page=<%= i %>&limit=<%= limit %>"
+                                                                        class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 text-xs font-bold transition-colors">
+                                                                        <%= i %>
+                                                                    </a>
+                                                                    <% } %>
+                                                                        <% } %>
+
+                                                                            <!-- Last Page element wrapper if far behind -->
+                                                                            <% if (currentPage < totalPages - 1) { %>
+                                                                                <% if (currentPage < totalPages - 2) {%>
+                                                                                    <span
+                                                                                        class="px-1 text-gray-300">...</span>
+                                                                                    <% } %>
+                                                                                        <a href="?page=<%= totalPages %>&limit=<%= limit %>"
+                                                                                            class="w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 text-xs font-bold transition-colors">
+                                                                                            <%= totalPages %>
+                                                                                        </a>
+                                                                                        <% } %>
+
+                                                                                            <!-- Next Button -->
+                                                                                            <% if (currentPage < totalPages) { %>
+                                                                                                <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>"
+                                                                                                    class="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                                                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                                        class="h-4 w-4"
+                                                                                                        fill="none"
+                                                                                                        viewBox="0 0 24 24"
+                                                                                                        stroke="currentColor"
+                                                                                                        stroke-width="3">
+                                                                                                        <path
+                                                                                                            d="M9 5l7 7-7 7" />
+                                                                                                    </svg>
+                                                                                                </a>
+
+                                                                                                <% } else { %>
+                                                                                                    <button
+                                                                                                        type="button"
+                                                                                                        class="p-2 text-gray-300 cursor-not-allowed"
+                                                                                                        disabled>
+                                                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                                            class="h-4 w-4"
+                                                                                                            fill="none"
+                                                                                                            viewBox="0 0 24 24"
+                                                                                                            stroke="currentColor"
+                                                                                                            stroke-width="3">
+                                                                                                            <path
+                                                                                                                d="M9 5l7 7-7 7" />
+                                                                                                        </svg>
+                                                                                                    </button>
+
+                                                                                                    <% } %>
+                        </div>
+                        <% } %>
+                </div>

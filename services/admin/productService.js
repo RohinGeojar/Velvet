@@ -1,10 +1,22 @@
 import Product from "../../models/productModel.js"
+import { AppError } from "../../utils/AppError.js"
+import { capitalizeName, normalizeText } from "../../utils/capitalizer.js"
 import { generateSlug } from "../../utils/slugify.js"
 
 
 
 export const createProduct = async (productData, files) => {
-    const slug = generateSlug(productData.productName)
+    
+
+    let baseSlug = generateSlug(productData.productName,{ lower: true }) 
+    let slug = baseSlug;
+
+    let counter = 1;
+
+    while (await Product.findOne({ slug })) {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+    }
 
 
     productData.variants.forEach((variant, index) => {
@@ -22,7 +34,10 @@ export const createProduct = async (productData, files) => {
         }
 
         variant.images = variantFiles.map(
-            file => file.filename
+            file => ({
+                public_id: file.filename,
+                url: file.path
+            })
         )
     })
 
@@ -31,4 +46,57 @@ export const createProduct = async (productData, files) => {
         slug
     })
     return product
+}
+
+
+export const updateProductService = async (id, body, files, value) => {
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+        throw new AppError("Product not found", 404)
+    }
+    let productName = capitalizeName(value.productName)
+    let productTitle = normalizeText(value.productTitle)
+
+    body.variants.forEach((variant, index) => {
+
+        let existingImages = variant.existingImages || []
+
+        if (!Array.isArray(existingImages)) {
+            existingImages = [existingImages]
+        }
+
+
+        const oldImages =
+            existingImages.map(url => ({
+                url
+            }))
+
+
+        const variantFiles = files.filter(file => file.fieldname === `variantImages_${index}`)
+
+        const newImages = variantFiles.map(file => ({
+            public_id: file.filename,
+            url: file.path
+        }))
+        variant.images = [
+            ...oldImages,
+            ...newImages
+        ]
+
+        delete variant.existingImages;
+    })
+
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+        id,
+        {
+            ...value, productName, productTitle,
+            variants: body.variants
+        },
+        { new: true }
+    )
+
+    return updatedProduct;
 }

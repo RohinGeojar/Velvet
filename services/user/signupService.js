@@ -14,7 +14,7 @@ export const signupService = async (data) => {
         existingUser.password = hashedPassword;
         await existingUser.save();
         
-        return { linked: true }; // special response
+        return { linked: true }; 
     }
     if(existingUser && !existingUser.isVerified) {
         await sendOtpService(email);

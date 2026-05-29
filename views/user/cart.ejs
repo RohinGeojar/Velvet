@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Velvet Vogue</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandGreen: {
+                            DEFAULT: '#556B55',
+                            hover: '#425242'
+                        },
+                        primaryText: '#111827',
+                        secondaryText: '#6B7280',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts for Clean Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Premium elegant brand font styling */
+        .brand-title {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        /* Simple custom scrollbar if needed */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c5cbc5;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-primaryText min-h-screen flex flex-col font-sans antialiased selection:bg-brandGreen/20">
+
+
+
+
+    <!-- Main Cart Section -->
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex-grow pb-20">
+
+        <!-- Sub-header: Back Button, Page Title, Continue Shopping Link -->
+        <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 pb-6 mb-8 mt-4 gap-4">
+            <div class="flex items-center space-x-4">
+                <a href="javascript:history.back()"
+                    class="text-sm font-medium text-secondaryText hover:text-primaryText transition-colors flex items-center group">
+                    <svg class="w-4 h-4 mr-1.5 transform group-hover:-translate-x-0.5 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back
+                </a>
+                <h1 class="text-3xl font-bold tracking-tight text-primaryText">Your Cart <%= cartCount %> </h1>
+            </div>
+            <div>
+                <a href="/shop"
+                    class="text-sm font-medium text-secondaryText hover:text-primaryText transition-colors hover:underline underline-offset-4">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+
+        <!-- EJS Conditional Logic: Empty Cart State -->
+        <% if (items.length===0) { %>
+            <div class="text-center py-24 px-4 border border-dashed border-gray-200 rounded-2xl max-w-2xl mx-auto">
+                <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <h2 class="text-xl font-medium text-primaryText mb-1">Your cart is empty</h2>
+                <p class="text-secondaryText text-sm mb-6">Looks like you haven't added anything to your cart yet.</p>
+                <a href="/shop"
+                    class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-brandGreen hover:bg-brandGreen-hover transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brandGreen">
+                    Start Shopping
+                </a>
+            </div>
+            <% } else { %>
+
+                <!-- Two-Column Layout Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+
+                    <!-- Left Column: Cart Items List (Occupies 7 columns on Desktop) -->
+                    <section class="lg:col-span-7 space-y-8">
+                        <h2 class="text-lg font-semibold text-primaryText border-b border-gray-100 pb-2">Order Summary
+                        </h2>
+
+                        <div class="divide-y divide-gray-100" id="cart-items-container">
+                            <% items.forEach((item, index)=> { %>
+                                <!-- Cart Item Component -->
+                                <div class="py-6 flex flex-row gap-4 sm:gap-6 group relative"  data-stock="<%= item.availableStock %>"
+                                    data-item-id="<%= item.id || 'item-' + index %>" data-price="<%= item.price %>">
+
+                                    <!-- Product Image -->
+                                    <a href="/shop/product/<%= item.slug %>?variant=<%= item.variantIndex %>"
+                                        class="w-24 h-32 sm:w-28 sm:h-36 flex-shrink-0 overflow-hidden rounded-lg bg-gray-50 border border-gray-100 relative group">
+                                        <img src="<%= item.image_url %>" alt="<%= item.title %>" class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-300
+                                            <%= item.isOutOfStock || item.isUnavailable
+                                            ? 'blur-[2px] opacity-60'
+                                            : ''
+                                            %>"
+                                            onerror="this.src='https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=400';">
+                                        <% if(item.isOutOfStock){ %>
+
+                                            <div class="absolute inset-0 flex items-center justify-center">
+
+                                                <span
+                                                    class="bg-white/90 text-red-500 px-4 py-2 text-xs font-bold tracking-widest uppercase">
+
+                                                    Out Of Stock
+
+                                                </span>
+
+                                            </div>
+
+                                            <% } %>
+
+                                                <% if(item.isUnavailable){ %>
+
+                                                    <div class="absolute inset-0 flex items-center justify-center">
+
+                                                        <span
+                                                            class="bg-white/90 text-gray-700 px-4 py-2 text-xs font-bold tracking-widest uppercase">
+
+                                                            Currently Unavailable
+
+                                                        </span>
+
+                                                    </div>
+
+                                                    <% } %>
+                                    </a>
+
+                                    <!-- Product Details & Controls -->
+                                    <div class="flex-grow flex flex-col justify-between">
+                                        <div class="space-y-1 pr-6">
+                                            <div class="flex justify-between items-start">
+                                                <h3 class="text-base font-bold text-primaryText tracking-tight">
+                                                    <%= item.title %>
+                                                </h3>
+                                            </div>
+                                            <p class="text-sm text-secondaryText">Size: <span
+                                                    class="text-primaryText font-medium">
+                                                    <%= item.size %>
+                                                </span></p>
+                                            <p class="text-sm text-secondaryText">Color: <span
+                                                    class="text-primaryText font-medium">
+                                                    <%= item.color %>
+                                                </span></p>
+                                        </div>
+
+                                        <!-- Quantity Selector & Price Row -->
+                                        <div class="flex items-center justify-between mt-4">
+                                            <!-- Dynamic Quantity Selector -->
+                                            <div class="flex items-center border border-gray-200 rounded-md bg-white
+                                                    <%= item.isOutOfStock || item.isUnavailable
+                                                    ? 'opacity-50 pointer-events-none'
+                                                    : ''
+                                                    %>"> <button type="button" onclick="decrementQuantity(this)"
+                                                    class="px-2.5 py-1.5 text-secondaryText hover:text-primaryText hover:bg-gray-50 transition-colors focus:outline-none"
+                                                    aria-label="Decrease quantity">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2.5" d="M20 12H4" />
+                                                    </svg>
+                                                </button>
+                                                <span
+                                                    class="px-3 py-1 text-sm font-semibold text-primaryText min-w-[2.5rem] text-center select-none quantity-display">
+                                                    <%= item.quantity %>
+                                                </span>
+                                                <button type="button" onclick="incrementQuantity(this)"
+                                                    class="px-2.5 py-1.5 text-secondaryText hover:text-primaryText hover:bg-gray-50 transition-colors focus:outline-none"
+                                                    aria-label="Increase quantity">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2.5" d="M12 4v16m8-8H4" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+
+                                            <!-- Price Representation -->
+                                            <div class="text-right">
+                                                <span class="text-base font-bold text-primaryText item-total-price">
+                                                    $<%= (item.price * item.quantity).toFixed(2) %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Remove Button (Absolute placed on top right) -->
+                                    <button type="button" onclick="removeCartItem(this)"
+                                        class="absolute top-6 right-0 p-1 text-gray-400 hover:text-red-500 transition-colors focus:outline-none"
+                                        aria-label="Remove item">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+
+                                </div>
+                                <% }) %>
+                        </div>
+                    </section>
+
+                    <!-- Right Column: Order Summary Card (Occupies 5 columns on Desktop) -->
+                    <aside class="lg:col-span-5 bg-gray-50/50 rounded-2xl p-6 sm:p-8 border border-gray-100 mt-2">
+
+                        <!-- Decorative Top border alignment mimicking mockup -->
+                        <div class="border-t border-gray-200 pt-6">
+                            <h2 class="sr-only">Billing Details</h2>
+
+                            <div class="space-y-5">
+
+                                <!-- Subtotal Line item -->
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-secondaryText" id="subtotal-label">Subtotal (<%=
+                                            items.reduce((acc, curr)=> acc + curr.quantity, 0) %>)</span>
+                                    <span class="font-medium text-primaryText text-base"
+                                        id="summary-subtotal">$0.00</span>
+                                </div>
+
+                                <!-- Discount Line item -->
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-secondaryText">Discount</span>
+                                    <span class="font-medium text-green-600 text-base" id="summary-discount">-$<%=
+                                            discount.toFixed(2) %></span>
+                                </div>
+
+                                <!-- Shipping Line item -->
+                                <div class="flex items-center justify-between text-sm pb-4 border-b border-gray-100">
+                                    <span class="text-secondaryText">Shipping</span>
+                                    <span class="font-medium text-primaryText" id="summary-shipping">
+                                        <%= shipping===0 ? 'Free' : '$' + shipping.toFixed(2) %>
+                                    </span>
+                                </div>
+
+                                <!-- Grand Total Line item -->
+                                <div class="flex items-center justify-between pt-2">
+                                    <span class="text-base font-medium text-primaryText">Total Orders:</span>
+                                    <span class="text-2xl font-bold text-primaryText"
+                                        id="summary-grandtotal">$0.00</span>
+                                </div>  
+
+                                <!-- Checkout Button Action Container -->
+                                <div class="pt-6">
+                                    <button type="button" onclick="triggerCheckout()"
+                                        class="w-full bg-brandGreen hover:bg-brandGreen-hover text-white py-4 px-6 rounded-md font-medium tracking-wide text-sm transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brandGreen focus:ring-offset-gray-50 uppercase text-center">
+                                        Checkout
+                                    </button>
+                                    <button type="button" onclick="clearAll()"
+                                        class="w-full bg-brandGreen hover:bg-brandGreen-hover text-white py-4 px-6 rounded-md font-medium tracking-wide text-sm transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brandGreen focus:ring-offset-gray-50 uppercase text-center">
+                                       clear all
+                                    </button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </aside>
+
+                </div>
+                <% } %>
+
+    </main>
+
+    <!-- Interactive Feedback Overlay Modal (Replacing browser alert) -->
+    <div id="checkout-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 hidden transition-opacity duration-300">
+        <div
+            class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="text-center">
+                <div
+                    class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 text-green-600 mb-4">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-bold text-primaryText mb-2">Order Confirmed!</h3>
+                <p class="text-sm text-secondaryText mb-6">Thank you for shopping with Velvet Vogue. Your style dispatch
+                    is on its way!</p>
+                <button type="button" onclick="closeModal()"
+                    class="w-full bg-brandGreen hover:bg-brandGreen-hover text-white py-3 px-4 rounded-md font-medium transition-colors">
+                    Back to Shop
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Real-Time Client Side Interactivity Logic -->
+    <script>
+
+        function clearAll(){
+
+        }
+        const discountVal = parseFloat("<%= discount %>") || 0;
+        const shippingVal = parseFloat("<%= shipping %>") || 0;
+
+        // Recalculates all cart math in real time dynamically
+        function updateCartCalculations() {
+            const items = document.querySelectorAll('#cart-items-container > div');
+            let subtotal = 0;
+            let totalItemCount = 0;
+
+            items.forEach(item => {
+                const price = parseFloat(item.getAttribute('data-price')) || 0;
+                const qtyElement = item.querySelector('.quantity-display');
+                const quantity = parseInt(qtyElement.textContent) || 0;
+
+                // Calculate item subtotal
+                const itemTotal = price * quantity;
+                subtotal += itemTotal;
+                totalItemCount += quantity;
+
+                // Update single item price display text in row
+                const priceDisplay = item.querySelector('.item-total-price');
+                if (priceDisplay) {
+                    priceDisplay.textContent = '$' + itemTotal.toFixed(2);
+                }
+            });
+
+            // Update right-hand order summary card figures
+            const subtotalLabel = document.getElementById('subtotal-label');
+            if (subtotalLabel) {
+                subtotalLabel.textContent = `Subtotal (${totalItemCount})`;
+            }
+
+            const summarySubtotal = document.getElementById('summary-subtotal');
+            if (summarySubtotal) {
+                summarySubtotal.textContent = '$' + subtotal.toFixed(2);
+            }
+
+            // Calculate absolute Grand Total
+            let finalTotal = subtotal - discountVal + shippingVal;
+            if (finalTotal < 0) finalTotal = 0;
+
+            const summaryGrandtotal = document.getElementById('summary-grandtotal');
+            if (summaryGrandtotal) {
+                summaryGrandtotal.textContent = '$' + (subtotal > 0 ? finalTotal.toFixed(2) : '0.00');
+            }
+
+            // Handle completely empty cart scenario on client deletion
+            if (items.length === 0) {
+                const mainElement = document.querySelector('main');
+                if (mainElement) {
+                    mainElement.innerHTML = `
+            <div class="text-center py-24 px-4 border border-dashed border-gray-200 rounded-2xl max-w-2xl mx-auto my-12">
+              <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              <h2 class="text-xl font-medium text-primaryText mb-1">Your cart is empty</h2>
+              <p class="text-secondaryText text-sm mb-6">Looks like you haven't added anything to your cart yet.</p>
+              <a href="/shop" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-brandGreen hover:bg-brandGreen-hover transition-colors">
+                Start Shopping
+              </a>
+            </div>
+          `;
+                }
+            }
+        }
+
+        // Handles decrement action clicks safely
+        function decrementQuantity(button) {
+            const qtyContainer = button.parentNode;
+            const qtyDisplay = qtyContainer.querySelector('.quantity-display');
+            let currentQty = parseInt(qtyDisplay.textContent) || 1;
+
+            if (currentQty > 1) {
+                qtyDisplay.textContent = currentQty - 1;
+                updateCartCalculations();
+            } else {
+                // Prompt or offer removal if quantity drops below 1
+                removeCartItem(button);
+            }
+        }
+
+        // Handles increment action clicks safely
+        function incrementQuantity(button) {
+
+            const qtyContainer = button.parentNode;
+
+            const qtyDisplay = qtyContainer.querySelector('.quantity-display');
+
+            const itemRow = button.closest('[data-item-id]');
+
+            const availableStock = Number(itemRow.dataset.stock)
+
+            let currentQty = parseInt(qtyDisplay.textContent) || 1;
+
+            if (
+                currentQty >= 5 || currentQty >= availableStock
+            ) {
+
+                return;
+            }
+
+            qtyDisplay.textContent = currentQty + 1;
+
+            updateCartCalculations();
+        }
+
+        // Animates and removes item element from UI
+        async function removeCartItem(button) {
+
+    const itemRow =
+        button.closest("[data-cart-item-id]");
+
+    const itemId =
+        itemRow.dataset.cartItemId;
+
+    try {
+
+        const response = await fetch(
+            `/cart/remove/${itemId}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const data = await response.json();
+
+        if (!data.success) return;
+
+        itemRow.style.transition =
+            "all .4s ease";
+
+        itemRow.style.opacity = "0";
+
+        itemRow.style.transform =
+            "translateX(20px)";
+
+        setTimeout(() => {
+
+            itemRow.remove();
+
+            updateCartCalculations();
+
+        }, 400);
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+}
+
+        // Modal Trigger for elegant Checkout feedback
+        function triggerCheckout() {
+            const modal = document.getElementById('checkout-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.querySelector('.transform').classList.remove('scale-95');
+                    modal.querySelector('.transform').classList.add('scale-100');
+                }, 50);
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('checkout-modal');
+            if (modal) {
+                modal.querySelector('.transform').classList.remove('scale-100');
+                modal.querySelector('.transform').classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 200);
+            }
+        }
+
+        // Initial Execution to compute subtotals perfectly on load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartCalculations();
+        });
+    </script>
+</body>
+
+</html>

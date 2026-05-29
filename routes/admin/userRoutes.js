@@ -18,9 +18,9 @@ router.use((req, res, next) => {
 });
 
 router.get("/users",isLoggin,  loadUsers);
-router.get("/users/search", searchUsers);
-router.get("/user-stats", refreshStat)
+router.get("/users/search",isLoggin, searchUsers);
+router.get("/user-stats",isLoggin, refreshStat)
 
-router.patch("/block-user/:id", blockUser);
-router.patch("/unblock-user/:id", unblockUser);
+router.patch("/block-user/:id",isLoggin, blockUser);
+router.patch("/unblock-user/:id",isLoggin, unblockUser);
 export default router;

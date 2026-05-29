@@ -5,7 +5,6 @@ import Joi from "joi"
 const sizeSchema = Joi.object({
     size: Joi.string()
         .trim()
-        .empty("")
         .required()
         .valid("S", "M", "L", "XL")
         .messages({
@@ -16,8 +15,6 @@ const sizeSchema = Joi.object({
 
     stock: Joi.number()
         .integer()
-        .empty("")
-
         .required()
         .min(0)
         .messages({
@@ -42,9 +39,11 @@ const variantSchema = Joi.object({
             "string.max": "Color cannot exceed 20 characters",
             "string.pattern.base": "Color name must be valid"
         }),
+    colorCode: Joi.string()
+        .trim()
+        .required(),
 
     regularPrice: Joi.number()
-        .empty("")
         .min(1)
         .required()
         .messages({
@@ -54,7 +53,6 @@ const variantSchema = Joi.object({
         }),
 
     salePrice: Joi.number()
-        .empty("")
         .min(0)
         .required()
         .custom((value, helpers) => {
@@ -73,6 +71,7 @@ const variantSchema = Joi.object({
             "any.required": "Sale price is required",
             "any.invalid": "Sale price cannot exceed regular price"
         }),
+    existingImages: Joi.array().optional(),
 
     sizes: Joi.array()
         .items(sizeSchema)
@@ -167,7 +166,11 @@ export const productSchema = Joi.object({
         .messages({
             "array.min": "At least one variant is required",
             "any.required": "Variants are required"
-        })
+        }),
+    isActive: Joi.boolean()
+        .default(true),
+    isDeleted: Joi.boolean()
+        .default(false)
 
 })
 

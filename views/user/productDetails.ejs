@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Vogue - Luxury Product Detail</title>
+    <!-- Google Fonts: Playfair Display (Serif) & DM Sans (Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#7a9575',// #7a9575,#475845  #7a9575,#475845 00674F ,#2e6f40
+                            dark: '#627a5e',
+                        },
+                        bgLightGray: '#F4F5F4',
+                        text: {
+                            dark: '#1A1A1A',
+                            muted: '#555555',
+                            footer: '#FFFFFF'
+                        },
+                        border: {
+                            light: '#E5E5E5'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"DM Sans"', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- EJS Browser Compiler Library -->
+    <script src="https://cdn.jsdelivr.net/npm/ejs@3.1.9/ejs.min.js"></script>
+    <style>
+        /* Smooth transitions for interactive elements */
+        .transition-all-300 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-white font-sans text-text-dark min-h-screen flex flex-col antialiased">
+
+
+    <!-- Breadcrumb line -->
+    <div class="bg-white border-b border-border-light py-3.5">
+        <div
+            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-[11px] font-sans tracking-wider text-text-muted uppercase flex items-center gap-2">
+            <a href="#" class="hover:text-brand transition">Home</a>
+            <span class="text-gray-300 font-light">/</span>
+            <a href="#" class="hover:text-brand transition">
+                <%= product.productTitle %>
+            </a>
+            <span class="text-gray-300 font-light">/</span>
+            <span class="text-text-dark font-semibold">
+                <%= product.productName %>
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Workspace: Two-column split -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+
+            <!-- LEFT GALLERY COLUMN (1 lg:col-span-7) -->
+            <div class="lg:col-span-7 flex flex-col-reverse sm:flex-row gap-4 sm:gap-6">
+
+                <!-- Vertical Slider/Thumbnail Column on the left -->
+                <div id="thumbnailContainer" class="flex flex-row sm:flex-col gap-3 sm:w-24">
+
+                    <% if(product.variants[selectedVariantIndex] ?.images?.length){ %>
+
+                        <% product.variants[selectedVariantIndex] .images.forEach((image)=> { %>
+
+                            <img src="<%= image.url %>" onclick="changeImage(this)"
+                                class="w-20 h-24 object-cover rounded cursor-pointer border hover:border-black transition">
+
+                            <% }) %>
+
+                                <% } %>
+
+                </div>
+
+                <!-- MAIN IMAGE -->
+                <div id="zoomContainer"
+                    class="flex-1 aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden relative cursor-zoom-in">
+
+                    <img id="mainImage" src="<%= product.variants[selectedVariantIndex] ?.images?.[0]?.url %>"
+                        class="w-full h-full object-cover transition duration-200">
+
+                </div>
+
+
+
+            </div>
+
+            <!-- RIGHT DETAILS & PURCHASE COLUMN (lg:col-span-5) -->
+            <div class="lg:col-span-5 space-y-8 sm:py-2">
+
+                <div>
+                    <h2 class="font-semibold text-3xl sm:text-[40px] tracking-wide text-text-dark leading-tight">
+                        <%= product.productName %>
+                    </h2>
+                    <p class="text-xs sm:text-sm text-text-muted mt-4 font-sans leading-relaxed tracking-wide">
+                        <%= product.description %>
+                    </p>
+                </div>
+
+                <!-- COLOR SELECTOR -->
+                <div class="space-y-4">
+
+                    <h3 class="text-[11px] font-sans font-bold uppercase tracking-[0.2em] text-text-dark">
+
+                        Colors
+
+                    </h3>
+
+
+                    <div class="flex items-center gap-3">
+
+                        <% product.variants.forEach((variant,index)=> { %>
+
+                            <button type="button" onclick="selectVariant(<%= index %>)" title="<%= variant.color %>"
+                                data-images='<%- JSON.stringify(variant.images) %>'
+                                data-price="<%= variant.salePrice %>" data-regular="<%= variant.regularPrice %>"
+                                data-sizes='<%- JSON.stringify(variant.sizes) %>'
+                                class="color-btn w-8 h-8 rounded-full border-2 border-gray-200 hover:scale-110 transition-all duration-200 <%= index === 0 ? 'ring-2 ring-black ring-offset-2' : '' %>"
+                                style="background-color:<%= variant.colorCode %>;"></button>
+
+                            <% }) %>
+
+                    </div>
+                    <div id="stockStatus"
+                        class="text-sm font-medium tracking-wide <%= product.isActive ? 'text-gray-500'  : 'text-red-500' %>">
+
+                        <%= product.isActive ? 'Select Size For Stock Verification' : 'Currently Unavailable' %>
+
+                    </div>
+
+                </div>
+
+                <!-- Interactive Size Selector with Size Guide Trigger -->
+
+                <!-- QUANTITY SELECTOR -->
+                <div class="space-y-3">
+
+                    <label class="text-[11px] font-sans font-bold uppercase tracking-[0.2em] text-text-dark">
+
+                        Quantity
+
+                    </label>
+
+                    <div class="flex items-center border border-border-light rounded-md w-fit">
+
+                        <button type="button" onclick="updateQuantity(-1)"
+                            class="px-4 py-3 text-lg hover:bg-gray-100 transition">
+
+                            -
+
+                        </button>
+
+                        <input id="quantityInput" type="number" name="quantity" value="1" min="1" max="5" readonly
+                            class="w-14 text-center outline-none border-x border-border-light py-3">
+
+                        <button type="button" onclick="updateQuantity(1)"
+                            class="px-4 py-3 text-lg hover:bg-gray-100 transition">
+
+                            +
+
+                        </button>
+
+                    </div>
+
+                    <p class="text-xs text-text-muted">
+                        Maximum 5 quantities allowed
+                    </p>
+
+                </div>
+
+                <!-- Actions Panel: Add to Cart & Secondary Interactions -->
+                <div class="space-y-4 pt-4 border-t border-border-light">
+                    <form id="addToCartForm" action="/shop/cart/add" method="POST" class="space-y-4"
+                        onsubmit="return validateCartForm()" class="space-y-4">
+
+                        <div class="space-y-3.5">
+                            <div
+                                class="flex justify-between items-center text-[11px] font-sans font-bold uppercase tracking-[0.2em]">
+                                <span class="text-text-dark">Size</span>
+
+                            </div>
+
+
+                        </div>
+                        <div id="sizeWrapper" class="relative">
+                            <select id="sizeSelect" name="size" class="w-full border px-4 py-3 rounded-md">
+
+                                <option value="" selected disabled>
+
+                                    Select Size
+
+                                </option>
+
+                                <% product.variants[selectedVariantIndex] .sizes.forEach((item)=> { %>
+
+                                    <option value="<%= item.size %>" data-stock="<%= item.stock %>">
+
+                                        <%= item.size %>
+
+                                    </option>
+
+                                    <% }) %>
+
+                            </select>
+                            <div
+                                class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-text-muted">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </div>
+                            <p id="sizeError" class="text-sm text-red-500 mt-2 hidden">
+
+                                Please select a size
+
+                            </p>
+                        </div>
+
+                        <input type="hidden" name="productId" value="<%= product._id %>">
+                        <input type="hidden" id="cartQuantity" name="quantity" value="1">
+                        <input type="hidden" id="selectedVariantIndex" name="variantIndex"
+                            value="<%= selectedVariantIndex %>">
+
+                        <button id="addToCartBtn" type="submit" <%= !product.variants[selectedVariantIndex] .sizes.some(size=> size.stock > 0)
+
+                            ? 'disabled'
+                            : ''
+                            %>
+
+                            class="w-full text-white py-4 rounded-md transition
+
+                            <%= !product.isActive || !product.variants[selectedVariantIndex] .sizes.some(size=>
+                                size.stock > 0)
+
+                                ? 'bg-gray-400 cursor-not-allowed'
+
+                                : 'bg-brand hover:bg-brand-dark'
+                                %>"
+                                >
+
+                                Add To Cart • ₹ <span id="salePrice">
+                                    <%= product.variants[selectedVariantIndex] .salePrice %>
+                                </span>
+
+                        </button>
+
+                    </form>
+
+                    <div
+                        class="grid grid-cols-2 gap-4 text-[11px] font-sans font-bold uppercase tracking-[0.15em] pt-2">
+                        <button onclick="showDemoToast('30 Days Return eligibility guaranteed!', 'truck')"
+                            class="flex items-center justify-center gap-2 text-text-muted hover:text-brand py-3 border border-border-light rounded-md transition">
+                            <i data-lucide="truck" class="w-4 h-4"></i>
+                            <span>Easy Return</span>
+                        </button>
+                        <button
+                            class="flex items-center justify-center gap-2 text-text-muted py-3 border border-border-light rounded-md transition">
+
+                            <i data-lucide="heart" class="w-4 h-4"></i>
+
+                            <span>Add To Wish List</span>
+
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Product info split: Left dynamic accordions, Right material callout card -->
+    <!-- Product Details Accordion -->
+    <!-- DETAILS + MATERIAL SECTION -->
+    <section class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-14">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+            <!-- LEFT ACCORDIONS -->
+            <div class="space-y-4">
+
+                <!-- Material Care -->
+                <div class="border border-[#d7d7d2] bg-[#f7f7f4]">
+
+                    <button onclick="toggleAccordion(1)" class="w-full flex items-center justify-between px-8 py-6">
+
+                        <span class="text-2xl font-semibold">
+                            Fabric & Care
+                        </span>
+
+                        <i id="icon-1" class="ri-subtract-line text-2xl"></i>
+
+                    </button>
+
+                    <div id="accordion-1" class="px-8 pb-8 text-[15px] leading-8 text-gray-700">
+
+                        <p class="mb-4">
+                            <strong>Fabric Details :</strong>
+                        </p>
+
+                        <p>
+                            <%= product.materialDetails %>
+                        </p>
+
+                        <br>
+
+                        <p class="mb-4">
+                            <strong> Fabric Care :</strong>
+                        </p>
+
+                        <p>
+                            <%= product.materialCare %>
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- Product Detail -->
+
+
+                <!-- Shipping -->
+                <div class="border border-[#d7d7d2] bg-[#f7f7f4]">
+
+                    <button onclick="toggleAccordion(3)" class="w-full flex items-center justify-between px-8 py-6">
+
+                        <span class="text-2xl font-semibold">
+                            Shipping And Return
+                        </span>
+
+                        <i id="icon-3" class="ri-subtract-line text-2xl"></i>
+
+                    </button>
+
+                    <div id="accordion-3" class="px-8 pb-8 text-[15px] leading-8 text-gray-700">
+
+                        <%= product.shippingDetails %>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT MATERIAL CARD -->
+            <div class="border border-[#d7d7d2] bg-[#f7f7f4] p-8">
+
+                <h3 class="text-4xl font-serif mb-6">
+                    Silk
+                </h3>
+
+                <div class="border-t border-[#d7d7d2] pt-6">
+
+                    <p class="text-[15px] leading-8 text-gray-700">
+
+
+                        <%= product.materialDetails %>
+
+
+                    </p>
+
+                    <div class="flex flex-wrap gap-3 mt-8">
+
+                        <span class="px-4 py-2 bg-white border text-sm">
+                            Quick Dry
+                        </span>
+
+                        <span class="px-4 py-2 bg-white border text-sm">
+                            Chemical Free
+                        </span>
+
+                        <span class="px-4 py-2 bg-white border text-sm">
+                            Machine Washable
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+    <!-- Recommendations Section: "You May Also Like" Grid (Matches Prouduct order.jpg) -->
+    <section class="m-20">
+
+        <h2 class="text-3xl font-semibold mb-10">
+            You may also like
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+            <% relatedProducts.forEach(item=> { %>
+
+                <a href="/shop/product/<%= item.slug %>" class="group">
+
+                    <div class="aspect-[3/4] overflow-hidden rounded-xl bg-gray-100">
+
+                        <img src="<%= item.variants[0]?.images?.[0]?.url %>"
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+
+                    </div>
+
+                    <h3 class="mt-4 font-medium">
+                        <%= item.productName %>
+                    </h3>
+
+                    <p class="text-gray-500">
+                        ₹<%= item.variants[0].salePrice %>
+                    </p>
+
+                </a>
+
+                <% }) %>
+
+        </div>
+
+    </section>
+
+    <div id="toast" class="fixed top-50 right-5 z-50 hidden"></div>
+
+
+
+    <!-- ---------------------------------------------------- -->
+    <!-- JAVASCRIPT CONTROLLER LAYER -->
+    <!-- ---------------------------------------------------- -->
+    <script>
+
+        function changeImage(element) {
+
+            document.getElementById("mainImage").src =
+                element.src;
+
+        }
+
+        function toggleAccordion(index) {
+
+            const content =
+                document.getElementById(`accordion-${index}`);
+
+            const icon =
+                document.getElementById(`icon-${index}`);
+
+            content.classList.toggle("hidden");
+
+            if (icon.classList.contains("ri-add-line")) {
+
+                icon.classList.remove("ri-add-line");
+
+                icon.classList.add("ri-subtract-line");
+
+            } else {
+
+                icon.classList.remove("ri-subtract-line");
+
+                icon.classList.add("ri-add-line");
+
+            }
+
+        }
+        function selectVariant(index) {
+            document.getElementById("selectedVariantIndex").value = index;
+
+            const buttons =
+                document.querySelectorAll(".color-btn");
+
+            buttons.forEach(btn => {
+
+                btn.classList.remove(
+                    "ring-2",
+                    "ring-black",
+                    "ring-offset-2"
+                );
+
+            });
+
+            buttons[index].classList.add(
+                "ring-2",
+                "ring-black",
+                "ring-offset-2"
+            );
+
+            const button = buttons[index];
+
+            const images =
+                JSON.parse(button.dataset.images);
+
+            const sizes =
+                JSON.parse(button.dataset.sizes);
+
+            const price =
+                button.dataset.price;
+
+            // =========================
+            // IMAGE
+            // =========================
+
+            document.getElementById(
+                "mainImage"
+            ).src = images[0].url;
+
+            // =========================
+            // THUMBNAILS
+            // =========================
+
+            const thumbnailContainer =
+                document.getElementById(
+                    "thumbnailContainer"
+                );
+
+            thumbnailContainer.innerHTML = "";
+
+            images.forEach(image => {
+
+                thumbnailContainer.innerHTML += `
+
+                <img
+                    src="${image.url}"
+                    onclick="changeImage(this)"
+                    class="w-20 h-24 object-cover rounded cursor-pointer border hover:border-black transition"
+                >
+            `;
+            });
+
+            // =========================
+            // PRICE
+            // =========================
+
+            document.getElementById(
+                "salePrice"
+            ).textContent = price;
+
+            // =========================
+            // SIZE SELECT
+            // =========================
+
+            const sizeSelect =
+                document.getElementById("sizeSelect");
+
+            sizeSelect.innerHTML = `
+
+    <option value="" selected disabled>
+        Select Size
+    </option>
+
+`;
+
+            sizes.forEach(size => {
+
+                sizeSelect.innerHTML += `
+
+        <option
+            value="${size.size}"
+            data-stock="${size.stock}"
+        >
+            ${size.size}
+        </option>
+
+    `;
+
+
+
+            });
+
+            // =========================
+            // STOCK STATUS
+            // =========================
+
+            const stockStatus =
+                document.getElementById(
+                    "stockStatus"
+                );
+
+            const addToCartBtn =
+                document.getElementById(
+                    "addToCartBtn"
+                );
+
+
+            const productActive = <%- product.isActive ? 'true' : 'false' %>;
+
+            stockStatus.textContent =
+                productActive
+                    ? "Select Size For Stock Verification"
+                    : "Currently Unavailable";
+
+            stockStatus.className =
+                productActive
+                    ? "text-sm font-medium tracking-wide text-gray-500"
+                    : "text-sm font-medium tracking-wide text-red-500";
+
+        }
+
+
+        document.addEventListener("change", function (e) {
+
+            if (e.target.id !== "sizeSelect") return;
+
+            const selectedOption =
+                e.target.options[e.target.selectedIndex];
+
+            const stock =
+                Number(
+                    selectedOption.dataset.stock
+                );
+
+            const stockStatus =
+                document.getElementById(
+                    "stockStatus"
+                );
+
+            const addToCartBtn =
+                document.getElementById(
+                    "addToCartBtn"
+                );
+            const productActive = <%- product.isActive ? 'true' : 'false' %>;
+
+            if (stock > 0 && productActive) {
+
+                stockStatus.textContent =
+                    "In Stock";
+
+                stockStatus.className =
+                    "text-sm font-medium text-green-600";
+
+                addToCartBtn.disabled = false;
+
+                addToCartBtn.classList.remove(
+                    "bg-gray-400",
+                    "cursor-not-allowed"
+                );
+
+                addToCartBtn.classList.add(
+                    "bg-brand"
+                );
+
+            } else {
+
+                stockStatus.textContent =
+                    productActive
+                        ? "Out Of Stock"
+                        : "Currently Unavailable";
+
+                stockStatus.className =
+                    "text-sm font-medium text-red-500";
+
+                addToCartBtn.disabled = true;
+
+                addToCartBtn.classList.remove(
+                    "bg-brand"
+                );
+
+                addToCartBtn.classList.add(
+                    "bg-gray-400",
+                    "cursor-not-allowed"
+                );
+
+
+            }
+
+        });
+
+        const zoomContainer =
+            document.getElementById(
+                "zoomContainer"
+            );
+
+        const mainImage =
+            document.getElementById(
+                "mainImage"
+            );
+
+        zoomContainer.addEventListener(
+            "mousemove",
+            (e) => {
+
+                const rect =
+                    zoomContainer.getBoundingClientRect();
+
+                const x =
+                    ((e.clientX - rect.left) / rect.width) * 100;
+
+                const y =
+                    ((e.clientY - rect.top) / rect.height) * 100;
+
+                mainImage.style.transformOrigin =
+                    `${x}% ${y}%`;
+
+                mainImage.style.transform =
+                    "scale(2)";
+            }
+        );
+
+        zoomContainer.addEventListener(
+            "mouseleave",
+            () => {
+
+                mainImage.style.transform =
+                    "scale(1)";
+            }
+        );
+        function updateQuantity(change) {
+
+            const quantityInput = document.getElementById("quantityInput")
+
+            const cartQuantity = document.getElementById("cartQuantity")
+
+            let currentQuantity = Number(quantityInput.value);
+
+            currentQuantity += change;
+
+            if (currentQuantity < 1) {
+
+                currentQuantity = 1;
+            }
+
+            if (currentQuantity > 5) {
+
+                currentQuantity = 5;
+            }
+
+            quantityInput.value =
+                currentQuantity;
+
+            cartQuantity.value =
+                currentQuantity;
+        }
+        function validateCartForm() {
+
+            const productActive =
+        <%- product.isActive ? 'true' : 'false' %>;
+
+            if (!productActive) {
+
+                showToast("Product currently unavailable");
+
+                return false;
+            }
+
+            const sizeSelect =
+                document.getElementById("sizeSelect");
+
+            const sizeError =
+                document.getElementById("sizeError");
+
+            if (!sizeSelect.value) {
+
+                sizeError.classList.remove("hidden");
+
+                sizeSelect.classList.add("border-red-500");
+
+                return false;
+            }
+
+            sizeError.classList.add("hidden");
+
+            sizeSelect.classList.remove("border-red-500");
+
+            return true;
+        }
+
+        function showToast(message, type = "error") {
+
+            const toast =
+                document.getElementById(
+                    "toast"
+                );
+
+            toast.className = `
+
+            fixed top-5 right-5 z-50
+            px-5 py-3 rounded-lg text-white
+            shadow-lg transition-all duration-300
+
+            ${type === "success"
+
+                    ? "bg-green-600"
+
+                    : "bg-red-500"
+                }
+
+        `;
+
+            toast.textContent = message;
+
+            toast.classList.remove("hidden");
+
+            setTimeout(() => {
+
+                toast.classList.add("hidden");
+
+            }, 3000);
+        }
+        document
+            .getElementById(
+                "addToCartForm"
+            )
+
+            .addEventListener(
+                "submit",
+
+                async function (e) {
+
+                    e.preventDefault();
+                    if (!validateCartForm()) {
+                        return;
+                    }
+
+                    const formData = new FormData(this);
+
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+
+                        const response =
+                            await fetch(
+
+                                this.action,
+
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body: JSON.stringify(data)
+                                }
+                            );
+
+                        const result =
+                            await response.json();
+
+                        if (!result.success) {
+
+                            return showToast(
+                                result.message
+                            );
+                        }
+
+                        showToast(
+                            result.message,
+                            "success"
+                        );
+
+                        setTimeout(() => {
+
+                            window.location.href =
+                                result.redirect;
+
+                        }, 1000);
+
+                    } catch (error) {
+
+                        showToast(
+                            "Something went wrong"
+                        );
+                    }
+                }
+            );
+        document.getElementById("sizeSelect")
+
+            .addEventListener("change", function () {
+
+                this.classList.remove("border-red-500");
+
+                document.getElementById("sizeError").classList.add("hidden");
+            }
+            );
+
+
+    </script>
+</body>
+
+</html>

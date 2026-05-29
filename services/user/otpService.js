@@ -4,22 +4,7 @@ import { generateOTP } from "../../utils/otpGeneration.js"
 import bcrypt from "bcryptjs";
 
 
-// export const sendOtpService = async (email)=> {
-//     const otp = generateOTP()
-//     console.log(otp)
 
-//     await Otp.deleteMany({email})
-
-//     const expiresAt = new Date(Date.now() + 30 * 1000)
-   
-//     await Otp.create({
-//         email,
-//         otp,
-//         expiresAt
-//     })
-//     await sendMail(email,otp)
-//     return otp
-// }
 export const sendOtpService = async (email) => {
 
     const existingOtp = await Otp.findOne({ email });

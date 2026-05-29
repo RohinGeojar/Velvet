@@ -4,19 +4,20 @@ import nocache from "nocache";
 import session from "express-session";
 import expressLayouts from "express-ejs-layouts";
 import dotenv from "dotenv";
+import MongoStore from "connect-mongo";
+import { connectDB } from "./config/db.js";
 import "dotenv/config";
+import flash from "connect-flash";
+import passport from "./config/passport.js";
+import { setAdmin } from "./middleware/admin/authMiddilware.js";
 import authRoutes from "./routes/user/authRoutes.js"
 import profileRoutes from "./routes/user/profileRoutes.js"
-import { connectDB } from "./config/db.js";
-import MongoStore from "connect-mongo";
-import flash from "connect-flash";
 import addressRoutes from "./routes/user/addressRoutes.js"
 import adminUserRoutes from "./routes/admin/userRoutes.js";
 import adminAuth from "./routes/admin/adminAuth.js"
-import { setAdmin } from "./middleware/admin/authMiddilware.js";
-import passport from "./config/passport.js";
 import categoryRoutes from "./routes/admin/categoryRoutes.js"
 import productRoutes from "./routes/admin/productRoutes.js"
+import shopRoutes from "./routes/user/shopRoutes.js"
 
 dotenv.config();
 
@@ -65,6 +66,8 @@ app.use((req, res, next) => {
 app.use("/",authRoutes );
 app.use("/profile", profileRoutes);
 app.use("/address",addressRoutes)
+app.use("/shop",shopRoutes)
+
 app.use("/admin", adminUserRoutes);
 app.use("/adminAuth",adminAuth)
 app.use("/admin/category",categoryRoutes)

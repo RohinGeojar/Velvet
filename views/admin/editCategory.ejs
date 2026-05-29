@@ -113,21 +113,7 @@
             <!-- Title Row -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Edit Category</h1>
-                <div class="flex gap-3 w-full md:w-auto">
-
-                    <!-- CANCEL -->
-                    <a href="/admin/category"
-                        class="flex-1 md:flex-none px-8 py-3 rounded-xl border border-gray-200 bg-white font-semibold text-gray-700 hover:bg-gray-50 transition-colors text-center">
-                        Cancel
-                    </a>
-
-                    <!-- UPDATE -->
-                    <button type="submit"
-                        class="flex-1 md:flex-none px-8 py-3 rounded-xl bg-[#8B5E3C] text-white font-semibold hover:bg-[#724c31] transition-all shadow-md shadow-brown-100">
-                        Update Category
-                    </button>
-
-                </div>
+                
             </div>
 
             <form id="categoryForm" action="/admin/category/edit/<%= category._id %>" method="POST"
@@ -280,9 +266,9 @@
                 </div>
 
                 <!-- BUTTONS -->
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mt-8">
+                <div class="flex flex-col md:flex-row justify-end items-start md:items-center gap-4 mt-8">
 
-                    <div class="flex gap-3 w-full md:w-auto">
+                    <div class="flex gap-3 w-full md:w-auto justify-end">
 
                         <!-- CANCEL -->
                         <a href="/admin/category"

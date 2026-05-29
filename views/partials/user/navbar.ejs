@@ -1,25 +1,25 @@
 <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif'],
-                        kaushan: ['"Kaushan Script"', 'cursive'],
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                    serif: ['Playfair Display', 'serif'],
+                    kaushan: ['"Kaushan Script"', 'cursive'],
+                },
+                colors: {
+                    brand: {
+                        DEFAULT: '#7a9575',// #7a9575,#475845  #7a9575,#475845 00674F ,#2e6f40
+                        dark: '#627a5e',
                     },
-                    colors: {
-                        brand: {
-                            DEFAULT: '#7a9575',// #7a9575,#475845  #7a9575,#475845 00674F ,#2e6f40
-                            dark: '#627a5e',
-                        },
-                        footer: {
-                            DEFAULT: '#4a4a4a',
-                        }
+                    footer: {
+                        DEFAULT: '#4a4a4a',
                     }
                 }
             }
         }
-    </script>
+    }
+</script>
 <div class="sticky top-0 z-50">
     <div id="top-banner" class="  bg-brand text-white text-center py-2 text-[10px] sm:text-sm tracking-wide z-50">
         Enjoy Free Shipping On All Orders
@@ -41,12 +41,13 @@
                         Vogue</a>
                     <i class="ph-fill ph-plant text-brand text-lg sm:text-xl relative -top-1"></i>
                 </div>
-                <span class="text-[0.5rem] sm:text-[0.6rem] text-gray-500 tracking-widest uppercase -mt-1">women clothing</span>
+                <span class="text-[0.5rem] sm:text-[0.6rem] text-gray-500 tracking-widest uppercase -mt-1">women
+                    clothing</span>
             </div>
 
             <!-- Desktop Nav Links -->
             <nav class="hidden md:flex space-x-6 lg:space-x-8">
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Collection</a>
+                <a href="/shop" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Collection</a>
                 <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">New In</a>
                 <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Wedding</a>
                 <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Plus Size</a>
@@ -55,24 +56,93 @@
 
             <!-- Icons -->
             <div class="flex items-center space-x-3 sm:space-x-6 mr-8 ">
-                
-                <a href="#" class="text-gray-600 hover:text-brand transition p-1" aria-label="Search"><i
-                        class="ph ph-magnifying-glass text-xl sm:text-2xl"></i></a>
-                <a href="/profile/overview" class="text-gray-600 hover:text-brand transition p-1 relative hidden sm:block"
-                    aria-label="Profile">
-                    
+
+                <button id="search-toggle" class="text-gray-600 hover:text-brand transition p-1" aria-label="Search">
+
+                    <i class="ph ph-magnifying-glass text-xl sm:text-2xl"></i>
+
+                </button>
+                <a href="/profile/overview"
+                    class="text-gray-600 hover:text-brand transition p-1 relative hidden sm:block" aria-label="Profile">
+
                     <i class="ph ph-user text-xl sm:text-2xl"></i>
                 </a>
                 <a href="#" class="text-gray-600 hover:text-brand transition p-1" aria-label="Favorites"><i
                         class="ph ph-heart text-xl sm:text-2xl"></i></a>
-                <a href="#" class="text-gray-600 hover:text-brand transition p-1" aria-label="Cart">
+                <a href="/shop/cart" class="text-gray-600 hover:text-brand transition p-1" aria-label="Cart">
                     <i class="ph ph-tote text-xl sm:text-2xl"></i>
                 </a>
-                <% if (typeof error !== "undefined" && error) { %>
-      <a class="text-[#475845] mx-4 bg-dark border-b-2 border-[#475845] pb-1 font-bold" href="/register"> signup</a></p>
-        <% } %>
+                <% if (typeof error !=="undefined" && error) { %>
+                    <a class="text-[#475845] mx-4 bg-dark border-b-2 border-[#475845] pb-1 font-bold" href="/register">
+                        signup</a></p>
+                    <% } %>
             </div>
         </div>
+
+
     </header>
+    <div id="search-bar"
+    class="hidden bg-white border-b border-gray-200 w-full">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+
+        <form action="/shop" method="GET"
+            class="flex items-center gap-4">
+
+            <!-- Search Icon -->
+            <i class="ph ph-magnifying-glass text-2xl text-gray-400"></i>
+
+            <!-- Input -->
+            <input
+                type="text"
+                name="search"
+                placeholder="Search products..."
+                class="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400 text-sm sm:text-base"
+                autocomplete="off"
+            >
+
+            <!-- Close Button -->
+            <button type="button"
+                id="close-search"
+                class="text-gray-500 hover:text-brand transition">
+
+                <i class="ph ph-x text-2xl"></i>
+
+            </button>
+
+        </form>
+
+    </div>
+
 </div>
-   
+</div>
+<script>
+
+    const searchToggle =
+        document.getElementById("search-toggle")
+
+    const searchBar =
+        document.getElementById("search-bar")
+
+    const closeSearch =
+        document.getElementById("close-search")
+
+    searchToggle.addEventListener("click", () => {
+
+        searchBar.classList.remove("hidden")
+
+        setTimeout(() => {
+
+            searchBar.querySelector("input").focus()
+
+        }, 100)
+
+    })
+
+    closeSearch.addEventListener("click", () => {
+
+        searchBar.classList.add("hidden")
+
+    })
+
+</script>
