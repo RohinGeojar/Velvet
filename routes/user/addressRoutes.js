@@ -6,12 +6,14 @@ import {
   updateAddress,
   deleteAddress,
   setDefaultAddress,
-  loadAddAddress
+  loadAddAddress,
+  getAddress
 } from "../../controllers/user/addressController.js";
 
 import { userAuth } from "../../middleware/auth.js";
 import { addressSchema } from "../../validators/addressvalidator.js";
 import { validate } from "../../middleware/validate.js";
+import { addcheckoutAddress } from "../../controllers/user/shopController.js";
 
 const router = express.Router();
 
@@ -20,10 +22,17 @@ router.get("/",userAuth, loadAddressPage);
 router.post("/",userAuth, addAddress);
 router.get("/addAddress", userAuth,validate(addressSchema), loadAddAddress);
 router.get("/:id/edit",userAuth, loadEditAddress);
-router.post("/:id/edit",userAuth,validate(addressSchema), updateAddress);
+router.post("/:id/edit",userAuth, updateAddress);
 
-router.get("/:id/delete",userAuth,  deleteAddress);
-router.get("/:id/default",userAuth,  setDefaultAddress);
+router.delete("/:id/delete",userAuth,  deleteAddress);
+router.post("/:id/default",userAuth,  setDefaultAddress);
+
+
+// ================CHECKOUT ============================
+router.get("/:id", userAuth, getAddress);
+
+router.post("/checkout",userAuth,addcheckoutAddress)
+
 
 
 export default router;

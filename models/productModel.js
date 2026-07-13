@@ -1,7 +1,7 @@
 
 import mongoose from "mongoose";
 
-// 
+
 
 const sizeSchema = new mongoose.Schema({
 
@@ -17,7 +17,7 @@ const sizeSchema = new mongoose.Schema({
         min: 0
     }
 
-}, { _id: false });
+}, { _id: false })
 
 
 
@@ -49,7 +49,7 @@ const variantSchema = new mongoose.Schema({
 
     sizes: [sizeSchema]
 
-}, { _id: false });
+})
 
 
 
@@ -110,5 +110,5 @@ const productSchema = new mongoose.Schema({
 }, {
 
     timestamps: true
-});
+})
 export default mongoose.model("Product", productSchema)

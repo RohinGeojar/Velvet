@@ -134,7 +134,7 @@
                         <div>
                             <p class="text-sm font-semibold text-gray-500 mb-1">Total Products</p>
                             <h3 class="text-2xl font-bold text-gray-900">
-                                <%= totalProductsCount.toLocaleString() %>
+                                <%= totalProductsCount %>
                             </h3>
                         </div>
                         <div
@@ -281,6 +281,14 @@
                             </select>
 
                         </button>
+                        <select id="sortSelect"
+    class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+
+    <option value="newest">Newest</option>
+    <option value="a-z">Name A-Z</option>
+    <option value="z-a">Name Z-A</option>
+
+</select>
                         <a href="/products"><button id="clearSearch"
                                 class="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
                                 Clear </button></a>
@@ -334,7 +342,7 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4">
-                                            <span class="text-sm font-extrabold text-gray-900">$<%= Number(
+                                            <span class="text-sm font-extrabold text-gray-900">₹<%= Number(
                                                     product.variants?.[0]?.salePrice || 0 ).toFixed(2) %></span>
                                         </td>
                                         <td class="px-6 py-4">
@@ -811,7 +819,8 @@
             let currentSearch = "";
 
             let currentFilter = "All";
-
+            let currentSort = "newest";
+            const sortSelect = document.getElementById("sortSelect")
 
             function debounce(func, delay) {
 
@@ -839,13 +848,12 @@
 
                 currentPage = page;
 
-                currentSearch =
-                    searchInput.value;
+                currentSearch = searchInput.value;
 
-                currentFilter =
-                    filterSelect.value;
+                currentFilter =filterSelect.value;
+                currentSort = sortSelect.value
 
-                const res = await fetch(`/products/search?page=${currentPage}&search=${currentSearch}&filter=${currentFilter}`);
+                const res = await fetch(`/products/search?page=${currentPage}&search=${currentSearch}&filter=${currentFilter}&sort=${currentSort}`);
 
                 const data = await res.json();
 
@@ -1153,6 +1161,11 @@ Restore
                 loadProducts(1);
             }
             );
+            sortSelect.addEventListener("change", () => {
+
+    loadProducts(1);
+
+});
 
 
             // =========================
@@ -1168,10 +1181,11 @@ Restore
                     searchInput.value = "";
 
                     filterSelect.value = "All";
-
+                    sortSelect.value = "newest"
                     currentSearch = "";
 
-                    currentFilter = "All";
+                    currentFilter = "All"
+                    currentSort = "newest"
 
                     loadProducts(1);
                 }

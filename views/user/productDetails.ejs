@@ -78,13 +78,17 @@
     <div class="bg-white border-b border-border-light py-3.5">
         <div
             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-[11px] font-sans tracking-wider text-text-muted uppercase flex items-center gap-2">
-            <a href="#" class="hover:text-brand transition">Home</a>
-            <span class="text-gray-300 font-light">/</span>
-            <a href="#" class="hover:text-brand transition">
-                <%= product.productTitle %>
+            <a href="/">Home</a>
+
+            <span>/</span>
+
+            <a href="/shop?category=<%= product.category._id %>">
+                <%= product.category.name %>
             </a>
-            <span class="text-gray-300 font-light">/</span>
-            <span class="text-text-dark font-semibold">
+
+            <span>/</span>
+
+            <span>
                 <%= product.productName %>
             </span>
         </div>
@@ -156,7 +160,7 @@
                                 data-images='<%- JSON.stringify(variant.images) %>'
                                 data-price="<%= variant.salePrice %>" data-regular="<%= variant.regularPrice %>"
                                 data-sizes='<%- JSON.stringify(variant.sizes) %>'
-                                class="color-btn w-8 h-8 rounded-full border-2 border-gray-200 hover:scale-110 transition-all duration-200 <%= index === 0 ? 'ring-2 ring-black ring-offset-2' : '' %>"
+                                class="color-btn w-8 h-8 rounded-full border-2 border-gray-200 hover:scale-110 transition-all duration-200 <%= index === selectedVariantIndex? 'ring-2 ring-black ring-offset-2' : '' %>"
                                 style="background-color:<%= variant.colorCode %>;"></button>
 
                             <% }) %>
@@ -182,6 +186,8 @@
 
                     </label>
 
+
+
                     <div class="flex items-center border border-border-light rounded-md w-fit">
 
                         <button type="button" onclick="updateQuantity(-1)"
@@ -201,9 +207,13 @@
 
                         </button>
 
+
+
+                    </div>
+                    <div id="stockError" class=" text-xs text-red-500 mt-2 hidden stock-error">
                     </div>
 
-                    <p class="text-xs text-text-muted">
+                    <p id="quantityLimitText" class="text-xs text-text-muted">
                         Maximum 5 quantities allowed
                     </p>
 
@@ -232,7 +242,7 @@
 
                                 </option>
 
-                                <% product.variants[selectedVariantIndex] .sizes.forEach((item)=> { %>
+                                <% product.variants[selectedVariantIndex].sizes.forEach((item)=> { %>
 
                                     <option value="<%= item.size %>" data-stock="<%= item.stock %>">
 
@@ -259,7 +269,8 @@
                         <input type="hidden" id="selectedVariantIndex" name="variantIndex"
                             value="<%= selectedVariantIndex %>">
 
-                        <button id="addToCartBtn" type="submit" <%= !product.variants[selectedVariantIndex] .sizes.some(size=> size.stock > 0)
+                        <button id="addToCartBtn" type="submit" <%=!product.variants[selectedVariantIndex]
+                            .sizes.some(size=> size.stock > 0)
 
                             ? 'disabled'
                             : ''
@@ -270,7 +281,7 @@
                             <%= !product.isActive || !product.variants[selectedVariantIndex] .sizes.some(size=>
                                 size.stock > 0)
 
-                                ? 'bg-gray-400 cursor-not-allowed'
+                                ? 'bg-gray-400 cursor-not-allowed hover:bg-gray-400'
 
                                 : 'bg-brand hover:bg-brand-dark'
                                 %>"
@@ -358,64 +369,30 @@
 
 
                 <!-- Shipping -->
-                <div class="border border-[#d7d7d2] bg-[#f7f7f4]">
-
-                    <button onclick="toggleAccordion(3)" class="w-full flex items-center justify-between px-8 py-6">
-
-                        <span class="text-2xl font-semibold">
-                            Shipping And Return
-                        </span>
-
-                        <i id="icon-3" class="ri-subtract-line text-2xl"></i>
-
-                    </button>
-
-                    <div id="accordion-3" class="px-8 pb-8 text-[15px] leading-8 text-gray-700">
-
-                        <%= product.shippingDetails %>
-
-                    </div>
-
-                </div>
 
             </div>
 
             <!-- RIGHT MATERIAL CARD -->
-            <div class="border border-[#d7d7d2] bg-[#f7f7f4] p-8">
+            <div class="border border-[#d7d7d2] bg-[#f7f7f4]">
 
-                <h3 class="text-4xl font-serif mb-6">
-                    Silk
-                </h3>
+                <button onclick="toggleAccordion(3)" class="w-full flex items-center justify-between px-8 py-6">
 
-                <div class="border-t border-[#d7d7d2] pt-6">
+                    <span class="text-2xl font-semibold">
+                        Shipping And Return
+                    </span>
 
-                    <p class="text-[15px] leading-8 text-gray-700">
+                    <i id="icon-3" class="ri-subtract-line text-2xl"></i>
 
+                </button>
 
-                        <%= product.materialDetails %>
+                <div id="accordion-3" class="px-8 pb-8 text-[15px] leading-8 text-gray-700">
 
-
-                    </p>
-
-                    <div class="flex flex-wrap gap-3 mt-8">
-
-                        <span class="px-4 py-2 bg-white border text-sm">
-                            Quick Dry
-                        </span>
-
-                        <span class="px-4 py-2 bg-white border text-sm">
-                            Chemical Free
-                        </span>
-
-                        <span class="px-4 py-2 bg-white border text-sm">
-                            Machine Washable
-                        </span>
-
-                    </div>
+                    <%= product.shippingDetails %>
 
                 </div>
 
             </div>
+
 
         </div>
 
@@ -616,7 +593,7 @@
                 );
 
 
-            const productActive = <%- product.isActive ? 'true' : 'false' %>;
+            const productActive = <%= product.isActive %>;
 
             stockStatus.textContent =
                 productActive
@@ -627,6 +604,13 @@
                 productActive
                     ? "text-sm font-medium tracking-wide text-gray-500"
                     : "text-sm font-medium tracking-wide text-red-500";
+
+            document.getElementById("quantityInput").value = 1;
+
+            document.getElementById("cartQuantity").value = 1;
+
+            document.getElementById("stockError")
+                .classList.add("hidden");
 
         }
 
@@ -652,7 +636,7 @@
                 document.getElementById(
                     "addToCartBtn"
                 );
-            const productActive = <%- product.isActive ? 'true' : 'false' %>;
+            const productActive = <%= product.isActive %>;
 
             if (stock > 0 && productActive) {
 
@@ -666,7 +650,7 @@
 
                 addToCartBtn.classList.remove(
                     "bg-gray-400",
-                    "cursor-not-allowed"
+                    "cursor-not-allowed",
                 );
 
                 addToCartBtn.classList.add(
@@ -686,7 +670,7 @@
                 addToCartBtn.disabled = true;
 
                 addToCartBtn.classList.remove(
-                    "bg-brand"
+                    "bg-brand", "hover:bg-brand-dark"
                 );
 
                 addToCartBtn.classList.add(
@@ -699,36 +683,22 @@
 
         });
 
-        const zoomContainer =
-            document.getElementById(
-                "zoomContainer"
-            );
+        const zoomContainer = document.getElementById("zoomContainer");
 
-        const mainImage =
-            document.getElementById(
-                "mainImage"
-            );
+        const mainImage = document.getElementById("mainImage");
 
-        zoomContainer.addEventListener(
-            "mousemove",
-            (e) => {
+        zoomContainer.addEventListener("mousemove", (e) => {
 
-                const rect =
-                    zoomContainer.getBoundingClientRect();
+            const rect = zoomContainer.getBoundingClientRect();
 
-                const x =
-                    ((e.clientX - rect.left) / rect.width) * 100;
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
 
-                const y =
-                    ((e.clientY - rect.top) / rect.height) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-                mainImage.style.transformOrigin =
-                    `${x}% ${y}%`;
+            mainImage.style.transformOrigin = `${x}% ${y}%`;
 
-                mainImage.style.transform =
-                    "scale(2)";
-            }
-        );
+            mainImage.style.transform = "scale(2)";
+        });
 
         zoomContainer.addEventListener(
             "mouseleave",
@@ -740,11 +710,40 @@
         );
         function updateQuantity(change) {
 
-            const quantityInput = document.getElementById("quantityInput")
+            const quantityInput =
+                document.getElementById("quantityInput");
 
-            const cartQuantity = document.getElementById("cartQuantity")
+            const cartQuantity =
+                document.getElementById("cartQuantity");
 
-            let currentQuantity = Number(quantityInput.value);
+            const stockError =
+                document.getElementById("stockError");
+
+            const sizeSelect =
+                document.getElementById("sizeSelect");
+
+            const selectedOption =
+                sizeSelect.options[sizeSelect.selectedIndex];
+
+            const availableStock = Number(selectedOption?.dataset.stock || 0);
+            if (!sizeSelect.value) {
+
+                const sizeError =
+                    document.getElementById("sizeError");
+
+                sizeError.classList.remove("hidden");
+
+                sizeSelect.classList.add(
+                    "border-red-500"
+                );
+
+                return;
+            }
+
+            let currentQuantity =
+                Number(quantityInput.value);
+
+            stockError.classList.add("hidden");
 
             currentQuantity += change;
 
@@ -753,9 +752,53 @@
                 currentQuantity = 1;
             }
 
+            if (currentQuantity > availableStock) {
+                console.log("sizeSelect", selectedOption)
+
+                stockError.textContent =
+                    `Insufficient stock. Only ${availableStock} left`;
+
+                stockError.classList.remove("hidden");
+
+                setTimeout(() => {
+
+                    stockError.classList.add("hidden");
+
+                }, 3000);
+
+                return;
+            }
+
             if (currentQuantity > 5) {
 
-                currentQuantity = 5;
+                const limitText =
+                    document.getElementById(
+                        "quantityLimitText"
+                    );
+
+                limitText.classList.remove(
+                    "text-text-muted"
+                );
+
+                limitText.classList.add(
+                    "text-red-500",
+                    "font-medium"
+                );
+
+                setTimeout(() => {
+
+                    limitText.classList.remove(
+                        "text-red-500",
+                        "font-medium"
+                    );
+
+                    limitText.classList.add(
+                        "text-text-muted"
+                    );
+
+                }, 1000);
+
+                return;
             }
 
             quantityInput.value =
@@ -764,10 +807,12 @@
             cartQuantity.value =
                 currentQuantity;
         }
+
+
         function validateCartForm() {
 
             const productActive =
-        <%- product.isActive ? 'true' : 'false' %>;
+        <%= product.isActive %>;
 
             if (!productActive) {
 
@@ -776,11 +821,9 @@
                 return false;
             }
 
-            const sizeSelect =
-                document.getElementById("sizeSelect");
+            const sizeSelect = document.getElementById("sizeSelect");
 
-            const sizeError =
-                document.getElementById("sizeError");
+            const sizeError = document.getElementById("sizeError");
 
             if (!sizeSelect.value) {
 
@@ -830,83 +873,109 @@
 
             }, 3000);
         }
-        document
-            .getElementById(
-                "addToCartForm"
-            )
 
-            .addEventListener(
-                "submit",
+        document.getElementById("addToCartForm").addEventListener("submit", async function (e) {
+            console.log("Submit intercepted");
+            e.preventDefault();
+            if (!validateCartForm()) {
+                return;
+            }
 
-                async function (e) {
+            const formData = new FormData(this);
 
-                    e.preventDefault();
-                    if (!validateCartForm()) {
-                        return;
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+
+                const response = await fetch(
+                    "/shop/cart/add",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+                        body: JSON.stringify(data)
                     }
+                );
+                if (response.status === 401) {
 
-                    const formData = new FormData(this);
+                    window.location.href = "/login";
 
-                    const data = Object.fromEntries(formData.entries());
-
-                    try {
-
-                        const response =
-                            await fetch(
-
-                                this.action,
-
-                                {
-                                    method: "POST",
-
-                                    headers: {
-                                        "Content-Type":
-                                            "application/json"
-                                    },
-
-                                    body: JSON.stringify(data)
-                                }
-                            );
-
-                        const result =
-                            await response.json();
-
-                        if (!result.success) {
-
-                            return showToast(
-                                result.message
-                            );
-                        }
-
-                        showToast(
-                            result.message,
-                            "success"
-                        );
-
-                        setTimeout(() => {
-
-                            window.location.href =
-                                result.redirect;
-
-                        }, 1000);
-
-                    } catch (error) {
-
-                        showToast(
-                            "Something went wrong"
-                        );
-                    }
+                    return;
                 }
-            );
-        document.getElementById("sizeSelect")
 
+
+
+                const result = await response.json();
+
+
+                const stockError = document.getElementById("stockError");
+
+                if (!result.success) {
+
+                    stockError.textContent = result.message;
+
+                    stockError.classList.remove("hidden");
+
+                    clearTimeout(stockError.timeout);
+
+                    stockError.timeout = setTimeout(() => {
+                        stockError.classList.add("hidden");
+                    }, 3000);
+
+                    return;
+                }
+
+                // Success
+                stockError.classList.add("hidden");
+
+                showToast(result.message, "success");
+
+                setTimeout(() => {
+                    window.location.href = result.redirect;
+                }, 1000);
+
+                showToast(
+                    result.message,
+                    "success"
+                );
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        result.redirect;
+
+                }, 1000);
+
+            } catch (error) {
+                console.log("ERROR [ ] :", error)
+                showToast(
+                    "please signup or login to continue"
+                );
+            }
+        }
+        );
+        document.getElementById("sizeSelect")
             .addEventListener("change", function () {
 
-                this.classList.remove("border-red-500");
+                this.classList.remove(
+                    "border-red-500"
+                );
 
-                document.getElementById("sizeError").classList.add("hidden");
-            }
-            );
+                document.getElementById("sizeError")
+                    .classList.add("hidden");
+
+                document.getElementById("quantityInput")
+                    .value = 1;
+
+                document.getElementById("cartQuantity")
+                    .value = 1;
+
+                document.getElementById("stockError")
+                    .classList.add("hidden");
+            });
+
 
 
     </script>

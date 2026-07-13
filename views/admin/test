@@ -100,3 +100,795 @@
                         </div>
                         <% } %>
                 </div>
+
+
+
+
+                <div class="flex items-center gap-3 flex-wrap">
+                           
+                            <button onclick="handleInvoiceAction('download')"
+                                class="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[#E5E7EB] bg-white text-sm font-semibold text-[#1F2937] hover:bg-gray-50 active:scale-95 transition-all shadow-sm">
+                                <i class="fa-solid fa-download text-[#6B7280]"></i>
+                                <span>Download Invoice</span>
+                            </button>
+                        </div>
+
+
+
+
+
+
+
+                        <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Vogue Admin - Order Details</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for premium serif and clean sans-serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['Cinzel', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#F9F6F0',
+                            100: '#EFEAE0',
+                            200: '#DFD5C1',
+                            500: '#8C6239', // Accent Brand Brown
+                            600: '#754F2E',
+                            700: '#5E3D22',
+                            800: '#472C18',
+                            900: '#301C0F',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F8F6F2;
+        }
+        .brand-font {
+            font-family: 'Cinzel', serif;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col md:flex-row">
+
+    <!-- MOBILE HEADER (Visible only on mobile) -->
+    <div class="md:hidden flex items-center justify-between bg-white px-4 py-3 border-b border-slate-100 shadow-sm sticky top-0 z-40 w-full">
+        <div class="flex items-center gap-2">
+            <div class="bg-brand-500 text-white p-2 rounded-lg flex items-center justify-center">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <span class="brand-font font-bold text-lg text-brand-800 tracking-wide">Velvet Vogue</span>
+        </div>
+        <button onclick="toggleSidebar()" class="p-2 hover:bg-slate-100 rounded-lg text-slate-600 transition-colors">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#F2ECE4] border-r border-brand-100 flex flex-col justify-between p-4 transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out">
+        <div class="space-y-6">
+            <!-- Brand Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-brand-200/50">
+                <div class="flex items-center gap-3">
+                    <div class="bg-[#8C6239] text-white p-2 rounded-xl shadow-md flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-amber-200"></i>
+                    </div>
+                    <div>
+                        <h1 class="brand-font font-bold text-lg text-brand-900 leading-none">Velvet Vogue</h1>
+                        <span class="text-xs text-brand-600/80 font-medium uppercase tracking-wider">Admin Panel</span>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden p-1.5 hover:bg-brand-200/50 rounded-lg text-brand-900">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-1">
+                <a href="#" onclick="switchTab('Dashboard')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:text-brand-800 hover:bg-brand-100/50 transition-all font-medium text-sm group">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5 group-hover:scale-105 transition-transform"></i>
+                    Dashboard
+                </a>
+                <a href="#" onclick="switchTab('Products')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:text-brand-800 hover:bg-brand-100/50 transition-all font-medium text-sm group">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 group-hover:scale-105 transition-transform"></i>
+                    Products
+                </a>
+                <a href="#" onclick="switchTab('Orders')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-[#8C6239] text-white transition-all font-medium text-sm shadow-md shadow-brand-700/10">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    Orders
+                </a>
+                <a href="#" onclick="switchTab('Users')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:text-brand-800 hover:bg-brand-100/50 transition-all font-medium text-sm group">
+                    <i data-lucide="users" class="w-5 h-5 group-hover:scale-105 transition-transform"></i>
+                    Users
+                </a>
+                <a href="#" onclick="switchTab('Categories')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:text-brand-800 hover:bg-brand-100/50 transition-all font-medium text-sm group">
+                    <i data-lucide="folder-tree" class="w-5 h-5 group-hover:scale-105 transition-transform"></i>
+                    Categories
+                </a>
+                <a href="#" onclick="switchTab('Coupons')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:text-brand-800 hover:bg-brand-100/50 transition-all font-medium text-sm group">
+                    <i data-lucide="ticket" class="w-5 h-5 group-hover:scale-105 transition-transform"></i>
+                    Coupons
+                </a>
+                <a href="#" onclick="switchTab('Banners')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:text-brand-800 hover:bg-brand-100/50 transition-all font-medium text-sm group">
+                    <i data-lucide="image" class="w-5 h-5 group-hover:scale-105 transition-transform"></i>
+                    Banners
+                </a>
+                <a href="#" onclick="switchTab('Sales Report')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:text-brand-800 hover:bg-brand-100/50 transition-all font-medium text-sm group">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 group-hover:scale-105 transition-transform"></i>
+                    Sales Report
+                </a>
+                <a href="#" onclick="switchTab('Offers')" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:text-brand-800 hover:bg-brand-100/50 transition-all font-medium text-sm group">
+                    <i data-lucide="percent" class="w-5 h-5 group-hover:scale-105 transition-transform"></i>
+                    Offers
+                </a>
+            </nav>
+        </div>
+
+        <!-- Logout Bottom -->
+        <div class="pt-4 border-t border-brand-200/50">
+            <button onclick="handleSignOut()" class="flex w-full items-center gap-3 px-3 py-2.5 rounded-xl text-red-600 hover:bg-red-50 hover:text-red-700 transition-all font-medium text-sm">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- BACKDROP for Mobile Sidebar -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/30 backdrop-blur-sm z-40 transition-opacity"></div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="flex-1 flex flex-col min-w-0">
+        
+        <!-- HEADER -->
+        <header class="bg-white border-b border-slate-100 h-16 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+            <!-- Search -->
+            <div class="relative w-full max-w-md hidden sm:block">
+                <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-slate-400"></i>
+                <input type="text" placeholder="Search anything..." class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+            </div>
+            
+            <div class="flex items-center gap-4 ml-auto">
+                <!-- Notifications -->
+                <button onclick="showNotificationAlert()" class="relative p-2 text-slate-500 hover:bg-slate-50 hover:text-slate-800 rounded-xl transition-all">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                
+                <!-- Profile Details -->
+                <div class="flex items-center gap-3 pl-3 border-l border-slate-100">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-slate-800 leading-none">Rohin Geojar</p>
+                        <span class="text-[10px] text-slate-500">Administrator</span>
+                    </div>
+                    <div class="w-9 h-9 bg-emerald-600 text-white rounded-full flex items-center justify-center font-bold text-sm border-2 border-emerald-100 shadow-sm">
+                        RG
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN VIEWPORT -->
+        <main id="main-content" class="p-4 md:p-8 space-y-6 max-w-7xl w-full mx-auto">
+            
+            <!-- Breadcrumbs & Document Header Actions -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <nav class="flex text-xs font-medium text-slate-400 space-x-1 items-center mb-1">
+                        <a href="#" class="hover:text-brand-600 transition-colors">Dashboard</a>
+                        <span>&rsaquo;</span>
+                        <a href="#" class="hover:text-brand-600 transition-colors">Orders</a>
+                        <span>&rsaquo;</span>
+                        <span class="text-slate-600 font-semibold">Order Details</span>
+                    </nav>
+                    <div class="flex items-center gap-3">
+                        <h2 class="text-xl md:text-2xl font-bold text-slate-800">Order #ORD-1024</h2>
+                        <span id="badge-top" class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 uppercase tracking-wide">
+                            Shipped
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">Placed on March 05, 2026 at 02:45 PM</p>
+                </div>
+
+                <!-- Invoice Actions -->
+                <div class="flex items-center gap-2.5">
+                    <button onclick="handlePrintInvoice()" class="flex items-center gap-2 px-4 py-2 border border-slate-200 hover:border-slate-300 bg-white rounded-xl text-xs font-semibold text-slate-700 shadow-sm hover:shadow-md transition-all">
+                        <i data-lucide="printer" class="w-4 h-4 text-slate-500"></i>
+                        Print Invoice
+                    </button>
+                    <button onclick="handleDownloadInvoice()" class="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold shadow-sm hover:shadow-md transition-all">
+                        <i data-lucide="download" class="w-4 h-4 text-slate-300"></i>
+                        Download Invoice
+                    </button>
+                </div>
+            </div>
+
+            <!-- Two Column Main Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Left Details Area (Takes 2 Columns) -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Information & Customer Card Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Order Information Card -->
+                        <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow">
+                            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-50">
+                                <h3 class="font-bold text-sm uppercase text-slate-500 tracking-wider">Order Information</h3>
+                                <span id="badge-info" class="px-2.5 py-0.5 text-xs font-bold rounded-full bg-blue-100 text-blue-800">
+                                    SHIPPED
+                                </span>
+                            </div>
+                            <div class="space-y-3.5 text-sm">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400">Payment Method</span>
+                                    <span class="font-semibold text-slate-700">Razorpay</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400">Transaction ID</span>
+                                    <span class="font-mono bg-slate-100 text-slate-700 text-xs px-2 py-1 rounded font-bold">#TXN-9842105</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400">Shipping Class</span>
+                                    <span class="font-semibold text-slate-700">Priority Express</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Details Card -->
+                        <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow">
+                            <h3 class="font-bold text-sm uppercase text-slate-500 tracking-wider mb-4 pb-3 border-b border-slate-50">Customer Details</h3>
+                            <div class="space-y-4">
+                                <!-- Profile row -->
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 bg-slate-100 text-slate-600 rounded-full flex items-center justify-center font-bold">
+                                        <i data-lucide="user" class="w-5 h-5 text-slate-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-sm text-slate-800">John Doe</h4>
+                                        <p class="text-xs text-slate-400">john.doe@example.com</p>
+                                    </div>
+                                </div>
+                                <!-- Contacts row -->
+                                <div class="space-y-2 text-xs text-slate-600">
+                                    <div class="flex items-center gap-2.5">
+                                        <i data-lucide="phone" class="w-4 h-4 text-slate-400"></i>
+                                        <span>+44 20 7946 0958</span>
+                                    </div>
+                                    <div class="flex items-start gap-2.5">
+                                        <i data-lucide="map-pin" class="w-4 h-4 text-slate-400 mt-0.5 shrink-0"></i>
+                                        <span class="leading-relaxed">221B Baker Street, Marylebone<br>London NW1 6XE, UK</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Dynamic Order Items Table Card -->
+                    <div class="bg-white border border-slate-100 rounded-2xl shadow-xs overflow-hidden">
+                        <div class="p-5 border-b border-slate-50 flex items-center justify-between">
+                            <h3 class="font-bold text-sm uppercase text-slate-500 tracking-wider">Order Items</h3>
+                            <button onclick="openAddItemModal()" class="flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 text-brand-700 hover:bg-brand-100 rounded-lg text-xs font-semibold transition-all">
+                                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Mock Item
+                            </button>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-50 text-[10px] tracking-wider text-slate-400 font-bold uppercase border-b border-slate-100">
+                                        <th class="py-3 px-5">Product Image</th>
+                                        <th class="py-3 px-5">Name</th>
+                                        <th class="py-3 px-5 text-right">Price</th>
+                                        <th class="py-3 px-5 text-center">Qty</th>
+                                        <th class="py-3 px-5 text-right">Subtotal</th>
+                                        <th class="py-3 px-5 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="order-items-tbody" class="divide-y divide-slate-50 text-sm">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Summary & Control Actions -->
+                <div class="space-y-6">
+                    
+                    <!-- Order Summary Card -->
+                    <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow">
+                        <h3 class="font-bold text-sm uppercase text-slate-500 tracking-wider mb-4 pb-3 border-b border-slate-50">Order Summary</h3>
+                        
+                        <div class="space-y-3 text-sm pb-4 border-b border-slate-100">
+                            <div class="flex justify-between text-slate-600">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal" class="font-semibold text-slate-800">$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span>Shipping</span>
+                                <span id="summary-shipping" class="font-semibold text-slate-800">$10.00</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-slate-600">Discount</span>
+                                    <span class="text-[10px] font-bold tracking-wide uppercase px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded">PROMO10</span>
+                                </div>
+                                <span id="summary-discount" class="font-semibold text-emerald-600">-$5.00</span>
+                            </div>
+                            <div class="flex justify-between text-slate-600">
+                                <span>Tax (8%)</span>
+                                <span id="summary-tax" class="font-semibold text-slate-800">$0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center pt-4">
+                            <span class="font-bold text-slate-800 text-base">Total Amount</span>
+                            <span id="summary-total" class="brand-font text-2xl font-bold text-[#8C6239]">$0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Control Actions Card -->
+                    <div class="bg-white border border-slate-100 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow">
+                        <h3 class="font-bold text-sm uppercase text-slate-500 tracking-wider mb-4 pb-3 border-b border-slate-50">Control Actions</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label for="status-select" class="block text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Update Order Status</label>
+                                <div class="relative">
+                                    <select id="status-select" class="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 pr-10 cursor-pointer">
+                                        <option value="Pending">Pending</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Shipped" selected>Shipped</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-slate-400 border-l border-slate-200/50 mt-0.5">
+                                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button onclick="updateOrderStatus()" class="w-full py-3 bg-[#8C6239] hover:bg-[#754F2E] active:scale-[0.99] text-white font-bold text-sm rounded-xl shadow-md shadow-brand-500/10 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="save" class="w-4 h-4"></i>
+                                Update Status
+                            </button>
+                            
+                            <div class="pt-2">
+                                <button onclick="openRefundModal()" class="w-full py-2.5 bg-white border border-red-200 hover:bg-red-50 text-red-600 font-bold text-sm rounded-xl transition-all flex items-center justify-center gap-2">
+                                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                                    Refund Order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            
+        </main>
+    </div>
+
+    <!-- MOCK VIEWPORT FOR COLLAB PLACEHOLDER CHATBOX SYNC -->
+    <div id="navigation-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 text-center space-y-4">
+            <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-full flex items-center justify-center mx-auto">
+                <i data-lucide="info" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h3 id="nav-modal-title" class="text-lg font-bold text-slate-800">Tab Switched</h3>
+                <p id="nav-modal-text" class="text-sm text-slate-500 mt-1">This is a dynamic template mockup view. Navigation to other sidebar pages is simulated!</p>
+            </div>
+            <button onclick="closeNavModal()" class="px-5 py-2.5 bg-brand-500 text-white rounded-xl text-sm font-semibold hover:bg-brand-600 transition-colors">
+                Back to Order Details
+            </button>
+        </div>
+    </div>
+
+    <!-- REFUND CONFIRMATION MODAL -->
+    <div id="refund-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 space-y-4">
+            <div class="w-12 h-12 bg-red-50 text-red-600 rounded-full flex items-center justify-center">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-slate-800">Refund Order #ORD-1024?</h3>
+                <p class="text-sm text-slate-500 mt-1">This action will process a full refund of <strong id="refund-amount-text" class="text-brand-700">$0.00</strong> to John Doe's original payment method (Razorpay). This transaction cannot be undone.</p>
+            </div>
+            <!-- Reason Dropdown -->
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Reason for Refund</label>
+                <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500">
+                    <option>Customer Return / Dislike</option>
+                    <option>Wrong Size / Fits Incorrectly</option>
+                    <option>Product Defect / Damaged</option>
+                    <option>Order Cancelled before shipment</option>
+                </select>
+            </div>
+            <!-- Modal Actions -->
+            <div class="flex items-center justify-end gap-2.5 pt-2">
+                <button onclick="closeRefundModal()" class="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-semibold text-slate-600 transition-colors">
+                    Cancel
+                </button>
+                <button onclick="confirmRefund()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-semibold shadow-md shadow-red-500/10 transition-all">
+                    Yes, Issue Refund
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOCK ADD ITEM MODAL -->
+    <div id="add-item-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-100 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-50 pb-3">
+                <h3 class="text-lg font-bold text-slate-800">Add Mock Fashion Item</h3>
+                <button onclick="closeAddItemModal()" class="text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Select Velvet Vogue Item</label>
+                    <select id="item-selector" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500">
+                        <option value="1">Double Breasted Woolen Trench Coat ($240.00)</option>
+                        <option value="2">Gold-Embroidered Velvet Slippers ($85.00)</option>
+                        <option value="3">Cashmere Cable Knit Sweater ($150.00)</option>
+                        <option value="4">Satin Tailored Blazer - Ivory ($195.00)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase">Quantity</label>
+                    <input id="item-qty-input" type="number" min="1" max="10" value="1" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-500">
+                </div>
+            </div>
+
+            <!-- Modal Actions -->
+            <div class="flex items-center justify-end gap-2.5 pt-2">
+                <button onclick="closeAddItemModal()" class="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-semibold text-slate-600 transition-colors">
+                    Cancel
+                </button>
+                <button onclick="addMockItemSubmit()" class="px-4 py-2 bg-[#8C6239] hover:bg-[#754F2E] text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-500/10 transition-all">
+                    Add to Invoice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GLOBAL NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white rounded-xl py-3 px-5 shadow-2xl flex items-center gap-3 translate-y-24 opacity-0 transition-all duration-300">
+        <div id="toast-icon-wrapper" class="p-1 rounded-full bg-brand-500 text-white flex items-center justify-center">
+            <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        <div>
+            <p id="toast-title" class="text-xs font-bold leading-tight">Notification</p>
+            <p id="toast-desc" class="text-[11px] text-slate-300">Success message body.</p>
+        </div>
+    </div>
+
+    <!-- APPLICATION SCRIPTS -->
+    <script>
+        // Init state
+        let orderItems = [
+            {
+                id: 'silk-evening-dress',
+                name: 'Silk Evening Dress',
+                sku: 'VV-SED-001',
+                variant: 'Midnight Blue / Medium',
+                price: 120.00,
+                qty: 1,
+                image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80&w=120' // high fashion dress fallback
+            }
+        ];
+
+        // Constants
+        const SHIPPING = 10.00;
+        const DISCOUNT = 5.00;
+        const TAX_RATE = 0.08;
+
+        // Mock Preset Products Database
+        const MOCK_PRODUCTS = {
+            "1": {
+                name: "Double Breasted Woolen Trench Coat",
+                sku: "VV-WTC-012",
+                variant: "Camel / Large",
+                price: 240.00,
+                image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&q=80&w=120"
+            },
+            "2": {
+                name: "Gold-Embroidered Velvet Slippers",
+                sku: "VV-GVS-089",
+                variant: "Royal Gold / 42",
+                price: 85.00,
+                image: "https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&q=80&w=120"
+            },
+            "3": {
+                name: "Cashmere Cable Knit Sweater",
+                sku: "VV-CKS-045",
+                variant: "Oatmeal / Medium",
+                price: 150.00,
+                image: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&q=80&w=120"
+            },
+            "4": {
+                name: "Satin Tailored Blazer - Ivory",
+                sku: "VV-STB-015",
+                variant: "Ivory White / Small",
+                price: 195.00,
+                image: "https://images.unsplash.com/photo-1548624149-f7b31668831a?auto=format&fit=crop&q=80&w=120"
+            }
+        };
+
+        // Window load
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+            renderTable();
+        });
+
+        // Sidebar responsive menu toggling
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        // Render standard order items table & update totals
+        function renderTable() {
+            const tbody = document.getElementById('order-items-tbody');
+            tbody.innerHTML = '';
+
+            let subtotalAccumulator = 0;
+
+            orderItems.forEach((item, index) => {
+                const itemSubtotal = item.price * item.qty;
+                subtotalAccumulator += itemSubtotal;
+
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-slate-50/50 transition-colors';
+                row.innerHTML = `
+                    <td class="py-4.5 px-5">
+                        <div class="relative w-14 h-14 bg-brand-50 rounded-xl overflow-hidden border border-brand-100 shadow-xs">
+                            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover object-top" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&q=80&w=120';">
+                        </div>
+                    </td>
+                    <td class="py-4.5 px-5">
+                        <div>
+                            <p class="font-bold text-slate-800 leading-snug">${item.name}</p>
+                            <div class="flex flex-wrap gap-1.5 mt-1 text-slate-400 text-xs items-center">
+                                <span class="font-semibold text-[10px] bg-slate-100 text-slate-500 py-0.5 px-1.5 rounded">SKU: ${item.sku}</span>
+                                <span>&bull;</span>
+                                <span>${item.variant}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4.5 px-5 text-right font-medium text-slate-600">
+                        $${item.price.toFixed(2)}
+                    </td>
+                    <td class="py-4.5 px-5">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="changeQty(${index}, -1)" class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-sm font-bold transition-colors select-none">-</button>
+                            <span class="w-6 text-center font-bold text-slate-800">${item.qty}</span>
+                            <button onclick="changeQty(${index}, 1)" class="w-7 h-7 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-sm font-bold transition-colors select-none">+</button>
+                        </div>
+                    </td>
+                    <td class="py-4.5 px-5 text-right font-bold text-slate-800">
+                        $${itemSubtotal.toFixed(2)}
+                    </td>
+                    <td class="py-4.5 px-5 text-center">
+                        <button onclick="removeItem(${index})" class="text-slate-400 hover:text-red-500 p-1 rounded-lg hover:bg-red-50 transition-all" title="Remove Item">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // If empty table state
+            if (orderItems.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="py-10 text-center text-slate-400">
+                            <div class="flex flex-col items-center justify-center space-y-2">
+                                <i data-lucide="shopping-bag" class="w-8 h-8 text-slate-300"></i>
+                                <p class="text-sm">No items in this invoice.</p>
+                                <button onclick="openAddItemModal()" class="text-xs text-brand-500 underline font-semibold">Add mock fashion item</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            // Calculations
+            const taxAmount = subtotalAccumulator * TAX_RATE;
+            const finalTotal = subtotalAccumulator + SHIPPING - DISCOUNT + taxAmount;
+
+            // Update UI elements
+            document.getElementById('summary-subtotal').innerText = `$${subtotalAccumulator.toFixed(2)}`;
+            document.getElementById('summary-tax').innerText = `$${taxAmount.toFixed(2)}`;
+            document.getElementById('summary-total').innerText = `$${Math.max(0, finalTotal).toFixed(2)}`;
+
+            // Render fresh icons
+            lucide.createIcons();
+        }
+
+        // Add/subtract quantites
+        function changeQty(index, offset) {
+            const item = orderItems[index];
+            if (!item) return;
+
+            item.qty = Math.max(1, item.qty + offset);
+            renderTable();
+            showToast('Invoice Updated', `Quantity for ${item.name} updated.`, 'check');
+        }
+
+        // Remove item from simulated table
+        function removeItem(index) {
+            const removedItem = orderItems[index];
+            orderItems.splice(index, 1);
+            renderTable();
+            if (removedItem) {
+                showToast('Item Removed', `${removedItem.name} was removed from the order.`, 'trash-2');
+            }
+        }
+
+        // Interactive status changer
+        function updateOrderStatus() {
+            const selectValue = document.getElementById('status-select').value;
+            const badgeTop = document.getElementById('badge-top');
+            const badgeInfo = document.getElementById('badge-info');
+
+            // Set content
+            badgeTop.innerText = selectValue;
+            badgeInfo.innerText = selectValue.toUpperCase();
+
+            // Set matching badge color classes
+            let bgClass = 'bg-blue-100 text-blue-800';
+            if (selectValue === 'Pending') bgClass = 'bg-yellow-100 text-yellow-800';
+            else if (selectValue === 'Processing') bgClass = 'bg-purple-100 text-purple-800';
+            else if (selectValue === 'Delivered') bgClass = 'bg-emerald-100 text-emerald-800';
+            else if (selectValue === 'Cancelled') bgClass = 'bg-rose-100 text-rose-800';
+
+            // Reset class lists
+            badgeTop.className = `px-2.5 py-0.5 text-xs font-semibold rounded-full uppercase tracking-wide ${bgClass}`;
+            badgeInfo.className = `px-2.5 py-0.5 text-xs font-bold rounded-full ${bgClass}`;
+
+            showToast('Status Updated', `Order status has been updated to ${selectValue}.`, 'check');
+        }
+
+        // Open refund dialog
+        function openRefundModal() {
+            const totalText = document.getElementById('summary-total').innerText;
+            document.getElementById('refund-amount-text').innerText = totalText;
+            document.getElementById('refund-modal').classList.remove('hidden');
+        }
+
+        function closeRefundModal() {
+            document.getElementById('refund-modal').classList.add('hidden');
+        }
+
+        function confirmRefund() {
+            closeRefundModal();
+            showToast('Refund Successful', 'Full refund has been processed.', 'check');
+        }
+
+        // Open custom add item dialog
+        function openAddItemModal() {
+            document.getElementById('add-item-modal').classList.remove('hidden');
+        }
+
+        function closeAddItemModal() {
+            document.getElementById('add-item-modal').classList.add('hidden');
+        }
+
+        function addMockItemSubmit() {
+            const selectVal = document.getElementById('item-selector').value;
+            const qtyVal = parseInt(document.getElementById('item-qty-input').value) || 1;
+            
+            const prod = MOCK_PRODUCTS[selectVal];
+            if (prod) {
+                // Check if SKU exists to consolidate
+                const existing = orderItems.find(i => i.sku === prod.sku);
+                if (existing) {
+                    existing.qty += qtyVal;
+                } else {
+                    orderItems.push({
+                        id: `prod-${selectVal}`,
+                        name: prod.name,
+                        sku: prod.sku,
+                        variant: prod.variant,
+                        price: prod.price,
+                        qty: qtyVal,
+                        image: prod.image
+                    });
+                }
+                renderTable();
+                showToast('Item Added', `${prod.name} added to invoice.`, 'shopping-bag');
+            }
+            closeAddItemModal();
+        }
+
+        // Print & Download triggers
+        function handlePrintInvoice() {
+            window.print();
+        }
+
+        function handleDownloadInvoice() {
+            showToast('Invoice Exported', 'Your PDF has been successfully prepared and downloaded.', 'file-text');
+        }
+
+        function showNotificationAlert() {
+            showToast('System Notification', 'No new critical admin updates at this moment.', 'bell');
+        }
+
+        function handleSignOut() {
+            showToast('Signing Out...', 'Ending Velvet Vogue admin panel session.', 'log-out');
+        }
+
+        // Navigation modal mock placeholder
+        function switchTab(tabName) {
+            if (tabName === 'Orders') {
+                return; // already on orders details
+            }
+            document.getElementById('nav-modal-title').innerText = `${tabName} Section`;
+            document.getElementById('nav-modal-text').innerText = `You have clicked on the "${tabName}" sidebar item. This is a fully customizable template mock! Let's stay on Order Details to examine our product card.`;
+            document.getElementById('navigation-modal').classList.remove('hidden');
+        }
+
+        function closeNavModal() {
+            document.getElementById('navigation-modal').classList.add('hidden');
+        }
+
+        // Toast handler helper
+        let toastTimeout;
+        function showToast(title, desc, iconName) {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toast-title');
+            const toastDesc = document.getElementById('toast-desc');
+            const iconWrapper = document.getElementById('toast-icon-wrapper');
+
+            // clear current timeout
+            clearTimeout(toastTimeout);
+
+            toastTitle.innerText = title;
+            toastDesc.innerText = desc;
+            
+            // update icon
+            iconWrapper.innerHTML = `<i data-lucide="${iconName}" class="w-4 h-4"></i>`;
+            lucide.createIcons();
+
+            // trigger sliding animation
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            // hide after delay
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

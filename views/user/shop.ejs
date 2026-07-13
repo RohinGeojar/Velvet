@@ -117,8 +117,10 @@
 
         <!-- Results Counter -->
         <div class="text-center mb-8">
-            <h2 id="items-counter" class="text-sm font-sans uppercase tracking-[0.25em] font-medium text-text-dark">
-               <%= products.length %> Items
+            <h2 id="items-counter"
+                class="text-sm pt-4 font-sans uppercase tracking-[0.25em] font-medium text-text-dark">
+                <%= products.length %>
+                    <%= products.length===1 ? 'Item' : 'Items' %>
             </h2>
             <div class="w-10 h-[1px] bg-brand mx-auto mt-2"></div>
         </div>
@@ -154,53 +156,94 @@
                         <button onclick="toggleAccordion('sort-by-content', 'sort-by-icon')"
                             class="w-full flex justify-between items-center py-1 text-xs sm:text-sm font-semibold uppercase tracking-widest text-text-dark hover:text-brand">
                             <span>Sort By</span>
-                            <span id="sort-by-icon" class="text-text-muted font-light transition-transform"><%= sort ? '-' : '+' %></span>
+                            <span id="sort-by-icon" class="text-text-muted font-light transition-transform">
+                                <%= sort ? '-' : '+' %>
+                            </span>
                         </button>
-                        <div id="sort-by-content"  class="<%= sort ? '' : 'hidden' %> mt-3 pl-1 space-y-2.5">
+                        <div id="sort-by-content" class="<%= sort ? '' : 'hidden' %> mt-3 pl-1 space-y-2.5">
                             <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
-                                <input type="radio" name="sort"  <%= !sort || sort === "default" ? "checked" : "" %> onchange="applyFilter('sort','default')"
-                                    class="w-4.5 h-4.5 text-brand focus:ring-brand border-gray-300 accent-[#4F6352] rounded-full" />
+                                <input type="radio" name="sort" <%=!sort || sort==="default" ? "checked" : "" %>
+                                onchange="applyFilter('sort','default')"
+                                class="w-4.5 h-4.5 text-brand focus:ring-brand border-gray-300 accent-[#4F6352]
+                                rounded-full" />
                                 <span class="text-text-muted group-hover:text-text-dark transition">Default
                                     Recommended</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
-                                 <input type="radio" name="sort" <%= sort === "price_asc" ? "checked" : "" %> onchange="applyFilter('sort','price_asc')"
-                                    class="w-4.5 h-4.5 text-brand focus:ring-brand border-gray-300 accent-[#4F6352] rounded-full" />
+                                <input type="radio" name="sort" <%=sort==="price_asc" ? "checked" : "" %>
+                                onchange="applyFilter('sort','price_asc')"
+                                class="w-4.5 h-4.5 text-brand focus:ring-brand border-gray-300 accent-[#4F6352]
+                                rounded-full" />
                                 <span class="text-text-muted group-hover:text-text-dark transition">Price: Low to
                                     High</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
-                                <input type="radio" name="sort" <%= sort === "price_desc" ? "checked" : "" %>  onchange="applyFilter('sort','price_desc')"
-                                    class="w-4.5 h-4.5 text-brand focus:ring-brand border-gray-300 accent-[#4F6352] rounded-full" />
+                                <input type="radio" name="sort" <%=sort==="price_desc" ? "checked" : "" %>
+                                onchange="applyFilter('sort','price_desc')"
+                                class="w-4.5 h-4.5 text-brand focus:ring-brand border-gray-300 accent-[#4F6352]
+                                rounded-full" />
                                 <span class="text-text-muted group-hover:text-text-dark transition">Price: High to
                                     Low</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
-    <input
-        type="radio"
-        name="sort"
-        <%= sort === "a_z" ? "checked" : "" %>
-        onchange="applyFilter('sort','a_z')"
-        class="w-4.5 h-4.5 accent-[#4F6352]">
+                                <input type="radio" name="sort" <%=sort==="a_z" ? "checked" : "" %>
+                                onchange="applyFilter('sort','a_z')"
+                                class="w-4.5 h-4.5 accent-[#4F6352]">
 
-    <span class="text-text-muted group-hover:text-text-dark transition">
-        Name: A - Z
-    </span>     
-</label>
+                                <span class="text-text-muted group-hover:text-text-dark transition">
+                                    Name: A - Z
+                                </span>
+                            </label>
 
-<label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
-    <input
-        type="radio"
-        name="sort"
-        <%= sort === "z_a" ? "checked" : "" %>
-        onchange="applyFilter('sort','z_a')"
-        class="w-4.5 h-4.5 accent-[#4F6352]">
+                            <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
+                                <input type="radio" name="sort" <%=sort==="z_a" ? "checked" : "" %>
+                                onchange="applyFilter('sort','z_a')"
+                                class="w-4.5 h-4.5 accent-[#4F6352]">
 
-    <span class="text-text-muted group-hover:text-text-dark transition">
-        Name: Z - A
-    </span>
-</label>
+                                <span class="text-text-muted group-hover:text-text-dark transition">
+                                    Name: Z - A
+                                </span>
+                            </label>
                         </div>
+                    </div>
+
+                    <div class="pt-4">
+
+                        <button onclick="toggleAccordion('price-content','price-icon')"
+                            class="w-full flex justify-between items-center py-1 text-xs sm:text-sm font-semibold uppercase tracking-widest">
+
+                            <span>Price Range</span>
+
+                            <span id="price-icon">-</span>
+
+                        </button>
+
+                        <div id="price-content" class="mt-4 pl-1">
+
+                            <div class="flex justify-between text-sm mb-3">
+                                <span id="minPriceValue">
+                                    ₹<%= minPrice || dbMinPrice %>
+                                </span>
+
+                                <span id="maxPriceValue">
+                                    ₹<%= maxPrice || dbMaxPrice %>
+                                </span>
+                            </div>
+
+                            <input type="range" id="minPrice" min="<%= dbMinPrice %>" max="<%= dbMaxPrice %>" step="500"
+                                value="<%= minPrice || dbMinPrice %>" class="w-full accent-[#4F6352]">
+
+                            <input type="range" id="maxPrice" min="<%= dbMinPrice %>" max="<%= dbMaxPrice %>" step="500"
+                                value="<%= maxPrice || dbMaxPrice %>" class="w-full mt-3 accent-[#4F6352]">
+
+                            <button onclick="applyPriceRange()" class="mt-4 w-full bg-brand text-white py-2 rounded-md">
+
+                                Apply
+
+                            </button>
+
+                        </div>
+
                     </div>
 
                     <!-- Accordion: Size (Default Expanded) -->
@@ -222,25 +265,28 @@
                                     / US (4-6)</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
-                                <input type="checkbox" <%= size === "M" ? "checked" : "" %>
-                                    onchange="applyFilter('size','M')"
+                                <input type="checkbox" <%=size==="M" ? "checked" : "" %>
+                                onchange="applyFilter('size','M')"
 
-                                    class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand accent-[#4F6352]" />
+                                class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand
+                                accent-[#4F6352]" />
                                 <span class="text-text-muted group-hover:text-text-dark transition">M / US (6-10)</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
-                                <input type="checkbox"<%= size === "L" ? "checked" : "" %>
-                                    onchange="applyFilter('size','L')"
+                                <input type="checkbox" <%=size==="L" ? "checked" : "" %>
+                                onchange="applyFilter('size','L')"
 
-                                    class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand accent-[#4F6352]" />
+                                class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand
+                                accent-[#4F6352]" />
                                 <span class="text-text-muted group-hover:text-text-dark transition">L / US
                                     (10-14)</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group text-xs sm:text-sm">
-                                <input type="checkbox" <%= size === "XL" ? "checked" : "" %>
-                                    onchange="applyFilter('size','XL')"
+                                <input type="checkbox" <%=size==="XL" ? "checked" : "" %>
+                                onchange="applyFilter('size','XL')"
 
-                                    class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand accent-[#4F6352]" />
+                                class="custom-checkbox w-4 h-4 rounded border-gray-300 text-brand focus:ring-brand
+                                accent-[#4F6352]" />
                                 <span class="text-text-muted group-hover:text-text-dark transition">XL / US
                                     (12-16)</span>
                             </label>
@@ -248,44 +294,46 @@
                     </div>
 
                     <!-- Accordion: Color -->
-                  
+
 
                     <!-- Accordion: Collection (Default Expanded) -->
                     <div class="pt-4">
-                        <button onclick="toggleAccordion('collection-content', 'collection-icon')"
+
+                        <button onclick="toggleAccordion('category-content', 'category-icon')"
                             class="w-full flex justify-between items-center py-1 text-xs sm:text-sm font-semibold uppercase tracking-widest text-text-dark hover:text-brand">
-                            <span>Collection</span>
-                            <span id="collection-icon" class="text-text-muted font-light transition-transform">-</span>
+
+                            <span>Category</span>
+
+                            <span id="category-icon" class="text-text-muted font-light transition-transform">
+                                -
+                            </span>
+
                         </button>
-                        <div id="collection-content" class="mt-3 pl-1 space-y-3">
-                            <label class="flex items-center gap-3 cursor-pointer">
 
-    <input
-        type="checkbox"
-        <%= stock === "in" ? "checked" : "" %>
-        onchange="applyFilter('stock','in')"
-        class="custom-checkbox w-4 h-4">
+                        <div id="category-content" class="mt-3 pl-1 space-y-3">
 
-    <span>In Stock</span>
+                            <% categories.forEach(cat=> { %>
 
-</label>
+                                <label class="flex items-center gap-3 cursor-pointer">
 
-<label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" <%=category===cat._id.toString() ? "checked" : "" %>
+                                    onchange="applyFilter('category','<%= cat._id %>')"
+                                        class="custom-checkbox w-4 h-4">
 
-    <input
-        type="checkbox"
-        <%= stock === "out" ? "checked" : "" %>
-        onchange="applyFilter('stock','out')"
-        class="custom-checkbox w-4 h-4">
+                                        <span>
+                                            <%= cat.name %>
+                                        </span>
 
-    <span>Out Of Stock</span>
+                                </label>
 
-</label>
+                                <% }) %>
+
                         </div>
+
                     </div>
 
                     <!-- Accordion: Fabric (Default Expanded) -->
-                  
+
 
                 </div>
             </aside>
@@ -296,7 +344,7 @@
 
                     <% products.forEach(product=> { %>
 
-                        <div class="group relative flex flex-col ">
+                        <div class="product-card  group relative flex flex-col ">
 
                             <!-- Product Image -->
                             <a href="/shop/product/<%= product.slug %>"
@@ -304,16 +352,25 @@
 
                                 <img src="<%= product.variants?.[0]?.images?.[0]?.url || '/images/default-product.jpg' %>"
                                     alt="<%= product.productName %>"
-                                    class="w-[200px] h-[300px] md:w-[260px] md:h-[370px] lg:w-[320px] lg:h-[450px] object-cover group-hover:scale-105 transition duration-500">
+                                    class="productImage w-[200px] h-[300px] md:w-[260px] md:h-[370px] lg:w-[320px] lg:h-[450px] object-cover group-hover:scale-105 transition duration-500">
 
                                 <!-- Wishlist -->
-                                <button
-                                    class="absolute top-4 right-4 bg-white hover:bg-gray-50 text-text-dark p-2 rounded-full shadow-md transition-transform duration-200 hover:scale-110">
+                                <% const isWishlisted=wishlist && wishlist.products.some(item=>
+                                    item.productId.toString() === product._id.toString() &&
+                                    item.variantId.toString() === product.variants[0]._id.toString()
+                                    );
+                                    %>
+                                    <button
+                                        class="wishlistBtn absolute top-4 right-4 bg-white hover:bg-gray-50 p-2 rounded-full shadow-md transition-transform duration-200 hover:scale-110"
+                                        data-product-id="<%= product._id %>"
+                                        data-variant-id="<%= product.variants[0]._id %>">
 
-                                    <i data-lucide="heart" class="w-[17px] h-[17px] stroke-[1.5]">
-                                    </i>
+                                        <i data-lucide="heart" class="w-[17px] h-[17px] stroke-[1.5]"
+                                            fill="<%= isWishlisted ? '#ef4444' : 'none' %>"
+                                            stroke="<%= isWishlisted ? '#ef4444' : 'currentColor' %>">
+                                        </i>
 
-                                </button>
+                                    </button>
 
                             </a>
 
@@ -336,9 +393,9 @@
                                     </div>
 
                                     <span
-                                        class="font-sans font-semibold text-xs sm:text-sm text-text-dark whitespace-nowrap ml-auto">
+                                        class="productPrice font-sans font-semibold text-xs sm:text-sm text-text-dark whitespace-nowrap ml-auto">
 
-                                        ₹<%= product.displayPrice  || 0 %>
+                                        ₹<%= product.displayPrice || 0 %>
 
                                     </span>
 
@@ -346,62 +403,65 @@
 
                                 <!-- Color Swatches -->
                                 <div class="flex items-center gap-2 mt-1">
-                                    <% const colorMap={ black: "#000000" , white: "#ffffff" , red: "#ff0000" ,
-                                        blue: "#0000ff" , green: "#008000" , yellow: "#ffff00" , pink: "#ffc0cb" ,
-                                        purple: "#800080" , brown: "#8b4513" , grey: "#808080" , gray: "#808080" } 
-                                        %>
 
-                                        <% product.variants.forEach(variant=> { %>
+                                    <% product.variants.forEach((variant, index) => { %>
 
-                                            <span class="w-4 h-4 rounded-full border border-gray-300"
-                                                style="background-color:<%= variant.colorCode %>;">
-                                            </span>
-                                            <% }) %>
+                                        <button
+                                            type="button"
+                                            class="variantBtn w-4 h-4 rounded-full border border-gray-300 hover:scale-110 transition"
+                                            data-variant-id="<%= variant._id %>"
+                                            data-image="<%= variant.images?.[0]?.url %>"
+                                            data-price="<%= variant.salePrice %>"
+                                            data-sizes='<%- JSON.stringify(variant.sizes) %>'
+                                            style="background-color: <%= variant.colorCode %>;"
+                                        >
+                                        </button>
+
+                                    <% }) %>
 
                                 </div>
 
+                             </div>
                             </div>
-
-                        </div>
 
                         <% }) %>
 
                 </div>
                 <!-- ============= -->
-                 <% if(totalPages > 1){ %>
+                <% if(totalPages> 1){ %>
 
-<div class="flex justify-center items-center gap-2 mt-16">
+                    <div class="flex justify-center items-center gap-2 mt-16">
 
-    <% if(currentPage > 1){ %>
-        <a href="?page=<%= currentPage - 1 %>&sort=<%= sort || '' %>&size=<%= size || '' %>"
-            class="px-4 py-2 border rounded hover:bg-brand hover:text-white">
-            Prev
-        </a>
-    <% } %>
+                        <% if(currentPage> 1){ %>
+                            <a href="?page=<%= currentPage - 1 %>&search=<%= search || '' %>&category=<%= category || '' %>&sort=<%= sort || '' %>&size=<%= size || '' %>&color=<%= color || '' %>&stock=<%= stock || '' %>&minPrice=<%= minPrice || '' %>&maxPrice=<%= maxPrice || '' %>"
+                                class="px-4 py-2 border rounded hover:bg-brand hover:text-white">
+                                Prev
+                            </a>
+                            <% } %>
 
-    <% for(let i = Math.max(1,currentPage-2); i <= Math.min(totalPages,currentPage+2); i++){ %>
+                                <% for(let i=Math.max(1,currentPage-2); i <=Math.min(totalPages,currentPage+2); i++){ %>
 
-        <a href="?page=<%= i %>&sort=<%= sort || '' %>&size=<%= size || '' %>"
-            class="w-10 h-10 flex items-center justify-center rounded border
+                                    <a href="?page=<%= i %>&search=<%= search || '' %>&category=<%= category || '' %>&sort=<%= sort || '' %>&size=<%= size || '' %>&color=<%= color || '' %>&stock=<%= stock || '' %>&minPrice=<%= minPrice || '' %>&maxPrice=<%= maxPrice || '' %>"
+                                        class="w-10 h-10 flex items-center justify-center rounded border
             <%= currentPage === i
                 ? 'bg-brand text-white border-brand'
                 : 'hover:bg-brand hover:text-white'
             %>">
-            <%= i %>
-        </a>
+                                        <%= i %>
+                                    </a>
 
-    <% } %>
+                                    <% } %>
 
-    <% if(currentPage < totalPages){ %>
-        <a href="?page=<%= currentPage + 1 %>&sort=<%= sort || '' %>&size=<%= size || '' %>"
-            class="px-4 py-2 border rounded hover:bg-brand hover:text-white">
-            Next
-        </a>
-    <% } %>
+                                        <% if(currentPage < totalPages){ %>
+                                            <a href="?page=<%= currentPage + 1 %>&search=<%= search || '' %>&category=<%= category || '' %>&sort=<%= sort || '' %>&size=<%= size || '' %>&color=<%= color || '' %>&stock=<%= stock || '' %>&minPrice=<%= minPrice || '' %>&maxPrice=<%= maxPrice || '' %>"
+                                                class="px-4 py-2 border rounded hover:bg-brand hover:text-white">
+                                                Next
+                                            </a>
+                                            <% } %>
 
-</div>
+                    </div>
 
-<% } %>
+                    <% } %>
             </div>
 
         </div>
@@ -420,70 +480,210 @@
     <!-- ---------------------------------------------------- -->
     <script>
 
-    lucide.createIcons();
+        lucide.createIcons();
 
-    // ACCORDION
-    function toggleAccordion(panelId, iconId) {
+        // ACCORDION
+        function toggleAccordion(panelId, iconId) {
 
-        const panel = document.getElementById(panelId);
-        const icon = document.getElementById(iconId);
+            const panel = document.getElementById(panelId);
+            const icon = document.getElementById(iconId);
 
-        panel.classList.toggle("hidden");
+            panel.classList.toggle("hidden");
 
-        icon.textContent =
-            panel.classList.contains("hidden") ? "+" : "-";
-    }
+            icon.textContent =
+                panel.classList.contains("hidden") ? "+" : "-";
+        }
 
-    // APPLY FILTER
-    function applyFilter(key, value) {
+        // APPLY FILTER
+        function applyFilter(key, value) {
 
-        const params =
-            new URLSearchParams(window.location.search);
+            const params =
+                new URLSearchParams(window.location.search);
 
-        if (params.get(key) === value) {
+            if (params.get(key) === value) {
 
-            params.delete(key);
+                params.delete(key);
 
-        } else {
+            } else {
 
-            params.set(key, value);
+                params.set(key, value);
+
+            }
+
+            params.set("page", 1);
+            localStorage.setItem("openAccordion", "sort");
+
+            window.location.href =
+                `${window.location.pathname}?${params.toString()}`;
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const openAccordion =
+                localStorage.getItem("openAccordion");
+
+            if (openAccordion === "sort") {
+
+                const panel =
+                    document.getElementById("sort-by-content");
+
+                const icon =
+                    document.getElementById("sort-by-icon");
+
+                panel.classList.remove("hidden");
+                icon.textContent = "-";
+            }
+
+        });
+        const minSlider =
+            document.getElementById("minPrice");
+
+        const maxSlider =
+            document.getElementById("maxPrice");
+
+        const minValue =
+            document.getElementById("minPriceValue");
+
+        const maxValue =
+            document.getElementById("maxPriceValue");
+
+        if (minSlider && maxSlider) {
+
+            minSlider.addEventListener("input", () => {
+
+                if (
+                    Number(minSlider.value) >
+                    Number(maxSlider.value)
+                ) {
+                    minSlider.value =
+                        maxSlider.value;
+                }
+
+                minValue.textContent =
+                    `₹${minSlider.value}`;
+            });
+
+            maxSlider.addEventListener("input", () => {
+
+                if (
+                    Number(maxSlider.value) <
+                    Number(minSlider.value)
+                ) {
+                    maxSlider.value =
+                        minSlider.value;
+                }
+
+                maxValue.textContent =
+                    `₹${maxSlider.value}`;
+            });
+        }
+
+        function applyPriceRange() {
+
+            const params =
+                new URLSearchParams(window.location.search);
+
+            params.set(
+                "minPrice",
+                minSlider.value
+            );
+
+            params.set(
+                "maxPrice",
+                maxSlider.value
+            )
+
+            params.set("page", 1);
+
+            window.location.href =
+                `${window.location.pathname}?${params.toString()}`;
+        }
+
+        // CLEAR FILTERS
+        function clearAllFilters() {
+
+            window.location.href =
+                window.location.pathname;
 
         }
 
-        params.set("page", 1);
-        localStorage.setItem("openAccordion", "sort");
+        document.querySelectorAll(".wishlistBtn").forEach(btn => {
 
-        window.location.href =
-            `${window.location.pathname}?${params.toString()}`;
-    }
-    document.addEventListener("DOMContentLoaded", () => {
+            btn.addEventListener("click", async (e) => {
 
-    const openAccordion =
-        localStorage.getItem("openAccordion");
+                e.preventDefault()
+                e.stopPropagation()
 
-    if(openAccordion === "sort"){
+                const icon = btn.querySelector("svg");
 
-        const panel =
-            document.getElementById("sort-by-content");
+                const productId = btn.dataset.productId;
+                const variantId = btn.dataset.variantId;
+                console.log({
+                    productId,
+                    variantId
+                });
 
-        const icon =
-            document.getElementById("sort-by-icon");
+                const response = await fetch(
+                    `/shop/wishlist/toggle`, {
 
-        panel.classList.remove("hidden");
-        icon.textContent = "-";
-    }
+                    method: "POST",
 
-});
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-    // CLEAR FILTERS
-    function clearAllFilters() {
+                    body: JSON.stringify({
+                        productId,
+                        variantId
+                    })
 
-        window.location.href =
-            window.location.pathname;
+                });
+                const data = await response.json();
 
-    }
+                if (data.success) {
 
-</script>
+                    if (data.added) {
+                        icon.setAttribute("fill", "#ef4444");
+                        icon.setAttribute("stroke", "#ef4444");
+
+
+                    } else {
+
+                       icon.setAttribute("fill", "none");
+        icon.setAttribute("stroke", "currentColor");
+
+
+
+                    } 
+                }
+
+            });
+
+        });
+        document.querySelectorAll(".product-card").forEach(card => {
+
+            const image = card.querySelector(".productImage");
+
+            const price = card.querySelector(".productPrice");
+
+            card.querySelectorAll(".variantBtn").forEach(btn => {
+                const wishlistBtn = card.querySelector(".wishlistBtn");
+
+                btn.addEventListener("click", e => {
+
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    image.src = btn.dataset.image;
+
+                    price.textContent = `₹${btn.dataset.price}`;
+                    wishlistBtn.dataset.variantId = btn.dataset.variantId;
+                });
+
+            });
+
+        });
+
+    </script>
 </body>
 
 </html>

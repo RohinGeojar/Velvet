@@ -31,7 +31,7 @@ export const createCategory = async (data) => {
     })
 
     if (existing) {
-        throw new AppError(MESSAGES.CATEGORY_EXISTS, STATUS.BAD_REQUEST)
+        throw new AppError(MESSAGES.CATEGORY_EXISTS, STATUS.BAD_REQUEST,"name")
     }
 
     return await Category.create({

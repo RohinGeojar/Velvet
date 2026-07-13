@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wish List - Velvet Vogue</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Playfair Display (Brand/Serif) & Inter (UI/Sans-serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet">
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Configuration for exact design token matching -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandGreen: '#4a5d4e',
+            brandGreenDark: '#3b4b3f',
+            textDark: '#1a1a1a',
+            textMuted: '#707070',
+            bgLight: '#ffffff',
+            borderLight: '#e5e5e5'
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"DM Sans"', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Premium custom scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #4a5d4e;
+      border-radius: 3px;
+    }
+
+    /* Transition adjustments for butter-smooth interactions */
+    .transition-all-300 {
+      transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .addToCartBtn:disabled {
+      opacity: 1;
+      cursor: not-allowed;
+      background-color: rgb(202, 112, 112);
+    }
+  </style>
+</head>
+
+<body class="font-sans bg-white text-textDark flex flex-col min-h-screen selection:bg-brandGreen selection:text-white">
+
+  <main class="flex-grow">
+
+
+    <!-- Page Title -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-10 text-center">
+      <h1 class="font-sans text-3xl md:text-4xl font-normal text-textDark tracking-wide mb-2">
+        My Wish List
+      </h1>
+
+      <p id="wishlistCount" class="text-xs md:text-sm text-textMuted tracking-widest uppercase font-medium">
+        <%= wishlistProducts.length %> Item<%= wishlistProducts.length !==1 ? "s" : "" %>
+      </p>
+    </section>
+
+    <!-- Wishlist Grid -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+
+
+
+      <div id="wishlistGrid"
+        class="<%= wishlistProducts.length ? '' : 'hidden' %> grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
+
+        <% wishlistProducts.forEach(product=> { %>
+
+          <div class="group wishlistCard transition-all duration-300">
+
+            <a href="/shop/product/<%= product.slug %>?variant=<%=product.variantIndex %>"
+              class="block overflow-hidden">
+
+              <div class="relative bg-gray-50 aspect-[3/4] overflow-hidden">
+                <% if(product.isUnavailable){ %>
+
+                  <div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] uppercase px-2 py-1 rounded">
+
+                    Unavailable
+
+                  </div>
+
+                  <% } else if(product.isOutOfStock){ %>
+
+                    <div class="absolute top-3 left-3 bg-red-400 text-white text-[10px] uppercase px-2 py-1 rounded">
+
+                      Out of Stock
+
+                    </div>
+
+                    <% } %>
+
+                      <img src="<%= product?.image  %>" alt="<%= product.productName %>"
+                        class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+
+                      <button
+                        class=" wishlistBtn absolute top-4 right-4 bg-white rounded-full p-2 shadow removeWishlistBtn"
+                        data-product-id="<%= product._id %>" data-image="<%= product.image %>"
+                        data-variant-id="<%= product.variantId %>">
+
+                        <i data-lucide="x" class="w-4 h-4"></i>
+
+                      </button>
+                      <div
+                        class="absolute bottom-0 left-0 w-full translate-y-full group-hover:translate-y-0 transition-all duration-300">
+
+                        <button
+                          class="addToCartBtn w-full py-4 bg-brand text-white text-xs uppercase tracking-[0.2em] hover:bg-brandGreen transition disabled:opacity-50 disabled:cursor-not-allowed"
+                          data-product-id="<%= product._id %>" data-variant-id="<%= product.variantId %>"
+                          data-variant-index="<%= product.variantIndex %>" data-size="<%= product.size %>" data-sizes='<%- JSON.stringify(product.sizes) %>'
+                          <%=product.isUnavailable || product.isOutOfStock ? "disabled" : "" %>>
+
+                          <%= product.isUnavailable ? "Unavailable" : product.isOutOfStock ? "Out of Stock"
+                            : "Add To Cart" %>
+
+                        </button>
+
+                      </div>
+
+
+              </div>
+
+              <div class="mt-4 text-center">
+
+                <h3 class="text-sm uppercase tracking-wide font-medium">
+                  <%= product.productName %>
+                </h3>
+
+                <p class="mt-2 text-sm text-textMuted">
+                  ₹<%= product.price %>
+                </p>
+
+              </div>
+
+            </a>
+
+          </div>
+
+          <% }) %>
+
+      </div>
+
+
+
+      <!-- Empty State -->
+      <div id="emptyState"
+        class="<%= wishlistProducts.length ? 'hidden' : 'flex' %> flex flex-col items-center justify-center py-16 text-center">
+
+        <div class="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mb-4">
+          <i data-lucide="heart" class="w-8 h-8 text-gray-300 stroke-[1.2]"></i>
+        </div>
+
+        <h3 class="font-sans text-xl mb-2">
+          Your Wish List is Empty
+        </h3>
+
+        <p class="text-sm text-textMuted mb-8 max-w-sm">
+          Explore our curated collections and add your favorite pieces to your personalized list.
+        </p>
+
+        <a href="/shop"
+          class="px-8 py-3 bg-brand hover:bg-brand-dark text-white text-xs tracking-widest uppercase rounded transition">
+
+          Continue Shopping
+
+        </a>
+
+      </div>
+
+
+
+    </section>
+
+
+  </main>
+<div id="sizeModal"
+     class="fixed inset-0 hidden bg-black/50 flex items-center justify-center z-50">
+
+    <div class="bg-white rounded-lg w-96 p-6">
+
+        <h3 class="text-lg font-semibold mb-5">
+            Select Size
+        </h3>
+
+        <div id="sizeContainer"
+             class="grid grid-cols-4 gap-3">
+        </div>
+
+        <p id="sizeError"
+           class="text-red-500 text-sm mt-3 hidden">
+        </p>
+
+        <div class="flex justify-end mt-6 gap-3">
+
+            <button id="cancelSize">
+                Cancel
+            </button>
+
+            <button id="confirmAdd"
+                    class="bg-brand text-white px-4 py-2 rounded">
+                Add to Cart
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+  <!-- Toast -->
+
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 pointer-events-none">
+  </div>
+
+  <!-- Search Modal -->
+
+  <div id="searchModal"
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-start justify-center pt-24 px-4 hidden">
+
+    <div class="bg-white w-full max-w-2xl rounded-lg shadow-2xl p-6 relative">
+
+      <button id="closeSearchModal" class="absolute top-4 right-4 text-textDark hover:text-brandGreen">
+
+        <i data-lucide="x" class="w-5 h-5"></i>
+
+      </button>
+
+      <h3 class="font-serif text-lg mb-4">
+        What are you looking for today?
+      </h3>
+
+      <div class="flex items-center border-b border-gray-200 focus-within:border-brandGreen py-2">
+
+        <i data-lucide="search" class="w-5 h-5 text-gray-400 mr-3"></i>
+
+        <input type="text" placeholder="Search products, collections, lookbooks..."
+          class="w-full bg-transparent border-none outline-none text-sm text-textDark focus:ring-0">
+
+      </div>
+
+    </div>
+
+
+  </div>
+  <div id="toast" class="fixed top-6 right-6 z-50 bg-[#23273A]
+rounded-md shadow-2xl flex items-center gap-4
+px-2 py-2 translate-x-full opacity-0
+transition-all duration-500">
+
+    <img id="toastImage" src="" class="w-9 h-9 object-cover">
+
+    <span id="toastText" class="text-white text-sm font-semibold">
+    </span>
+
+  </div>
+
+</body>
+
+
+<!-- Interactive JavaScript Logic -->
+<script>
+  lucide.createIcons()
+
+  document.querySelectorAll(".wishlistBtn").forEach(btn => {
+
+    btn.addEventListener("click", async (e) => {
+
+      e.preventDefault()
+      e.stopPropagation()
+
+      const icon = btn.querySelector("i");
+
+      const productId = btn.dataset.productId;
+      const variantId = btn.dataset.variantId;
+
+      const response = await fetch(
+        "/shop/wishlist/remove",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            productId,
+            variantId
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+
+        const productImage = btn.dataset.image;
+
+        showToast(
+          "✕ Removed from wishlist",
+          productImage
+        );
+
+        const card = btn.closest(".wishlistCard");
+
+        card.style.transition = "all .35s ease";
+        card.style.opacity = "0";
+        card.style.transform = "scale(.9)";
+
+        setTimeout(() => {
+          card.remove()
+          updateWishlistCount();
+
+          checkEmptyWishlist();
+        }, 300)
+      }
+
+    });
+
+  })
+
+  function showToast(message, imageUrl) {
+
+    const toast = document.getElementById("toast");
+    const toastImage = document.getElementById("toastImage");
+    const toastText = document.getElementById("toastText");
+
+    toastImage.src = imageUrl;
+    toastText.textContent = message;
+
+    toast.classList.remove(
+      "translate-x-full",
+      "opacity-0"
+    );
+
+    setTimeout(() => {
+
+      toast.classList.add(
+        "translate-x-full",
+        "opacity-0"
+      );
+
+    }, 2500);
+  }
+
+  function updateWishlistCount() {
+
+    const count =
+      document.querySelectorAll(".wishlistCard").length;
+
+    document.getElementById("wishlistCount")
+      .textContent =
+      `${count} Item${count !== 1 ? "s" : ""}`;
+
+  }
+
+  function checkEmptyWishlist() {
+
+    const count =
+      document.querySelectorAll(".wishlistCard").length;
+
+    if (count === 0) {
+
+      document
+        .getElementById("wishlistGrid")
+        .classList.add("hidden");
+
+      const emptyState =
+        document.getElementById("emptyState");
+
+      emptyState.classList.remove("hidden");
+
+      emptyState.classList.add("flex");
+
+    }
+
+  }
+
+
+
+let selectedProduct = null;
+let selectedSize = null;
+
+const sizeModal = document.getElementById("sizeModal");
+const sizeContainer = document.getElementById("sizeContainer");
+const sizeError = document.getElementById("sizeError");
+
+document.querySelectorAll(".addToCartBtn").forEach(btn => {
+
+    btn.addEventListener("click", (e) => {
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (btn.disabled) return;
+
+        selectedProduct = {
+            productId: btn.dataset.productId,
+            variantId: btn.dataset.variantId,
+            variantIndex: btn.dataset.variantIndex,
+            card: btn.closest(".wishlistCard")
+        };
+
+        selectedSize = null;
+        sizeError.classList.add("hidden");
+
+        const sizes = JSON.parse(btn.dataset.sizes);
+
+        renderSizes(sizes);
+
+        sizeModal.classList.remove("hidden");
+
+    });
+
+});
+document.getElementById("confirmAdd").addEventListener("click", async () => {
+
+    if (!selectedSize) {
+
+        sizeError.textContent = "Please select a size.";
+        sizeError.classList.remove("hidden");
+        return;
+
+    }
+
+    const response = await fetch("/shop/cart/add", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            productId: selectedProduct.productId,
+            variantIndex: selectedProduct.variantIndex,
+            size: selectedSize
+
+        })
+
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+
+        sizeError.textContent = data.message;
+        sizeError.classList.remove("hidden");
+        return;
+
+    }
+
+    const removeResponse = await fetch("/shop/wishlist/remove", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            productId: selectedProduct.productId,
+            variantId: selectedProduct.variantId
+
+        })
+
+    });
+
+    const removeData = await removeResponse.json();
+
+    if (removeData.success) {
+
+        selectedProduct.card.remove();
+
+        updateWishlistCount();
+        checkEmptyWishlist();
+
+    }
+
+    sizeModal.classList.add("hidden");
+
+    showToast(
+        "✓ Added to cart",
+        selectedProduct.card.querySelector("img").src
+    );
+
+});
+
+function renderSizes(sizes) {
+
+    sizeContainer.innerHTML = "";
+
+    sizes.forEach(size => {
+
+        const btn = document.createElement("button");
+
+        btn.textContent = size.size;
+
+        btn.type = "button";
+
+        btn.className =
+            "border rounded p-2 text-sm hover:bg-brand hover:text-white";
+
+        if (size.stock <= 0) {
+
+            btn.disabled = true;
+
+            btn.classList.add(
+                "opacity-50",
+                "cursor-not-allowed",
+                "bg-gray-200"
+            );
+
+        } else {
+
+            btn.addEventListener("click", () => {
+
+                selectedSize = size.size;
+
+                sizeError.classList.add("hidden");
+
+                document
+                    .querySelectorAll("#sizeContainer button")
+                    .forEach(b => {
+
+                        b.classList.remove(
+                            "bg-brand",
+                            "text-white"
+                        );
+
+                    });
+
+                btn.classList.add(
+                    "bg-brand",
+                    "text-white"
+                );
+
+            });
+
+        }
+
+        sizeContainer.appendChild(btn);
+
+    });
+
+}
+
+document
+    .getElementById("cancelSize")
+    .addEventListener("click", () => {
+
+        sizeModal.classList.add("hidden");
+
+        selectedSize = null;
+
+    });
+</script>
+</body>
+
+</html>

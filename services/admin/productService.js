@@ -6,9 +6,9 @@ import { generateSlug } from "../../utils/slugify.js"
 
 
 export const createProduct = async (productData, files) => {
-    
 
-    let baseSlug = generateSlug(productData.productName,{ lower: true }) 
+
+    let baseSlug = generateSlug(productData.productName, { lower: true })
     let slug = baseSlug;
 
     let counter = 1;
@@ -53,6 +53,26 @@ export const updateProductService = async (id, body, files, value) => {
 
     const product = await Product.findById(id);
 
+    let baseSlug = generateSlug(
+        value.productName,
+        { lower: true }
+    );
+
+    let slug = baseSlug;
+
+    let counter = 1;
+
+    while (
+        await Product.findOne({
+            slug,
+            _id: { $ne: id }
+        })
+    ) {
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+    }
+
+
     if (!product) {
         throw new AppError("Product not found", 404)
     }
@@ -70,6 +90,7 @@ export const updateProductService = async (id, body, files, value) => {
 
         const oldImages =
             existingImages.map(url => ({
+                public_id:"",
                 url
             }))
 
@@ -93,7 +114,7 @@ export const updateProductService = async (id, body, files, value) => {
         id,
         {
             ...value, productName, productTitle,
-            variants: body.variants
+            variants: body.variants, slug
         },
         { new: true }
     )

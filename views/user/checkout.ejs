@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Velvet Vogue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .font-inter {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #7a9575;
+            border-radius: 9999px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #607a5d;
+        }
+
+        .address-radio {
+            appearance: none;
+            -webkit-appearance: none;
+
+            width: 22px;
+            height: 22px;
+
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            transition: all .25s ease;
+
+            position: absolute;
+            top: 8px;
+            right: 18px;
+
+            background: #fff;
+        }
+
+        .address-radio:hover {
+            border-color: #7a9575;
+        }
+
+        .address-radio:checked {
+            background: #7a9575;
+            border-color: #7a9575;
+        }
+
+        .address-radio::after {
+            content: "";
+            width: 6px;
+            height: 10px;
+
+            border: solid white;
+            border-width: 0 2px 2px 0;
+
+            transform: rotate(45deg) scale(0);
+
+            transition: .2s ease;
+        }
+
+        .address-radio:checked::after {
+            transform: rotate(45deg) scale(1);
+        }
+    </style>
+</head>
+
+<body class="bg-white text-[#2C2C2C] antialiased min-h-screen">
+
+    <div class="max-w-[1440px] mx-auto px-6 md:px-16 py-8">
+
+
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+            <div class="lg:col-span-7 space-y-10">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+
+                    <% if (addresses.length===0) { %>
+                        <p>No addresses found</p>
+                        <% } %>
+
+                            <% addresses.forEach(address=> { %>
+
+                                <div class="address-card <%= address.isDefault ? 'default border-2 border-[#7a9575]' : 'border border-gray-200' %> relative p-8 bg-white flex flex-col h-full rounded-xl "
+                                    data-id="<%= address._id %>">
+                                    <input type="radio" name="selectedAddress" value="<%= address._id %>"
+                                        class="address-radio   absolute top-4 right-4" <%=address.isDefault ? "checked"
+                                        : "" %>>
+
+
+                                    <% if (address.isDefault) { %>
+                                        <div class="absolute -top-[14px] left-4">
+                                            <span
+                                                class="bg-[#7a9575] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                                Default Address
+                                            </span>
+                                        </div>
+                                        <% } %>
+
+                                            <div class="flex justify-between items-start mb-4">
+                                                <div>
+                                                    <h3 class="text-xl font-bold text-[#1A1A1A]">
+                                                        <%= address.name %>
+                                                    </h3>
+
+                                                    <div
+                                                        class="flex items-center gap-2 text-sm text-[#1A1A1A] mt-1 font-medium">
+                                                        <i data-lucide="phone" class="w-4 h-4"></i>
+                                                        <%= address.phone %>
+                                                    </div>
+                                                </div>
+
+                                                <div class="bg-[#F3F4F6] p-2 rounded-lg text-gray-500">
+                                                    <i data-lucide="<%= address.type === 'office' ? 'building' : 'home' %>"
+                                                        class="w-5 h-5"></i>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                class="text-[15px] text-gray-600 space-y-1 mb-8 flex-1 leading-relaxed">
+                                                <p>
+                                                    <%= address.addressLine1 %>
+                                                </p>
+                                                <% if(address.addressLine2){ %>
+                                                    <p>
+                                                        <%= address.addressLine2 %>
+                                                    </p>
+                                                    <% } %>
+                                                        <p>
+                                                            <%= address.city %>
+                                                        </p>
+                                                        <p>
+                                                            <%= address.postalCode %>
+                                                        </p>
+                                                        <p
+                                                            class="font-bold text-[#1A1A1A] mt-2 tracking-wide uppercase">
+                                                            <%= address.country %>
+                                                        </p>
+                                            </div>
+
+                                            <% if (!address.isDefault) { %>
+                                                <button type="button"
+                                                    class="set-default-btn text-[11px] font-bold uppercase tracking-[0.1em] text-[#72846D] hover:underline"
+                                                    data-id="<%= address._id %>">
+                                                    Set as Default
+                                                </button>
+                                                <% } %>
+
+                                                    <div class="pt-6 border-t border-gray-100 flex items-center gap-4">
+
+                                                        <button type="button"
+                                                            class="edit-address-btn flex-1 flex items-center justify-center gap-2 py-2.5 bg-[#F9FAFB] rounded-lg  text-sm font-bold text-[#1A1A1A] hover:bg-gray-100 transition-all"
+                                                            data-id="<%= address._id %>">
+
+                                                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                                            Edit
+                                                        </button>
+
+
+                                                        <button
+                                                            class="delete-address-btn text-red-600 hover:text-red-700"
+                                                            data-url="/address/<%= address._id %>/delete?redirect=/checkout"
+                                                            data-id="<%= address._id %>">
+
+                                                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                                                        </button>
+                                                    </div>
+
+                                </div>
+
+                                <% }) %>
+
+                                    <!-- Delete Confirmation Modal -->
+                                    <div id="deleteAddressModal"
+                                        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+
+                                        <div class="bg-white rounded-xl shadow-xl w-[90%] max-w-md p-6 animate-fadeIn">
+
+                                            <div class="flex items-center gap-3 mb-4">
+                                                <div
+                                                    class="w-12 h-12 flex items-center justify-center rounded-full bg-red-100">
+                                                    <i data-lucide="trash-2" class="w-6 h-6 text-red-600"></i>
+                                                </div>
+
+                                                <div>
+                                                    <h2 class="text-xl font-semibold text-gray-800">
+                                                        Delete Address
+                                                    </h2>
+                                                    <p class="text-sm text-gray-500">
+                                                        This action cannot be undone.
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <p class="text-gray-600 mb-6">
+                                                Are you sure you want to delete this address?
+                                            </p>
+
+                                            <div class="flex justify-end gap-3">
+
+                                                <button id="cancelDeleteBtn"
+                                                    class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition">
+                                                    Cancel
+                                                </button>
+
+                                                <a id="confirmDeleteBtn" href="#"
+                                                    class="px-5 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
+                                                    Delete
+                                                </a>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- Keep your Add Card unchanged -->
+
+                                    <div id="addAdddress"
+                                        class="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer <%= addresses.length % 2 === 0 ? 'min-h-[100px] ' : 'address-card' %> group hover:border-[#72846D] transition-all">
+                                        <div
+                                            class="<%= addresses.length % 2 === 0 ? 'w-10 h-10' : 'w-16 h-16' %> bg-[#F3F4F6] rounded-full flex items-center justify-center text-[#72846D] mb-6 group-hover:bg-[#72846D] group-hover:text-white transition-all">
+                                            <i data-lucide="plus" class="w-8 h-8"></i>
+                                        </div>
+                                        <h4 class="text-lg font-bold text-[#1A1A1A]">Add New Address</h4>
+                                        <p class="text-sm text-gray-400 mt-1">Add a secondary shipping destination
+                                        </p>
+                                    </div>
+
+
+                </div>
+
+                <div class="font-inter space-y-4">
+                    <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 font-sans">Payment Method
+                    </h2>
+
+                    <label
+                        class="flex payment-option items-center justify-between p-5 bg-[#D2E9D9] border border-[#A7D1B4] rounded-2xl cursor-pointer transition-all"
+                        data-method="COD">
+                        <input type="radio" name="paymentMethod" value="COD" class="hidden" checked>
+                        <div class="flex items-center space-x-4">
+                            <div
+                                class="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-sm border border-gray-100 flex-shrink-0">
+                                <svg class="w-7 h-7 text-[#1A2E40]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 2v12h16V6H4zm8 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-[#1A2E40] text-base">Cash on Delivery</h3>
+                                <p class="text-sm text-[#70887A] mt-0.5">Pay when you receive the product</p>
+                            </div>
+                        </div>
+                        <div
+                            class="payment-check w-6 h-6 rounded-full bg-[#4EAD6C] flex items-center justify-center shadow-sm flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex payment-option items-center justify-between p-5 bg-white border border-[#E4E9F0] rounded-2xl cursor-pointer hover:border-gray-300 transition-all "
+                        data-method="Wallet">
+                        <input type="radio" name="paymentMethod" value="Wallet" class="hidden">
+                        <div class="flex items-center space-x-4">
+                            <div
+                                class="w-14 h-14 bg-white rounded-xl flex items-center justify-center border border-[#E4E9F0] flex-shrink-0">
+                                <svg class="w-7 h-7 text-[#1A2E40]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path
+                                        d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V6c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5 0.67 1.5 1.5-0.67 1.5-1.5 1.5z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-[#1A2E40] text-base">My Wallet</h3>
+                                <p class="text-sm text-gray-400 mt-0.5">Balance: ₹12,500.00</p>
+                            </div>
+                        </div>
+                        <div
+                            class="payment-check hidden w-6 h-6 rounded-full bg-[#4EAD6C] flex items-center justify-center shadow-sm flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex payment-option items-center justify-between p-5 bg-white border border-[#E4E9F0] rounded-2xl cursor-pointer hover:border-gray-300 transition-all"
+                        data-method="Razorpay">
+                        <input type="radio" name="paymentMethod" value="Razorpay" class="hidden">
+                        <div class="flex items-center space-x-4">
+                            <div
+                                class="w-14 h-14 bg-white rounded-xl flex items-center justify-center border border-[#E4E9F0] flex-shrink-0">
+                                <svg class="w-7 h-7 text-[#1A2E40]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 11.5h-5V3l-7 9.5h5V21l7-9.5z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-[#1A2E40] text-base">Razorpay</h3>
+                                <p class="text-sm text-gray-400 mt-0.5">Cards, UPI, Netbanking</p>
+                            </div>
+                        </div>
+                        <div
+                            class="payment-check hidden w-6 h-6 rounded-full bg-[#4EAD6C] flex items-center justify-center shadow-sm flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="3"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-5 bg-[#F4F4F2] rounded-xl p-6 lg:p-8">
+                <h2 class="text-center font-bold text-gray-800 tracking-wide text-sm uppercase mb-8">Your Cart</h2>
+
+                <div class="space-y-6 space-y-6 max-h-[520px]  overflow-y-auto pr-2 custom-scrollbar ">
+                    <% cart.items.forEach(item=> { %>
+
+                        <div class="checkout-item flex items-start min-h-[118px] rounded space-x-4 pb-6 border-b border-gray-300/40 "
+                            data-item-id="<%= item._id %>"">
+
+                            <div class=" relative flex-shrink-0">
+                            <div class="relative flex-shrink-0 w-16 h-20 overflow-hidden rounded-md">
+
+                                <img src="<%= item.productId.variants[item.variantIndex].images[0].url %>"
+                                    alt="<%= item.productId.productName %>"
+                                    class="w-full h-full object-cover transition-all duration-300 <%= item.isOutOfStock || item.isUnavailable ? '  opacity-60 ' : '' %>">
+
+                                <% if(item.isOutOfStock || item.isUnavailable){ %>
+
+                                    <div class="absolute inset-0 bg-white/30"></div>
+
+                                    <div class="absolute inset-0 flex items-center justify-center px-2">
+
+                                        <span
+                                            class="bg-white/95 backdrop-blur-sm rounded-md shadow-md border border-gray-200 px-2.5 py-1.5 text-[6px] font-bold uppercase tracking-[0.15em] leading-4 text-center <%= item.isOutOfStock ? 'text-red-500' : 'text-gray-700' %>">
+
+                                            <% if(item.isOutOfStock){ %>
+                                                OUTOF<br>STOCK
+                                                <% } else { %>
+                                                    CURRENTLY<br>UNAVAILABLE
+                                                    <% } %>
+
+                                        </span>
+
+                                    </div>
+
+                                    <% } %>
+
+                            </div>
+                        </div>
+
+                        <div
+                            class="flex-1 min-w-0 flex flex-col h-20 <%= item.isOutOfStock || item.isUnavailable? 'opacity-60': '' %>">
+
+                            <div class="flex justify-between items-start">
+                                <h4 class="text-sm font-bold text-gray-900 truncate pr-2">
+                                    <%= item.productId.productName %>
+                                </h4>
+
+                                <button class="text-gray-400 hover:text-gray-600 remove-cart-item"
+                                    data-id="<%= item._id %>">
+
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+
+                                </button>
+                            </div>
+
+                            <p class="text-xs text-gray-500 mt-1">
+                                Size: <%= item.size %>
+                            </p>
+
+                            <p class="text-xs text-gray-500 mb-2">
+                                Color: <%= item.productId.variants[item.variantIndex].color %>
+                            </p>
+
+                            <div class="mt-auto flex justify-between items-end">
+
+                                <div
+                                    class="inline-flex items-center bg-[#E5E5E3] rounded text-xs <%= item.isOutOfStock || item.isUnavailable? 'opacity-40 pointer-events-none': '' %>">
+
+                                    <button class="px-2 py-0.5 font-bold decreaseQty"
+                                        data-id="<%= item._id %>">-</button>
+
+                                    <span class="quantity-display px-2 py-0.5 font-bold">
+                                        <%= item.quantity %>
+                                    </span>
+
+                                    <button class="px-2 py-0.5 font-bold increaseQty"
+                                        data-id="<%= item._id %>">+</button>
+
+                                </div>
+
+                                <% if(item.isOutOfStock || item.isUnavailable){ %>
+                                    <div class=" item-total text-sm font-bold text-gray-400">
+                                        ₹0.00
+                                    </div>
+                                    <% }else{ %>
+                                        <div class=" item-total text-sm font-bold text-gray-900">
+                                            ₹<%= item.salePrice * item.quantity %>
+                                        </div>
+                                        <% } %>
+
+                            </div>
+                            <div class="stock-error h-4 mt-2 text-[13px]  text-center text-red-500"></div>
+
+
+                        </div>
+                </div>
+
+                <% }) %>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-300/60 space-y-3.5 text-sm">
+                <div class="flex justify-between text-gray-600">
+                    <span>
+                        Subtotal (<span id="cartCount">
+                            <%= cartCount %>
+                        </span>)
+                    </span>
+
+                    <span id="checkoutSubtotal">
+                        ₹<%= subtotal.toFixed(2) %>
+                    </span>
+                </div>
+                <div class="flex justify-between text-gray-600">
+                    <span>Discount</span>
+                    <span id="checkoutDiscount" class="font-medium text-gray-950">₹<%=discount %></span>
+                </div>
+                <div class="flex justify-between text-gray-600">
+                    <span>Coupon Discount</span>
+                    <span class="font-medium text-gray-950">₹0</span>
+                </div>
+                <div class="flex justify-between text-gray-600">
+                    <span>Shipping</span>
+                    <span id="checkoutShipping" class="font-medium text-emerald-600">
+                        <%= shipping %>
+                    </span>
+                </div>
+                <div class="flex justify-between py-2">
+                    <span>Round Off</span>
+                    <span>
+                        <%= roundOff>= 0 ? "+" : "" %>₹<%= roundOff.toFixed(2) %>
+                    </span>
+                </div>
+
+                <div class="flex justify-between text-base font-bold text-gray-900 pt-4 border-t border-gray-300/60">
+                    <span>Total :</span>
+                    <span id="checkoutGrandTotal"> ₹ <%= grandTotal.toFixed(2) %></span>
+                </div>
+            </div>
+
+            <div class="mt-8 space-y-4">
+                <button id="placeOrderBtn"
+                    class="w-full bg-brand hover:bg-brand-dark text-white text-base font-medium py-3.5 rounded transition shadow-sm tracking-wide">
+                    Place Order
+                </button>
+
+                <div class="flex space-x-2 pt-2">
+                    <input type="text" placeholder="Enter coupon code"
+                        class="flex-1 bg-white border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 placeholder-gray-400">
+                    <button
+                        class="bg-brand hover:bg-brand-dark text-white text-sm font-medium px-6 py-2.5 rounded transition">
+                        Apply
+                    </button>
+                </div>
+
+                <button id="openCouponModal"
+                    class="w-full flex items-center justify-between border border-gray-300 rounded-lg px-4 py-3 hover:border-brand transition">
+
+                    <div>
+                        <p id="couponTitle" class="text-xs uppercase tracking-[0.15em] text-gray-500">
+                            Available Coupons
+                        </p>
+
+                        <p id="couponSubtitle" class="font-semibold text-[#475845]">
+                            View & Apply Offers
+                        </p>
+                    </div>
+
+                    <i data-lucide="ticket-percent" class="w-5 h-5 text-[#475845]"></i>
+
+                </button>
+            </div>
+
+    </div>
+    </main>
+    </div>
+
+
+
+
+
+
+
+    <!-- ====================================================== -->
+
+    <div id="addressModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+
+        <div class="relative bg-white w-full max-w-[650px] rounded-xl shadow-xl p-8">
+
+            <button id="closeModal" class="absolute top-5 right-5 text-gray-500 hover:text-black">
+
+                <i data-lucide="x" class="w-5 h-5"></i>
+
+            </button>
+
+            <div class="  bg-white w-full max-w-[650px] rounded-xl shadow-xl p-8">
+                <form id="addressForm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                        <div class="relative">
+                            <input type="text" id="firstName" name="firstName" placeholder="First Name"
+                                class="form-input w-full p-4 border border-gray-400 rounded-lg text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#6d8c6d] transition-colors">
+                            <small class="error-message hidden text-red-500 text-xs mt-1 block">
+                            </small>
+                        </div>
+
+                        <div class="relative">
+                            <input type="text" id="lastName" name="lastName" placeholder="Last Name"
+                                class="form-input w-full p-4 border border-gray-400 rounded-lg text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#6d8c6d] transition-colors">
+                            <small class="error-message hidden text-red-500 text-xs mt-1 block">
+                            </small>
+                        </div>
+
+                        <div class="relative sm:col-span-2">
+                            <input type="text" id="addressLane1" name="addressLine1" placeholder="Address Lane 1"
+                                class=" form-input w-full p-4 border border-gray-400 rounded-lg text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#6d8c6d] transition-colors">
+                            <small class="error-message hidden text-red-500 text-xs mt-1 block">
+                            </small>
+                        </div>
+
+                        <div class="relative sm:col-span-2">
+                            <input type="text" id="addressLane2" name="addressLine2"
+                                placeholder="Address Lane 2 (Optional)"
+                                class="form-input w-full p-4 border border-gray-400 rounded-lg text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#6d8c6d] transition-colors">
+                            <small class="error-message hidden text-red-500 text-xs mt-1 block">
+                            </small>
+                        </div>
+
+                        <div class="relative sm:col-span-2">
+                            <input type="text" id="landmark" name="landmark" placeholder="Landmark (Optional)"
+                                class="form-input w-full p-4 border border-gray-400 rounded-lg text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#6d8c6d] transition-colors">
+                            <small class="error-message hidden text-red-500 text-xs mt-1 block">
+                            </small>
+                        </div>
+
+                        <div class="relative sm:col-span-2">
+                            <input type="text" id="country" name="country" placeholder="Country/Region"
+                                class="form-input w-full p-4 pr-12 border border-gray-400 rounded-lg text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#6d8c6d] transition-colors">
+                            <small class="error-message hidden text-red-500 text-xs mt-1 block">
+                            </small>
+                            <span
+                                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m19 9-7 7-7-7" />
+                                </svg>
+                            </span>
+                        </div>
+
+                        <div class="relative">
+                            <input type="text" id="postalCode" name="postalCode" placeholder="Postal Code"
+                                class="form-input w-full p-4 border border-gray-400 rounded-lg text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#6d8c6d] transition-colors">
+                            <small class="error-message hidden text-red-500 text-xs mt-1 block">
+                            </small>
+                        </div>
+
+                        <div class="relative">
+                            <input type="text" id="city" name="city" placeholder="City"
+                                class="form-input w-full p-4 border border-gray-400 rounded-lg text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#6d8c6d] transition-colors">
+                            <small class="error-message hidden text-red-500 text-xs mt-1 block">
+                            </small>
+                        </div>
+
+                        <div class="relative sm:col-span-2">
+                            <input type="tel" id="phone" name="phone" placeholder="Phone"
+                                class="form-input w-full p-4 pr-12 border border-gray-400 rounded-lg text-sm text-gray-800 placeholder-gray-400 outline-none focus:border-[#6d8c6d] transition-colors">
+                            <small class="error-message hidden text-red-500 text-xs mt-1 block">
+                            </small>
+                            <span
+                                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none flex items-center">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
+                                    <path d="M12 18h.01" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-span-2 flex items-center gap-3 pt-2">
+                        <input type="checkbox" name="isDefault" <%=addresses?.isDefault ? "checked" : "" %>
+                        class="w-4 h-4 border-gray-400 rounded accent-[#7A8B6E] cursor-pointer">
+                        <label for="defaultAddress" class="text-sm text-gray-700 cursor-pointer">
+                            Set This As Default Address
+                        </label>
+                    </div>
+
+                    <div class="mt-8 pt-5 border-t border-gray-100 flex flex-col-reverse sm:flex-row justify-end gap-3">
+                        <button id="cancelAddressBtn" type="button"
+                            class="px-6 py-3 border border-gray-300 text-gray-600 text-sm font-semibold rounded-md hover:bg-gray-50 transition-colors w-full sm:w-auto text-center cursor-pointer">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="px-6 py-3 bg-[#6d8c6d] hover:bg-[#5b785b] text-white text-sm font-semibold rounded-md transition-colors flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                                <polyline points="17 21 17 13 7 13 7 21" />
+                                <polyline points="7 3 7 8 15 8" />
+                            </svg>
+                            Save Address
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <div id="toast" class="fixed top-6 right-6 z-[9999] hidden translate-x-full transition-all duration-300">
+
+        <div id="toastContent"
+            class="flex items-center gap-3 min-w-[320px] max-w-md px-5 py-4 rounded-xl shadow-xl border bg-white">
+
+            <div id="toastIcon" class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
+            </div>
+
+            <div class="flex-1">
+                <h4 id="toastTitle" class="font-semibold text-gray-900">
+                </h4>
+
+                <p id="toastMessage" class="text-sm text-gray-500">
+                </p>
+            </div>
+
+            <button id="toastClose" class="text-gray-400 hover:text-gray-700">
+
+                <i data-lucide="x" class="w-4 h-4"></i>
+
+            </button>
+
+        </div>
+    </div>
+
+    <!-- ====================== -->
+    <!-- Coupon Modal -->
+    <div id="couponModal" class="fixed inset-0 hidden items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+
+        <div class="bg-white w-full max-w-md rounded-xl shadow-2xl overflow-hidden">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between px-5 py-4 border-b">
+
+                <h2 class="text-lg font-semibold text-[#1A1A1A]">
+                    Available Coupons
+                </h2>
+
+                <button id="closeCouponModal" class="text-gray-500 hover:text-black transition">
+
+                    <i data-lucide="x" class="w-5 h-5"></i>
+
+                </button>
+
+            </div>
+
+            <!-- Coupon List -->
+            <div class="p-5 space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar">
+
+                <!-- Coupon -->
+                <div
+                    class="flex items-center justify-between border border-dashed border-[#DDD7CD] rounded-lg bg-[#FAF9F5] px-4 py-3">
+
+                    <div>
+
+                        <h3 class="text-xl font-black tracking-tight text-[#1A1A1A]">
+                            NEW100
+                        </h3>
+
+                        <p class="text-sm text-gray-600">
+                            ₹100 OFF • Min ₹1000
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="applyCoupon bg-[#6F816A] hover:bg-[#5C6E58] text-white text-sm font-medium px-5 py-2 rounded-md transition"
+                        data-code="NEW100" data-discount="100">
+
+                        Apply
+
+                    </button>
+
+                </div>
+
+                <!-- Coupon -->
+                <div
+                    class="flex items-center justify-between border border-dashed border-[#DDD7CD] rounded-lg bg-[#FAF9F5] px-4 py-3">
+
+                    <div>
+
+                        <h3 class="text-xl font-black tracking-tight text-[#1A1A1A]">
+                            SAVE250
+                        </h3>
+
+                        <p class="text-sm text-gray-600">
+                            ₹250 OFF • Min ₹2000
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="applyCoupon bg-[#6F816A] hover:bg-[#5C6E58] text-white text-sm font-medium px-5 py-2 rounded-md transition"
+                        data-code="SAVE250" data-discount="250">
+
+                        Apply
+
+                    </button>
+
+                </div>
+
+                <!-- Coupon -->
+                <div
+                    class="flex items-center justify-between border border-dashed border-[#DDD7CD] rounded-lg bg-[#FAF9F5] px-4 py-3">
+
+                    <div>
+
+                        <h3 class="text-xl font-black tracking-tight text-[#1A1A1A]">
+                            FEST500
+                        </h3>
+
+                        <p class="text-sm text-gray-600">
+                            ₹500 OFF • Min ₹5000
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="applyCoupon bg-[#6F816A] hover:bg-[#5C6E58] text-white text-sm font-medium px-5 py-2 rounded-md transition"
+                        data-code="FEST500" data-discount="500">
+
+                        Apply
+
+                    </button>
+
+                </div>
+
+                <!-- Coupon -->
+                <div
+                    class="flex items-center justify-between border border-dashed border-[#DDD7CD] rounded-lg bg-[#FAF9F5] px-4 py-3">
+
+                    <div>
+
+                        <h3 class="text-xl font-black tracking-tight text-[#1A1A1A]">
+                            WELCOME50
+                        </h3>
+
+                        <p class="text-sm text-gray-600">
+                            ₹50 OFF • Min ₹500
+                        </p>
+
+                    </div>
+
+                    <button
+                        class=" applyCoupon bg-[#6F816A] hover:bg-[#5C6E58] text-white text-sm font-medium px-5 py-2 rounded-md transition"
+                        data-code="WELCOME50" data-discount="50">
+
+                        Apply
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+        lucide.createIcons()
+
+        let editAddressId = null
+        let originalAddress = null
+
+        const addAddress = document.getElementById("addAdddress");
+        const modal = document.getElementById("addressModal");
+        const closeModal = document.getElementById("closeModal");
+
+        addAddress.addEventListener("click", () => {
+            editAddressId = null
+            originalAddress = null
+
+            form.reset();
+
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+        });
+
+        closeModal.addEventListener("click", () => {
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+        });
+
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.classList.remove("flex");
+                modal.classList.add("hidden");
+            }
+        })
+
+
+        const paymentOptions = document.querySelectorAll(".payment-option")
+
+        paymentOptions.forEach(option => {
+            option.addEventListener("click", () => {
+                paymentOptions.forEach(item => {
+                    item.classList.remove(
+                        "bg-[#D2E9D9]",
+                        "border-[#A7D1B4]"
+                    )
+
+                    item.classList.add(
+                        "bg-white",
+                        "border-[#E4E9F0]"
+                    )
+
+                    item.querySelector(".payment-check").classList.add("hidden")
+
+                    item.querySelector("input").checked = false
+                })
+                option.classList.remove(
+                    "bg-white",
+                    "border-[#E4E9F0]"
+                )
+
+                option.classList.add(
+                    "bg-[#D2E9D9]",
+                    "border-[#A7D1B4]"
+                )
+
+                option.querySelector(".payment-check").classList.remove("hidden")
+
+                option.querySelector("input").checked = true
+            })
+        })
+
+
+        // ===========================clear field
+
+        function clearFieldError(input) {
+            input.classList.remove("border-red-500")
+            input.classList.add("border-gray-400")
+
+            const error = input.parentElement.querySelector(".error-message")
+            error.textContent = ""
+
+            error.classList.add("hidden")
+        }
+
+        function showFieldError(field, message) {
+
+            const input = document.querySelector(
+                `[name="${field}"]`
+            );
+
+            if (!input) return;
+
+            input.classList.remove(
+                "border-gray-400"
+            );
+
+            input.classList.add(
+                "border-red-500"
+            );
+
+            const error = input.parentElement.querySelector(".error-message");
+
+            error.textContent = message;
+
+            error.classList.remove("hidden");
+
+        }
+        const form = document.getElementById("addressForm");
+
+        form.addEventListener("submit", submitAddress);
+
+        async function submitAddress(e) {
+
+            e.preventDefault();
+
+            document
+                .querySelectorAll(".form-input")
+                .forEach(input => clearFieldError(input));
+
+            const formData = Object.fromEntries(new FormData(form))
+            formData.isDefault = document.querySelector(
+                '[name="isDefault"]'
+            ).checked;
+            if (editAddressId) {
+
+                const changed = Object.keys(originalAddress).some(key => {
+                    return String(originalAddress[key]) !== String(formData[key] ?? "");
+                })
+
+                if (!changed) {
+                    showToast("info", "No changes were made.");
+                    return;
+                }
+
+            }
+
+            try {
+                const url = editAddressId ? `/address/${editAddressId}/edit` : "/address/checkout"
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+
+
+                if (!result.success) {
+
+                    result.errors.forEach(error => {
+                        showFieldError(error.field, error.message);
+                    });
+                    return;
+                }
+
+                if (result.success) {
+                    showToast(
+                        "success",
+                        editAddressId
+                            ? "Address updated successfully."
+                            : "Address added successfully."
+                    );
+
+                    modal.classList.remove("flex");
+                    modal.classList.add("hidden");
+
+                    form.reset();
+
+                    editAddressId = null;
+                    originalAddress = null;
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 800);
+                }
+
+            } catch (err) {
+
+                console.error(err);
+                showToast("error", "Something went wrong.");
+
+            }
+
+        }
+        document.querySelectorAll(".form-input").forEach(input => {
+
+            input.addEventListener("input", () => {
+
+                clearFieldError(input);
+
+            });
+
+        })
+
+        const deleteModal = document.getElementById("deleteAddressModal");
+        const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+        const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+
+        let selectedAddressId = null;
+
+        // Open Modal
+        document.querySelectorAll(".delete-address-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                selectedAddressId = button.dataset.id;
+
+                deleteModal.classList.remove("hidden");
+                deleteModal.classList.add("flex");
+            });
+        });
+
+        // Close Modal
+        function closeDeleteModal() {
+            deleteModal.classList.remove("flex");
+            deleteModal.classList.add("hidden");
+            selectedAddressId = null;
+        }
+
+        cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+
+        // Close when clicking backdrop
+        deleteModal.addEventListener("click", (e) => {
+            if (e.target === deleteModal) {
+                closeDeleteModal();
+            }
+        });
+
+        // Delete Address
+        confirmDeleteBtn.addEventListener("click", async () => {
+
+            if (!selectedAddressId) return;
+
+            try {
+
+                const response = await fetch(`/address/${selectedAddressId}/delete`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast("success", data.message)
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 1000)
+                } else {
+                    showToast(error, data.message || "Failed to delete address");
+                }
+
+            } catch (err) {
+                console.error(err);
+                showToast("Something went wrong.");
+            }
+
+            closeDeleteModal();
+        })
+
+        const editButtons = document.querySelectorAll(".edit-address-btn");
+
+        editButtons.forEach(btn => {
+
+            btn.addEventListener("click", async () => {
+
+                const id = btn.dataset.id;
+                editAddressId = id;
+
+                const response = await fetch(`/address/${id}`);
+
+                const data = await response.json();
+
+
+                if (!data.success) {
+                    data.errors.forEach(error => {
+                        showFieldError(error.field, error.message);
+                    })
+                    return;
+                }
+
+                const address = data.address;
+                originalAddress = {
+                    firstName: address.firstName,
+                    lastName: address.lastName,
+                    addressLine1: address.addressLine1,
+                    addressLine2: address.addressLine2 || "",
+                    landmark: address.landmark || "",
+                    country: address.country,
+                    postalCode: address.postalCode,
+                    city: address.city,
+                    phone: address.phone,
+                    isDefault: address.isDefault
+                };
+
+                document.getElementById("firstName").value = address.firstName;
+                document.getElementById("lastName").value = address.lastName;
+                document.getElementById("addressLane1").value = address.addressLine1;
+                document.getElementById("addressLane2").value = address.addressLine2 || "";
+                document.getElementById("landmark").value = address.landmark || "";
+                document.getElementById("country").value = address.country;
+                document.getElementById("postalCode").value = address.postalCode;
+                document.getElementById("city").value = address.city;
+                document.getElementById("phone").value = address.phone;
+
+                document.querySelector("[name='isDefault']").checked = address.isDefault;
+
+                modal.classList.remove("hidden");
+                modal.classList.add("flex");
+
+                form.action = `/address/${id}/edit`;
+            });
+
+        });
+        const cancelAddressBtn = document.getElementById("cancelAddressBtn");
+
+        function closeAddressModal() {
+            modal.classList.remove("flex");
+            modal.classList.add("hidden");
+
+            form.reset();
+            editAddressId = null;
+
+            document.querySelectorAll(".form-input").forEach(input => {
+                clearFieldError(input);
+            });
+        }
+
+
+        closeModal.addEventListener("click", closeAddressModal);
+        cancelAddressBtn.addEventListener("click", closeAddressModal);
+
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                closeAddressModal();
+            }
+        });
+        const toast = document.getElementById("toast");
+        const toastIcon = document.getElementById("toastIcon");
+        const toastTitle = document.getElementById("toastTitle");
+        const toastMessage = document.getElementById("toastMessage");
+        const toastClose = document.getElementById("toastClose");
+
+        let toastTimeout;
+
+        function showToast(type, message) {
+
+            clearTimeout(toastTimeout);
+
+            toast.classList.remove("hidden", "translate-x-full");
+
+            if (type === "success") {
+
+                toastIcon.className =
+                    "w-10 h-10 rounded-full flex items-center justify-center bg-green-100 text-green-600";
+
+                toastIcon.innerHTML =
+                    `<i data-lucide="check" class="w-5 h-5"></i>`;
+
+                toastTitle.textContent = "Success";
+
+            } else if (type === "error") {
+
+                toastIcon.className =
+                    "w-10 h-10 rounded-full flex items-center justify-center bg-red-100 text-red-600";
+
+                toastIcon.innerHTML =
+                    `<i data-lucide="x-circle" class="w-5 h-5"></i>`;
+
+                toastTitle.textContent = "Error";
+
+            } else {
+
+                toastIcon.className =
+                    "w-10 h-10 rounded-full flex items-center justify-center bg-blue-100 text-blue-600";
+
+                toastIcon.innerHTML =
+                    `<i data-lucide="info" class="w-5 h-5"></i>`;
+
+                toastTitle.textContent = "Info";
+            }
+
+            toastMessage.textContent = message;
+
+            lucide.createIcons();
+
+            toastTimeout = setTimeout(hideToast, 3000);
+        }
+
+        function hideToast() {
+
+            toast.classList.add("translate-x-full");
+
+            setTimeout(() => {
+
+                toast.classList.add("hidden");
+
+            }, 300);
+
+        }
+
+        toastClose.addEventListener("click", hideToast);
+
+        document.querySelectorAll(".set-default-btn").forEach(button => {
+
+            button.addEventListener("click", async () => {
+
+                const id = button.dataset.id;
+
+                try {
+
+                    const response = await fetch(`/address/${id}/default`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    if (!result.success) {
+                        showToast("error", result.message);
+                        return;
+                    }
+
+                    showToast("success", result.message);
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 800);
+
+                } catch (err) {
+                    console.error(err);
+                    showToast("error", "Something went wrong.");
+                }
+
+            });
+
+        });
+
+
+        // ============================
+
+
+        const couponModal = document.getElementById("couponModal");
+
+        document.getElementById("openCouponModal")
+            .addEventListener("click", () => {
+
+                couponModal.classList.remove("hidden");
+
+                couponModal.classList.add("flex");
+
+            });
+
+        document.getElementById("closeCouponModal")
+            .addEventListener("click", () => {
+
+                couponModal.classList.remove("flex");
+
+                couponModal.classList.add("hidden");
+
+            });
+        const couponTitle = document.getElementById("couponTitle");
+        const couponSubtitle = document.getElementById("couponSubtitle");
+
+        document.querySelectorAll(".applyCoupon").forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                const code = button.dataset.code;
+                const discount = button.dataset.discount;
+
+                couponTitle.textContent = `✓ Coupon Applied • ${code}`;
+                couponSubtitle.classList.remove("font-semibold")
+
+                couponSubtitle.textContent = `You saved ₹${discount}`;
+
+                couponModal.classList.remove("flex");
+                couponModal.classList.add("hidden");
+                couponTitle.classList.remove("text-gray-500");
+                couponTitle.classList.add("text-green-600");
+
+                showToast("success", `${code} applied successfully.`);
+
+            });
+
+        });
+        // =============================================
+
+        const placeOrderBtn = document.getElementById("placeOrderBtn");
+
+        let hasInvalidItems = <%= hasInvalidItems %>;
+
+        togglePlaceOrderButton();
+
+        function togglePlaceOrderButton() {
+
+            if (hasInvalidItems) {
+
+                placeOrderBtn.disabled = true;
+
+                placeOrderBtn.classList.add(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
+
+                placeOrderBtn.classList.remove(
+                    "hover:bg-brand-dark"
+                );
+
+            } else {
+
+                placeOrderBtn.disabled = false;
+
+                placeOrderBtn.classList.remove(
+                    "opacity-50",
+                    "cursor-not-allowed"
+                );
+
+                placeOrderBtn.classList.add(
+                    "hover:bg-brand-dark"
+                );
+            }
+        }
+
+
+
+        placeOrderBtn.addEventListener("click", async () => {
+
+            const selectedAddress = document.querySelector(
+                'input[name="selectedAddress"]:checked'
+            );
+
+            if (!selectedAddress) {
+                showToast("error", "Please select an address.");
+                return;
+            }
+
+            const addressId = selectedAddress.value;
+
+            const paymentMethod = document.querySelector(
+                'input[name="paymentMethod"]:checked'
+            ).value;
+
+            try {
+
+                placeOrderBtn.disabled = true;
+                placeOrderBtn.textContent = "Placing Order...";
+
+                const response = await fetch("/shop/placeOrder", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        addressId,
+                        paymentMethod
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    if (data.type === "stockUpdated") {
+
+    showToast("info", data.message);
+
+    placeOrderBtn.disabled = false;
+    placeOrderBtn.textContent = "Place Order";
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 1200);
+
+    return;
+}
+
+                    showToast("error", data.message);
+
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.textContent = "Place Order";
+
+                    return;
+                }
+
+                showToast("success", data.message);
+
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 800);
+
+            } catch (err) {
+
+                console.log(err);
+
+                showToast("error", "Something went wrong.");
+
+                placeOrderBtn.disabled = false;
+                placeOrderBtn.textContent = "Place Order";
+            }
+
+        });
+        const addressRadios = document.querySelectorAll(".address-radio");
+
+        function updateSelectedAddress() {
+
+            document.querySelectorAll(".address-card").forEach(card => {
+                card.classList.remove("border-2", "border-[#7a9575]");
+                card.classList.add("border", "border-gray-200");
+            });
+
+            const checked = document.querySelector(".address-radio:checked");
+
+            if (checked) {
+                const card = checked.closest(".address-card");
+
+                card.classList.remove("border", "border-gray-200");
+                card.classList.add("border-2", "border-[#7a9575]");
+            }
+        }
+
+        addressRadios.forEach(radio => {
+            radio.addEventListener("change", updateSelectedAddress);
+        });
+
+        updateSelectedAddress();
+        // ==================================================
+
+        document.querySelectorAll(".increaseQty").forEach(btn => {
+            btn.addEventListener("click", () => updateQuantity(btn, "increment"));
+        });
+
+        document.querySelectorAll(".decreaseQty").forEach(btn => {
+            btn.addEventListener("click", () => updateQuantity(btn, "decrement"));
+        });
+
+        async function updateQuantity(button, action) {
+
+            const itemRow = button.closest("[data-item-id]");
+            const itemId = itemRow.dataset.itemId;
+
+            const errorBox = itemRow.querySelector(".stock-error");
+            errorBox.textContent = "";
+
+            try {
+
+                const response = await fetch("/shop/cart/updateQuantity", {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        itemId,
+                        action
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    if (data.type === "limit") {
+                        errorBox.textContent = data.message;
+                        setTimeout(() => {
+                            errorBox.textContent = ""
+                        }, 5000)
+                        return
+                    }
+
+                    errorBox.textContent = data.message;
+                    if (
+                        data.type === "stock" ||
+                        data.type === "unavailable"
+                    ) {
+
+                        hasInvalidItems = true;
+
+                        togglePlaceOrderButton();
+                    }
+                    
+
+
+
+                    return;
+                }
+
+
+                // quantity
+                itemRow.querySelector(".quantity-display").textContent =
+                    data.quantity;
+
+                // item total
+                itemRow.querySelector(".item-total").textContent =
+                    `₹${data.itemTotal.toFixed(2)}`;
+
+                // summary
+                document.getElementById("checkoutSubtotal").textContent =
+                    `₹${data.subtotal.toFixed(2)}`;
+
+                document.getElementById("cartCount").textContent =
+                    data.cartCount;
+                document.getElementById("checkoutDiscount").textContent =
+                    `₹${data.discount.toFixed(2)}`;
+
+                document.getElementById("checkoutShipping").textContent =
+                    data.shipping === 0
+                        ? "Free"
+                        : `₹${data.shipping.toFixed(2)}`;
+
+                document.getElementById("checkoutGrandTotal").textContent =
+                    `₹${data.grandTotal.toFixed(2)}`;
+
+                // clear previous error
+                errorBox.textContent = "";
+                const hasErrors = [...document.querySelectorAll(".stock-error")]
+                    .some(el => el.textContent.trim() !== "");
+
+                hasInvalidItems = hasErrors;
+
+                togglePlaceOrderButton();
+
+
+            } catch (err) {
+
+                console.log(err);
+
+                errorBox.textContent = "Something went wrong." + err;
+
+            }
+
+        }
+        document.querySelectorAll(".remove-cart-item").forEach(btn => {
+
+            btn.addEventListener("click", async () => {
+
+                const itemId = btn.dataset.id;
+
+                const itemRow = btn.closest(".checkout-item");
+
+                try {
+
+                    const response = await fetch(`/shop/cart/remove/${itemId}`, {
+
+                        method: "DELETE",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            itemId
+                        })
+
+                    });
+
+                    const data = await response.json()
+                    console.log(data);
+
+                    if (!data.success) {
+
+                        showToast("error", data.message);
+
+                        return;
+
+                    }
+
+                    itemRow.remove();
+
+                    document.getElementById("cartCount").textContent =
+                        data.cartCount;
+
+                    document.getElementById("checkoutSubtotal").textContent =
+                        `₹${data.subtotal.toFixed(2)}`;
+
+                    document.getElementById("checkoutDiscount").textContent =
+                        `₹${data.discount.toFixed(2)}`;
+
+                    document.getElementById("checkoutShipping").textContent =
+                        data.shipping === 0
+                            ? "Free"
+                            : `₹${data.shipping.toFixed(2)}`;
+
+                    document.getElementById("checkoutGrandTotal").textContent =
+                        `₹${data.grandTotal.toFixed(2)}`;
+
+                    showToast("success", "Item removed from cart.");
+
+                    if (data.cartCount === 0) {
+
+                        setTimeout(() => {
+                            window.location.href = "/shop/cart";
+                        }, 700);
+
+                    }
+
+                } catch (err) {
+
+                    console.log(err);
+
+                    showToast("error", `Something went wrong.${err}`,);
+
+                }
+
+            });
+
+        });
+
+
+    </script>
+</body>
+
+</html>

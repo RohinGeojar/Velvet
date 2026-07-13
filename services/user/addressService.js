@@ -13,8 +13,8 @@ export const addAddress = async (userId, data) => {
 
 export const getUserAddresses = async (userId) => {
   return await Address.find({ user: userId })
-    .sort({ isDefault: -1, createdAt: -1 });
-};
+    .sort({ isDefault: -1, createdAt: -1 })
+}
 
 
 export const getAddressById = async (addressId, userId) => {
@@ -37,8 +37,8 @@ export const updateAddress = async (addressId, userId, data) => {
     { _id: addressId, user: userId },
     data,
     { returnDocument: 'after' }
-  );
-console.log("(address updated" ,address)
+  )
+
   if (!address) {
     throw new Error("Address not found");
   }

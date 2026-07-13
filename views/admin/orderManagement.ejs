@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Vogue Admin Panel - Order Management</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Inter Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Elegant Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F9F9F9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #EBEBEB;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D5D5D5;
+        }
+    </style>
+</head>
+
+<body class="bg-[#F9F9F9] antialiased text-[#1E1E1E]">
+    <%- include("../partials/admin/adminSidebar") %>
+
+        <div class=" ml-[250px] flex min-h-screen">
+
+            <!-- MOBILE SIDEBAR BACKDROP -->
+            <div id="sidebarBackdrop" onclick="toggleSidebar()"
+                class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden transition-opacity duration-300"></div>
+
+            <!-- SIDEBAR -->
+
+            <!-- MAIN WORKSPACE -->
+            <main class="flex-1 flex flex-col min-w-0">
+
+                <!-- HEADER -->
+                <header
+                    class="h-16 border-b border-[#EBEBEB] bg-white flex items-center justify-between px-4 lg:px-8 shadow-sm">
+                    <!-- Sidebar Toggle (Mobile Only) -->
+                    <button onclick="toggleSidebar()"
+                        class="lg:hidden p-2 rounded-lg text-[#7A7A7A] hover:bg-gray-100 mr-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+
+                    <!-- Search Bar -->
+                    <div class="w-72 md:w-96 relative">
+                        <span
+                            class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#7A7A7A] pointer-events-none">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </span>
+                        <input type="text" id="globalSearchInput" oninput="handleGlobalSearch(this.value)"
+                            placeholder="Search anything..."
+                            class="w-full pl-11 pr-4 py-2 border border-[#EBEBEB] rounded-full bg-[#F9F9F9] focus:outline-none focus:ring-2 focus:ring-[#8A5C38] focus:border-[#8A5C38] text-sm transition-all placeholder:text-[#A0A0A0]" />
+                    </div>
+
+                    <!-- Right Utilities Panel -->
+                    <div class="flex items-center space-x-6">
+                        <!-- Notification Icon with Red Dot Indicator -->
+                        <button onclick="showNotificationToast()"
+                            class="relative p-1.5 text-[#7A7A7A] hover:text-[#1E1E1E] transition-colors rounded-full hover:bg-gray-50">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <span
+                                class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                        </button>
+
+                        <!-- User Details Profile -->
+                        <div class="flex items-center space-x-3.5 border-l border-[#EBEBEB] pl-6">
+                            <div class="hidden md:block text-right leading-none">
+                                <p class="text-sm font-semibold text-[#1E1E1E]">Rohin Geojar</p>
+                                <p class="text-[11px] text-[#7A7A7A] font-medium mt-1">Administrator</p>
+                            </div>
+                            <!-- Dynamic Avatar Design matching layout specifications -->
+                            <div class="w-9 h-9 rounded-full bg-[#81A694] text-white flex items-center justify-center font-bold text-sm shadow-inner transition-transform hover:scale-105 cursor-pointer"
+                                onclick="showFeatureAlert('Administrator Profile')">
+                                RG
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- WORKSPACE CONTAINER -->
+                <div class="flex-1 overflow-y-auto px-4 lg:px-8 py-6 space-y-6">
+
+                    <!-- BREADCRUMBS & SECTION TITLE -->
+
+                    <div class="space-y-1.5">
+                        <nav class="flex items-center space-x-2 text-xs text-[#7A7A7A] font-medium tracking-wide">
+                            <span class="hover:text-[#1E1E1E] cursor-pointer"
+                                onclick="showFeatureAlert('Dashboard')">Dashboard</span>
+                            <svg class="w-3 h-3 text-[#B0B0B0]" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="hover:text-[#1E1E1E] cursor-pointer"
+                                onclick="showFeatureAlert('Orders')">Orders</span>
+                            <svg class="w-3 h-3 text-[#B0B0B0]" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <span class="text-[#8A5C38] font-semibold">Order Management</span>
+                        </nav>
+                        <h2 class="text-2xl font-bold tracking-tight text-[#1E1E1E] md:text-3xl">Order Management</h2>
+                        <p class="text-sm text-[#7A7A7A]">Manage and track all customer orders.</p>
+                    </div>
+
+                    <!-- STATS / METRICS CARDS -->
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        <!-- Total Orders Card -->
+                        <div
+                            class="bg-white p-5 rounded-2xl border border-[#EBEBEB] shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+                            <div
+                                class="w-10 h-10 bg-blue-50/70 text-blue-600 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="9" cy="21" r="1"></circle>
+                                    <circle cx="20" cy="21" r="1"></circle>
+                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                </svg>
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-[10px] font-bold text-[#7A7A7A] tracking-wider uppercase">Total Orders
+                                </p>
+                                <p class="text-2xl font-extrabold text-[#1E1E1E] mt-1 tracking-tight">
+                                    <%= stats.totalOrders%>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Pending Orders Card -->
+                        <div
+                            class="bg-white p-5 rounded-2xl border border-[#EBEBEB] shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+                            <div
+                                class="w-10 h-10 bg-amber-50/70 text-amber-600 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-[10px] font-bold text-[#7A7A7A] tracking-wider uppercase">Pending Orders
+                                </p>
+                                <p class="text-2xl font-extrabold text-[#1E1E1E] mt-1 tracking-tight">
+                                    <%= stats.pendingOrders%>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Shipped Orders Card -->
+                        <div
+                            class="bg-white p-5 rounded-2xl border border-[#EBEBEB] shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+                            <div
+                                class="w-10 h-10 bg-indigo-50/70 text-indigo-600 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <rect x="1" y="3" width="15" height="13"></rect>
+                                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                </svg>
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-[10px] font-bold text-[#7A7A7A] tracking-wider uppercase">Shipped Orders
+                                </p>
+                                <p class="text-2xl font-extrabold text-[#1E1E1E] mt-1 tracking-tight">
+                                    <%= stats.shippedOrders%>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Delivered Orders Card -->
+                        <div
+                            class="bg-white p-5 rounded-2xl border border-[#EBEBEB] shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+                            <div
+                                class="w-10 h-10 bg-emerald-50/70 text-emerald-600 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-[10px] font-bold text-[#7A7A7A] tracking-wider uppercase">Delivered
+                                    Orders</p>
+                                <p class="text-2xl font-extrabold text-[#1E1E1E] mt-1 tracking-tight">
+                                    <%= stats.deliveredOrders%>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Cancelled Orders Card -->
+                        <div
+                            class="bg-white p-5 rounded-2xl border border-[#EBEBEB] shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
+                            <div
+                                class="w-10 h-10 bg-rose-50/70 text-rose-600 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-[10px] font-bold text-[#7A7A7A] tracking-wider uppercase">Cancelled
+                                    Orders</p>
+                                <p class="text-2xl font-extrabold text-[#1E1E1E] mt-1 tracking-tight">
+                                    <%= stats.cancelledOrders%>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ACTION CONTROLS & FILTER BAR -->
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
+                        <!-- Filters Group -->
+                        <div class="flex flex-wrap items-center gap-3">
+                            <!-- Table Search Input -->
+                            <div class="w-full sm:w-64 relative">
+                                <span
+                                    class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#7A7A7A] pointer-events-none">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                </span>
+                                <form action="/orderManagement" method="GET">
+                                    <input type="text" name="search" value="<%= search %>"
+                                        placeholder="Search by Order ID or Customer..."
+                                        class="w-full pl-9 pr-4 py-2 border border-[#EBEBEB] rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-[#8A5C38] focus:border-[#8A5C38] text-sm" />
+                                </form>
+                            </div>
+
+                            <!-- Status Custom Selector -->
+                            <div class="relative">
+
+
+                                <!-- Dropdown Menu -->
+                                <form action="/orderManagement" method="GET">
+
+                                    <input type="hidden" name="search" value="<%= search %>">
+
+                                    <select name="status" onchange="this.form.submit()"
+                                        class="border border-[#EBEBEB] rounded-lg px-3 py-2">
+
+                                        <option value="">All</option>
+
+                                        <option value="Pending" <%=status==="Pending" ? "selected" : "" %>>
+                                            Pending
+                                        </option>
+
+                                        <option value="Confirmed" <%=status==="Confirmed" ? "selected" : "" %>>
+                                            Confirmed
+                                        </option>
+
+                                        <option value="Shipped" <%=status==="Shipped" ? "selected" : "" %>>
+                                            Shipped
+                                        </option>
+
+                                        <option value="Delivered" <%=status==="Delivered" ? "selected" : "" %>>
+                                            Delivered
+                                        </option>
+
+                                        <option value="Cancelled" <%=status==="Cancelled" ? "selected" : "" %>>
+                                            Cancelled
+                                        </option>
+
+                                    </select>
+
+                                </form>
+                            </div>
+
+                            <!-- Date Selector (Static matching image layout) -->
+                            <div>
+                                <form action="/orderManagement" method="GET">
+
+                                    <input type="hidden" name="search" value="<%= search %>">
+
+                                    <input type="hidden" name="status" value="<%= status %>">
+
+                                    <select name="sort" onchange="this.form.submit()"
+                                        class="border border-[#EBEBEB] rounded-lg px-3 py-2 text-sm bg-white">
+
+                                        <option value="">Sort By</option>
+
+                                        <option value="oldest" <%=sort==="oldest" ? "selected" : "" %>>
+                                            Oldest First
+                                        </option>
+
+
+                                        <option value="amountHigh" <%=sort==="amountHigh" ? "selected" : "" %>>
+                                            Amount : High → Low
+                                        </option>
+
+                                        <option value="amountLow" <%=sort==="amountLow" ? "selected" : "" %>>
+                                            Amount : Low → High
+                                        </option>
+
+                                    </select>
+
+                                </form>
+                            </div>
+
+                            <button > <a href="/orderManagement"
+                                    class="border border-red-200 bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition">
+
+                                    Clear
+
+                                </a>
+                            </button>
+                        </div>
+
+
+
+                    </div>
+
+                    <!-- ORDERS TABLE CARD -->
+                    <div class="bg-white rounded-2xl border border-[#EBEBEB] shadow-sm overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse min-w-[900px]">
+                                <thead class="bg-gray-50/75 border-b border-[#EBEBEB]">
+                                    <tr class="text-[11px] font-bold tracking-wider text-[#7A7A7A] uppercase">
+                                        <th class="py-2 px-3">ORDER ID</th>
+                                        <th class="py-2 px-3">CUSTOMER</th>
+                                        <th class="py-2 px-3">PRODUCT</th>
+                                        <th class="py-2 px-3">TOTAL</th>
+                                        <th class="py-2 px-3 text-center">PAYMENT STATUS</th>
+                                        <th class="py-2 px-3 text-center">ORDER STATUS</th>
+                                        <th class="py-2 px-3">DATE</th>
+                                        <th class="py-2 px-3 text-center">ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-[#EBEBEB]">
+
+                                    <% if(orders.length){ %>
+
+                                        <% orders.forEach(order=>{ %>
+
+                                            <tr>
+
+                                                <td class="px-3 py-2">
+
+                                                    <%= order.orderId %>
+
+                                                </td>
+
+                                                <td class="px-3 py-2">
+
+                                                    <div class="font-semibold">
+
+                                                        <%= order.userId.firstName %>
+
+                                                            <%= order.userId.lastName %>
+
+                                                    </div>
+
+                                                    <div class="text-xs text-gray-500">
+
+                                                        <%= order.userId.email %>
+
+                                                    </div>
+
+                                                </td>
+
+                                                <td class="px-3 py-2">
+
+                                                    <div class="flex items-center min-w-[200px] gap-3">
+
+                                                        <img src="<%= order.items[0].image %>"
+                                                            class="w-12 h-15 rounded-lg object-cover">
+
+                                                        <div>
+                                                            <p class="font-medium">
+                                                                <%= order.items[0].productName %>
+                                                                    <% if(order.items.length> 1){ %>
+
+                                                                        <button
+                                                                            data-order='<%- JSON.stringify(order) %>'
+                                                                            onclick="openDrawer(this)" class="mt-1 text-xs font-semibold
+                                                                            text-[#8A5C38] hover:underline">
+
+                                                                            +<%= order.items.length - 1 %> more item<%=
+                                                                                    order.items.length> 2 ? "s" : "" %>
+
+                                                                        </button>
+
+                                                                        <% } %>
+                                                            </p>
+
+
+                                                            <p class="text-xs text-gray-500">
+                                                                <%= order.items[0].color %> • <%= order.items[0].size %>
+                                                                        <span> || Qty • <%= order.items[0].quantity %>
+                                                                        </span>
+
+                                                            </p>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </td>
+
+                                                <td class="px-3 py-2">
+
+                                                    ₹<%= Number(order.grandTotal).toLocaleString("en-IN") %>
+
+                                                </td>
+
+                                                <td class="px-3 py-2 text-center">
+                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+                                                    <%= order.paymentStatus === 'Paid'
+                                                        ? 'bg-emerald-100 text-emerald-700'
+                                                        : order.paymentStatus === 'Pending'
+                                                        ? 'bg-amber-100 text-amber-700'
+                                                        : order.paymentStatus === 'Failed'
+                                                        ? 'bg-red-100 text-red-700'
+                                                        : order.paymentStatus === 'Refunded'
+                                                        ? 'bg-slate-100 text-slate-700'
+                                                        : 'bg-gray-100 text-gray-700' %>">
+
+                                                        <%= order.paymentStatus %>
+                                                    </span>
+                                                </td>
+
+                                                <td class="px-3 py-2 text-center">
+                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+                                                        <%= order.orderStatus === 'Pending'
+                                                            ? 'bg-yellow-100 text-yellow-700'
+                                                            : order.orderStatus === 'Confirmed'
+                                                            ? 'bg-orange-100 text-orange-700'
+                                                            : order.orderStatus === 'Shipped'
+                                                            ? 'bg-blue-100 text-blue-700'
+                                                            : order.orderStatus === 'Out for Delivery'
+                                                            ? 'bg-indigo-100 text-indigo-700'
+                                                            : order.orderStatus === 'Delivered'
+                                                            ? 'bg-green-100 text-green-700'
+                                                            : order.orderStatus === 'Cancelled'
+                                                            ? 'bg-red-100 text-red-700'
+                                                            : order.orderStatus === 'Returned'
+                                                            ? 'bg-purple-100 text-purple-700'
+                                                            : 'bg-gray-100 text-gray-700' %>">
+
+                                                        <%= order.orderStatus %>
+                                                    </span>
+                                                    
+                                                </td>
+                                            
+                                                <td class="px-3 py-2">
+
+                                                    <%= new Date(order.createdAt).toLocaleDateString("en-IN", {
+                                                        day: "2-digit" , month: "short" , year: "numeric" }) %>
+
+                                                </td>
+
+                                                <td class="px-4 py-2 text-center">
+
+                                                    <a href="/orderManagement/<%= order._id %>" class="text-[#8A5C38]">
+
+                                                        <button type="submit"
+                                                            class="bg-[#8A5C38] hover:bg-[#734A2C] text-white min-w-[110px]  py-1 rounded-lg text-sm transition">
+                                                            View details</button>
+                                                    </a>
+
+
+                                                </td>
+
+                                            </tr>
+
+                                            <% }) %>
+
+                                                <% } else { %>
+
+                                                    <tr>
+
+                                                        <td colspan="8" class="text-center py-10">
+
+                                                            No Orders Found
+
+                                                        </td>
+
+                                                    </tr>
+
+                                                    <% } %>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- TABLE FOOTER PAGINATION -->
+                        <div class="flex justify-between items-center px-6 py-5 border-t">
+
+                            <a href="/orderManagement?page=<%= page-1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                                class="<%= page===1 ? 'pointer-events-none opacity-40' : '' %> px-4 py-2 border rounded-lg">
+
+                                Previous
+
+                            </a>
+
+                            <div class="flex gap-2">
+
+                                <% for(let i=1;i<=totalPages;i++){ %>
+
+                                    <a href="/orderManagement?page=<%= i %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                                        class="<%= page===i ? 'bg-[#8A5C38] text-white' : 'bg-white hover:bg-gray-50' %> w-10 h-10 rounded-lg flex items-center justify-center border">
+
+                                        <%= i %>
+
+                                    </a>
+
+                                    <% } %>
+
+                            </div>
+
+                            <a href="/orderManagement?page=<%= page+1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                                class="<%= page===totalPages ? 'pointer-events-none opacity-40' : '' %> px-4 py-2 border rounded-lg">
+
+                                Next
+
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+        <!-- ORDER DETAIL DRAWER (SLIDE-OVER MODAL) -->
+        <div id="detailDrawer" class="fixed inset-0 overflow-hidden z-50 hidden">
+            <div class="absolute inset-0 overflow-hidden">
+                <!-- Backdrop -->
+                <div onclick="closeDrawer()" class="absolute inset-0 bg-black/40 transition-opacity"></div>
+
+                <!-- Drawer Container -->
+                <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+                    <div
+                        class="pointer-events-auto w-screen max-w-md transform bg-white shadow-2xl transition-all duration-300 flex flex-col justify-between">
+
+                        <!-- Drawer Header -->
+                        <div class="px-6 py-5 border-b border-[#EBEBEB] flex items-center justify-between bg-[#FDFBF7]">
+                            <div>
+                                <h3 id="drawerOrderId" class="text-lg font-bold text-[#8A5C38]">#ORD-1024</h3>
+                                <p class="text-xs text-[#7A7A7A] mt-0.5">Order Detail & Activity Tracking</p>
+                            </div>
+                            <button onclick="closeDrawer()" class="p-1.5 rounded-lg text-[#7A7A7A] hover:bg-gray-100">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Drawer Body Content -->
+                        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+
+                            <!-- Customer Section -->
+                            <div class="space-y-3">
+                                <h4 class="text-xs font-bold text-[#7A7A7A] tracking-wider uppercase">Customer Details
+                                </h4>
+                                <div class="bg-[#F9F9F9] p-4 rounded-xl border border-[#EBEBEB] space-y-2">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-[#7A7A7A]">Name:</span>
+                                        <span id="drawerCustName" class="font-semibold text-[#1E1E1E]">-</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-[#7A7A7A]">Email:</span>
+                                        <span id="drawerCustEmail" class="font-medium text-[#1E1E1E]">-</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-[#7A7A7A]">Shipping Address:</span>
+                                        <span id="drawerAddress" class="text-[#1E1E1E] text-right font-medium"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Purchased -->
+                            <div class="space-y-3">
+                                <h4 class="text-xs font-bold text-[#7A7A7A] tracking-wider uppercase">Items Ordered</h4>
+                                <div id="drawerProducts" class="space-y-3"></div>
+                            </div>
+                            <div class="bg-[#F9F9F9] rounded-xl border border-[#EBEBEB] p-4">
+
+                                <div class="flex justify-between">
+
+                                    <span class="text-sm text-gray-500">
+
+                                        Grand Total :-
+
+                                    </span>
+
+                                    <span id="drawerGrandTotal" class="font-bold">
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Payment & Shipment Statuses -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-1.5">
+                                    <span class="text-xs font-bold text-[#7A7A7A] tracking-wider uppercase">Payment
+                                        Status</span>
+                                    <div id="drawerPaymentBadge"
+                                        class="py-2.5 text-center font-bold text-xs rounded-xl border tracking-wide">
+                                        -
+                                    </div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <span class="text-xs font-bold text-[#7A7A7A] tracking-wider uppercase">Order
+                                        Status</span>
+                                    <div id="drawerOrderBadge"
+                                        class="py-2.5 text-center font-bold text-xs rounded-xl border tracking-wide">
+                                        -
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Order Timeline -->
+                            <div class="space-y-3">
+                                <h4 class="text-xs font-bold text-[#7A7A7A] tracking-wider uppercase">Tracking Timeline
+                                </h4>
+                                <div class="space-y-4 pl-4 relative border-l border-gray-200">
+                                    <!-- Timeline step 1 -->
+                                    <div class="relative">
+                                        <span
+                                            class="absolute -left-[21px] top-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white ring-4 ring-emerald-50"></span>
+                                        <div class="text-xs font-semibold text-[#1E1E1E]">Order Placed</div>
+                                        <p id="drawerTimelinePlaced" class="text-[11px] text-[#7A7A7A] mt-0.5">Mar 02,
+                                            2026 - 09:30 AM</p>
+                                    </div>
+                                    <!-- Timeline step 2 -->
+                                    <div class="relative">
+                                        <span
+                                            class="absolute -left-[21px] top-0 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white ring-4 ring-emerald-50"></span>
+                                        <div class="text-xs font-semibold text-[#1E1E1E]">Payment Verified</div>
+                                        <p class="text-[11px] text-[#7A7A7A] mt-0.5">Mar 02, 2026 - 10:15 AM</p>
+                                    </div>
+                                    <!-- Timeline step 3 -->
+                                    <div class="relative">
+                                        <span id="timelineShipDot"
+                                            class="absolute -left-[21px] top-0 w-3 h-3 bg-gray-300 rounded-full border-2 border-white"></span>
+                                        <div id="timelineShipTitle" class="text-xs font-semibold text-[#7A7A7A]">In
+                                            Transit & Dispatched</div>
+                                        <p id="drawerTimelineShipped" class="text-[11px] text-[#7A7A7A] mt-0.5">Pending
+                                            courier pickup</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Drawer Footer Controls -->
+                        <div class="px-6 py-4 border-t border-[#EBEBEB] bg-gray-50 flex items-center gap-3">
+                            <button onclick="closeDrawer()"
+                                class="flex-1 border border-[#EBEBEB] bg-white text-sm font-semibold py-2.5 rounded-lg hover:bg-gray-50 text-[#1E1E1E] transition-colors">
+                                Close Detail Panel
+                            </button>
+                            <button id="viewOrderBtn" class="flex-1 bg-[#8A5C38] text-white rounded-lg py-2.5">
+
+                                View Full Details
+
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATUS UPDATE POPUP MODAL -->
+        <div id="statusModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+            <!-- Backdrop -->
+            <div onclick="closeStatusModal()" class="absolute inset-0 bg-black/45"></div>
+            <!-- Modal Dialog -->
+            <div
+                class="bg-white rounded-2xl border border-[#EBEBEB] max-w-sm w-full mx-4 overflow-hidden shadow-2xl relative z-10 animate-scaleUp">
+                <div class="p-6 space-y-5">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-[#1E1E1E] text-base">Update Status for <span id="modalOrderLabel"
+                                class="text-[#8A5C38]"></span></h3>
+                        <button onclick="closeStatusModal()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Payment Status Selection -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-[#7A7A7A] tracking-wider uppercase">Payment Status</label>
+                        <select id="modalPaymentSelect"
+                            class="w-full bg-[#F9F9F9] border border-[#EBEBEB] rounded-lg p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-[#8A5C38] font-medium text-[#1E1E1E]">
+                            <option value="PAID">PAID</option>
+                            <option value="PENDING">PENDING</option>
+                            <option value="FAILED">FAILED</option>
+                        </select>
+                    </div>
+
+                    <!-- Order Status Selection -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-bold text-[#7A7A7A] tracking-wider uppercase">Order Status</label>
+                        <select id="modalOrderSelect"
+                            class="w-full bg-[#F9F9F9] border border-[#EBEBEB] rounded-lg p-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-[#8A5C38] font-medium text-[#1E1E1E]">
+                            <option value="SHIPPED">SHIPPED</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="DELIVERED">DELIVERED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="bg-gray-50 px-6 py-4 flex items-center justify-end space-x-2 border-t border-[#EBEBEB]">
+                    <button onclick="closeStatusModal()"
+                        class="px-4 py-2 text-xs font-semibold border border-[#EBEBEB] bg-white rounded-lg text-gray-700 hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button onclick="saveStatusChanges()"
+                        class="px-4 py-2 text-xs font-bold bg-[#8A5C38] text-white rounded-lg hover:bg-[#734A2C]">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FLOATING NOTIFICATION TOAST CENTER -->
+        <div id="toastContainer" class="fixed bottom-5 right-5 space-y-2.5 z-50"></div>
+
+        <!-- JAVASCRIPT LOGIC ENGINE -->
+        <script>
+
+            let selectedOrderId = null;
+
+
+            // Mobile Sidebar
+
+            function toggleSidebar() {
+                const sidebar = document.getElementById("sidebar");
+                const backdrop = document.getElementById("sidebarBackdrop");
+
+                const isHidden = sidebar.classList.contains("-translate-x-full");
+
+                if (isHidden) {
+                    sidebar.classList.remove("-translate-x-full");
+                    backdrop.classList.remove("hidden");
+                } else {
+                    sidebar.classList.add("-translate-x-full");
+                    backdrop.classList.add("hidden");
+                }
+            }
+
+
+            // Dropdown
+
+            function toggleDropdown(id) {
+
+                document.querySelectorAll(".custom-dropdown").forEach(dropdown => {
+                    if (dropdown.id !== id) {
+                        dropdown.classList.add("hidden");
+                    }
+                });
+
+                document.getElementById(id).classList.toggle("hidden");
+            }
+
+
+            document.addEventListener("click", function (e) {
+
+                if (!e.target.closest(".dropdown-wrapper")) {
+
+                    document.querySelectorAll(".custom-dropdown").forEach(dropdown => {
+                        dropdown.classList.add("hidden");
+                    });
+
+                }
+
+            });
+
+
+            // Drawer
+
+            function openDrawer(button) {
+                const order = JSON.parse(button.dataset.order);
+
+                selectedOrderId = order._id;
+
+                document.getElementById("detailDrawer").classList.remove("hidden");
+
+                // Order
+
+                document.getElementById("drawerOrderId").innerText =
+                    order.orderId;
+
+                // Customer
+
+                document.getElementById("drawerCustName").innerText =
+                    order.userId.firstName + " " + order.userId.lastName;
+
+                document.getElementById("drawerCustEmail").innerText =
+                    order.userId.email;
+
+                // Address
+
+                document.getElementById("drawerAddress").innerText =
+                    `${order.shippingAddress.addressLine1},
+                    ${order.shippingAddress.city},
+                    ${order.shippingAddress.postalCode}`;
+
+                // Timeline
+
+                document.getElementById("drawerTimelinePlaced").innerText =
+                    new Date(order.createdAt).toLocaleString("en-IN");
+
+                // Grand Total
+
+                document.getElementById("drawerGrandTotal").innerText =
+                    "₹" + order.grandTotal.toLocaleString("en-IN");
+
+                // Products
+
+                const products = document.getElementById("drawerProducts");
+
+                products.innerHTML = "";
+
+                order.items.forEach(item => {
+
+                    products.innerHTML += `
+
+        <div class="flex justify-between border border-[#EBEBEB] rounded-xl p-3">
+
+            <div class="flex gap-3">
+
+                <img
+                    src="${item.image}"
+                    class="w-14 h-16 rounded-lg object-cover">
+
+                <div>
+
+                    <p class="font-semibold text-sm">
+
+                        ${item.productName}
+
+                    </p>
+
+                    <p class="text-xs text-gray-500">
+
+                        ${item.color} • ${item.size}
+
+                    </p>
+
+                    <p class="text-xs text-gray-500">
+
+                        Qty : ${item.quantity}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="text-right">
+
+                <p class="font-semibold">
+
+                    ₹${item.total}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        `;
+
+                });
+
+                // Payment Badge
+
+                const paymentBadge =
+                    document.getElementById("drawerPaymentBadge");
+
+                paymentBadge.innerText = order.paymentStatus;
+
+                paymentBadge.className =
+                    "py-2.5 text-center font-bold text-xs rounded-xl";
+
+                paymentBadge.classList.add(
+                    ...getBadgeStyles(order.paymentStatus, "payment").split(" ")
+                );
+
+                // Order Badge
+
+                const orderBadge =
+                    document.getElementById("drawerOrderBadge");
+
+                orderBadge.innerText = order.orderStatus;
+
+                orderBadge.className =
+                    "py-2.5 text-center font-bold text-xs rounded-xl";
+
+                orderBadge.classList.add(
+                    ...getBadgeStyles(order.orderStatus).split(" ")
+                );
+                const shipDot = document.getElementById("timelineShipDot");
+                const shipTitle = document.getElementById("timelineShipTitle");
+                const shipText = document.getElementById("drawerTimelineShipped");
+
+                if (order.orderStatus === "Pending") {
+
+                    shipDot.className =
+                        "absolute -left-[21px] top-0 w-3 h-3 bg-gray-300 rounded-full border-2 border-white";
+
+                    shipTitle.innerText = "Waiting for Shipment";
+
+                    shipText.innerText = "Order is awaiting Confirmed.";
+
+                }
+
+                else if (order.orderStatus === "Confirmed") {
+
+                    shipDot.className =
+                        "absolute -left-[21px] top-0 w-3 h-3 bg-amber-500 rounded-full border-2 border-white ring-4 ring-amber-50";
+
+                    shipTitle.innerText = "Confirmed";
+
+                    shipText.innerText = "Preparing the order for shipment.";
+
+                }
+
+                else if (order.orderStatus === "Shipped") {
+
+                    shipDot.className =
+                        "absolute -left-[21px] top-0 w-3 h-3 bg-blue-500 rounded-full border-2 border-white ring-4 ring-blue-50";
+
+                    shipTitle.innerText = "Shipped";
+
+                    shipText.innerText = "Package has been dispatched.";
+
+                }
+
+                else if (order.orderStatus === "Delivered") {
+
+                    shipDot.className =
+                        "absolute -left-[21px] top-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white ring-4 ring-green-50";
+
+                    shipTitle.innerText = "Delivered";
+
+                    shipText.innerText = "Package delivered successfully.";
+
+                }
+
+                else if (order.orderStatus === "Cancelled") {
+
+                    shipDot.className =
+                        "absolute -left-[21px] top-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white ring-4 ring-red-50";
+
+                    shipTitle.innerText = "Cancelled";
+
+                    shipText.innerText = "Order has been cancelled.";
+
+                }
+
+            }
+
+            function closeDrawer() {
+
+                document.getElementById("detailDrawer").classList.add("hidden");
+
+            }
+
+
+            // Status Modal
+
+            function openStatusUpdateModal(orderId) {
+
+                selectedOrderId = orderId;
+
+                document.getElementById("statusModal").classList.remove("hidden");
+
+            }
+
+            function closeStatusModal() {
+
+                selectedOrderId = null;
+
+                document.getElementById("statusModal").classList.add("hidden");
+
+            }
+
+
+            // Toast
+
+            function showToast(message) {
+
+                const container = document.getElementById("toastContainer");
+
+                const toast = document.createElement("div");
+
+                toast.className =
+                    "bg-slate-900 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-xl";
+
+                toast.innerHTML = message;
+
+                container.appendChild(toast);
+
+                setTimeout(() => {
+
+                    toast.remove();
+
+                }, 3000);
+
+            }
+
+
+            // Badges
+
+            function getBadgeStyles(status, type) {
+
+                if (type === "payment") {
+
+                    switch (status) {
+
+                        case "Paid":
+                            return "bg-emerald-100 text-emerald-700";
+
+                        case "Pending":
+                            return "bg-amber-100 text-amber-700";
+
+                        case "Failed":
+                            return "bg-red-100 text-red-700";
+
+                        case "Refunded":
+                            return "bg-slate-100 text-slate-700";
+
+                        default:
+                            return "bg-gray-100 text-gray-700";
+
+                    }
+
+                }
+
+                switch (status) {
+
+                    case "Delivered":
+                        return "bg-emerald-50 text-emerald-600";
+
+                    case "Pending":
+                        return "bg-amber-50 text-amber-600";
+
+                    case "Shipped":
+                        return "bg-blue-50 text-blue-600";
+
+                    case "Cancelled":
+                        return "bg-rose-50 text-rose-600";
+
+                    default:
+                        return "bg-gray-100 text-gray-700";
+
+                }
+
+            }
+        </script>
+</body>
+
+</html>

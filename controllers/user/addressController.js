@@ -3,6 +3,7 @@ import User from "../../models/user.js";
 import { addressSchema } from "../../validators/addressValidator.js";
 import Address from "../../models/address.js";
 import mongoose from "mongoose";
+import { capitalizeName, normalizeText } from "../../utils/capitalizer.js";
 
 
 export const loadAddAddress = (req, res) => {
@@ -63,7 +64,7 @@ export const addAddress = async (req, res) => {
     });
 
     
-    validatedData.name = `${validatedData.firstName} ${validatedData.lastName}`.trim();
+    validatedData.name = `${validatedData.firstName} ${validatedData.lastName}`.trim()
 
 
     if (validatedData.isDefault) {
@@ -73,10 +74,10 @@ export const addAddress = async (req, res) => {
       );
     }
 
-    await addressService.addAddress(userId, validatedData);
+    await addressService.addAddress(userId, validatedData)
 
 
-    return res.json({ success: true });
+    return res.json({ success: true })
 
   } catch (error) {
     console.log(error);
@@ -133,12 +134,24 @@ export const updateAddress = async (req, res) => {
     const data = { ...req.body };
 
 
-    const validatedData = await addressSchema.validateAsync(data,{
-    abortEarly: false
-  });
-
+    const {error,value} = addressSchema.validate(req.body,{abortEarly:false})
     
-    validatedData.name = `${validatedData.firstName} ${validatedData.lastName}`.trim();
+            if(error){
+                return res.status(400).json({
+                    success:false,
+                    errors:error.details.map(err =>({
+                        field:err.path[0],
+                        message:err.message
+                    }))
+                })
+            }
+            value.firstName = capitalizeName(value.firstName)
+            value.lastName = capitalizeName(value.lastName)
+            value.addressLine1 = normalizeText(value.addressLine1)
+            const validatedData = {...value,
+                
+                name : `${value.firstName} ${value.lastName}`.trim()
+            }
 
 
     if (validatedData.isDefault) {
@@ -175,15 +188,18 @@ export const deleteAddress = async (req, res) => {
     const userId = req.user._id;
     const { id } = req.params;
 
-    await addressService.deleteAddress(id, userId);
-
-    res.redirect("/address");
+    await addressService.deleteAddress(id, userId)
+    console.log(req.query)
+    return res.json({
+      success: true,
+      message: "Address deleted successfully"
+    });
 
   } catch (error) {
     console.log(error);
-    res.status(500).send(error.message);
+    res.status(500).send(error.message)
   }
-};
+}
 
 
 //  Set Default Address
@@ -194,10 +210,43 @@ export const setDefaultAddress = async (req, res) => {
 
     await addressService.setDefaultAddress(id, userId);
 
-    res.redirect("/address");
+    return res.json({
+      success: true,
+      message: "Default address updated."
+    });
 
   } catch (error) {
     console.log(error);
-    res.status(500).send(error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update default address."
+    });
   }
-};
+}
+
+export const getAddress = async (req,res )=> {
+  try {
+    const address = await addressService.getAddressById(req.params.id,req.user._id)
+    if (!address) {
+      return res.status(404).json({
+        success: false,
+        message: "Address not found"
+      });
+    }
+    const firstName = address.name.split(" ")[0]
+    const lastName = address.name.split(" ")[1]
+   
+   res.json({
+      success: true,
+      address: {
+        ...address.toObject(),
+        firstName,
+        lastName
+      }
+
+    })
+  } catch (error) {
+    console.log("get address error", error)
+  }
+}

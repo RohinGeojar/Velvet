@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom styling for the exact radial gradient background and smooth transitions -->
+    <style>
+        body {
+            /* Exact match for the dark, warm-toned radial background */
+            background: radial-gradient(circle, #261b1b 0%, #0d0a0a 100%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Custom text gradient matching the image precisely */
+        .gradient-404 {
+            background: linear-gradient(to right, #91D243 0%, #CFA356 50%, #C35271 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center px-6 overflow-hidden select-none">
+
+    <!-- Content Container -->
+    <div class="max-w-md mt-12 w-full text-center space-y-8 flex flex-col items-center justify-center">
+        
+        <!-- Big Gradient 404 Title -->
+        <h1 class="text-8xl md:text-9xl font-semibold tracking-tight gradient-404 animate-[pulse_3s_infinite_alternate]">
+            404
+        </h1>
+
+        <!-- Descriptive Text -->
+        <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-sm">
+            The page you're searching for seems to have vanished into the digital void. Let's get you back on track.
+        </p>
+
+        <!-- Dynamic Action Button -->
+        <button onclick="window.history.back()" 
+                class="px-8 py-3 bg-[#D83A62] hover:bg-[#C22D53] active:scale-95 text-white text-sm font-semibold rounded-2xl transition-all duration-200 shadow-lg shadow-pink-900/10 hover:shadow-pink-900/20">
+            Back to Home
+        </button>
+        
+    </div>
+
+</body>
+</html>

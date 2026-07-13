@@ -11,6 +11,22 @@ export const isLogged = (req, res, next) => {
 export const userAuth = async (req, res, next) => {
     try {
         if (!req.session.user) {
+            
+             const isAjax =
+                req.xhr ||
+                req.headers["x-requested-with"] ===
+                "XMLHttpRequest";
+
+            if (isAjax) {
+
+                return res.status(401).json({
+                    success: false,
+                    loginRequired: true,
+                    message:
+                        "Please login to continue"
+                });
+            }
+
             return res.redirect("/login");
         }
 
@@ -19,11 +35,11 @@ export const userAuth = async (req, res, next) => {
         if (!user || user.isBlocked) {
             req.session.destroy(() => {
                 return res.redirect("/login");
-            });
+            })
              return;
         }
 
-        req.user = user;
+        req.user = user
         next();
 
     } catch (error) {

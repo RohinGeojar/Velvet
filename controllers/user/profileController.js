@@ -18,14 +18,12 @@ import { uploadToCloudinary } from "../../utils/cloudinaryUpload.js";
 export const loadOverview = async (req, res) => {
     try {
         
-        if (!req.session.user) {
-            return res.redirect("/login");
-        }
+        
         const userId = req.session.user;
 
 
       
-        const user = await User.findById(userId).lean();
+        const user = await User.findById(userId).lean()
         console.log(req.session.user)
      
        

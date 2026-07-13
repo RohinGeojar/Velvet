@@ -21,6 +21,7 @@ export const loadProducts = async (req, res) => {
         const search = req.query.search || req.query.tableSearch || ""
 
         const filter = req.query.filter || "All"
+        const sort = req.query.sort || "newest"
 
         let query = {}
 
@@ -31,6 +32,7 @@ export const loadProducts = async (req, res) => {
                 $options: "i"
             }
         }
+   
 
 
 
@@ -62,7 +64,14 @@ export const loadProducts = async (req, res) => {
             query.isDeleted = false
         }
 
+        let sortOption = { createdAt: -1 }
 
+        if (sort === "a-z") {
+            sortOption = { productName: 1 }
+        }
+        if (sort === "z-a") {
+            sortOption = { productName: -1 }
+        }
 
         let products
         let totalFilteredProducts = 0
@@ -74,20 +83,20 @@ export const loadProducts = async (req, res) => {
                 isDeleted: false
             })
                 .populate("category")
-                .sort({ createdAt: -1 })
+                .sort(sortOption)
                 .lean();
 
             const outOfStockProducts = allProducts.filter(product => {
 
                 const totalStock = product.variants.reduce((total, variant) => {
 
-                        return total + variant.sizes.reduce((sum, size) => {
+                    return total + variant.sizes.reduce((sum, size) => {
 
-                            return sum + size.stock;
-
-                        }, 0);
+                        return sum + size.stock;
 
                     }, 0);
+
+                }, 0);
 
                 return totalStock === 0;
             });
@@ -103,7 +112,7 @@ export const loadProducts = async (req, res) => {
 
             products = await Product.find(query)
                 .populate("category")
-                .sort({ createdAt: -1 })
+                .sort(sortOption)
                 .skip(skip)
                 .limit(limit)
                 .lean();
@@ -130,7 +139,9 @@ export const loadProducts = async (req, res) => {
                 isDeleted: false
             }),
 
-            Category.countDocuments()
+            Category.countDocuments({
+                isDeleted: false
+            })
 
         ]);
 
@@ -178,7 +189,7 @@ export const loadProducts = async (req, res) => {
 
         console.error("Error in loadProducts:", error)
 
-        res.status(500).send("Internal Server Error")
+        return res.status(500).send("Internal Server Error")
     }
 }
 
@@ -405,6 +416,18 @@ export const searchProducts = async (req, res) => {
 
         const filter = req.query.filter || "All"
 
+        const sort = req.query.sort || "newest"
+
+        let sortOption = { createdAt: -1 }
+
+        if (sort === "a-z") {
+            sortOption = { productName: 1 }
+        }
+
+        if (sort === "z-a") {
+            sortOption = { productName: -1 }
+        }
+
         let query = {}
 
         if (search) {
@@ -452,7 +475,7 @@ export const searchProducts = async (req, res) => {
 
                 .populate("category")
 
-                .sort({ createdAt: -1 })
+                .sort(sortOption)
 
                 .skip(skip)
 

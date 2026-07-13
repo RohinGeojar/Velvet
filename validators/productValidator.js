@@ -117,7 +117,7 @@ export const productSchema = Joi.object({
     description: Joi.string()
         .trim()
         .min(10)
-        .max(500)
+        .max(800)
         .required()
         .messages({
             "string.empty": "Description is required",

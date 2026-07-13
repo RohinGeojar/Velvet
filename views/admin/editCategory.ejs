@@ -133,8 +133,9 @@
                                 Category Name
                             </label>
 
-                            <input type="text" name="name" value="<%= category.name %>"
+                            <input type="text" name="name" id="categoryName" value="<%= category.name %>"
                                 class="block w-full border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-[#8B5E3C]/10 focus:border-[#8B5E3C] outline-none transition-all">
+                                <p id="nameError" class="field-error hidden text-red-500 text-sm mt-2"></p>
 
                         </div>
                         <div>
@@ -152,10 +153,11 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
                                 Description
                             </label>
-
-                            <textarea name="description"
-                                class="block w-full border border-gray-200 rounded-xl p-4 h-40 resize-none focus:ring-2 focus:ring-[#8B5E3C]/10 focus:border-[#8B5E3C] outline-none transition-all"><%= category.description %></textarea>
-
+                            
+                            <textarea name="description" id="description"
+                            class=" block w-full border border-gray-200 rounded-xl p-4 h-40 resize-none focus:ring-2 focus:ring-[#8B5E3C]/10 focus:border-[#8B5E3C] outline-none transition-all"><%= category.description %></textarea>
+                            
+                            <p id="descriptionError" class="field-error hidden text-red-500 text-sm mt-2"></p>
                         </div>
 
                         <!-- PARENT CATEGORY -->
@@ -318,7 +320,69 @@
             <script>
 
                 lucide.createIcons();
+                function showFieldErrors(errors) {
 
+    clearFieldErrors();
+
+    Object.entries(errors)
+        .forEach(([field, message]) => {
+
+            const input =
+                document.querySelector(
+                    `[name="${field}"]`
+                );
+
+            const error =
+                document.getElementById(
+                    `${field}Error`
+                );
+
+            if (input) {
+
+                input.classList.add(
+                    "border-red-500"
+                );
+            }
+
+            if (error) {
+
+                error.textContent =
+                    message;
+
+                error.classList.remove(
+                    "hidden"
+                );
+            }
+        });
+}
+
+function clearFieldErrors() {
+
+    document
+        .querySelectorAll(
+            ".field-error"
+        )
+        .forEach(error => {
+
+            error.textContent = "";
+
+            error.classList.add(
+                "hidden"
+            );
+        });
+
+    document
+        .querySelectorAll(
+            "input, textarea, select"
+        )
+        .forEach(field => {
+
+            field.classList.remove(
+                "border-red-500",
+                "focus:border-red-500"
+            );
+        });
+}
 
 
                 const form = document.getElementById("categoryForm");
@@ -341,17 +405,49 @@
 
                         if (!data.success) {
 
-                            Toastify({
-                                text: data.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                backgroundColor: "#dc2626"
-                            }).showToast();
+    clearFieldErrors();
 
-                            return;
-                        }
+    let field = "name";
 
+    if (
+        data.message
+            .toLowerCase()
+            .includes("description")
+    ) {
+
+        field = "description";
+    }
+
+    const input =
+        document.querySelector(
+            `[name="${field}"]`
+        );
+
+    const errorElement =
+        document.getElementById(
+            `${field}Error`
+        );
+
+    if (input) {
+
+        input.classList.add(
+            "border-red-500",
+            "focus:border-red-500"
+        );
+    }
+
+    if (errorElement) {
+
+        errorElement.textContent =
+            data.message;
+
+        errorElement.classList.remove(
+            "hidden"
+        );
+    }
+
+    return;
+}
 
                         Toastify({
                             text: data.message,
@@ -378,6 +474,38 @@
                     }
 
                 });
+
+                document
+    .querySelectorAll(
+        "input, textarea, select"
+    )
+    .forEach(field => {
+
+        field.addEventListener(
+            "input",
+            function () {
+
+                this.classList.remove(
+                    "border-red-500",
+                    "focus:border-red-500"
+                );
+
+                const error =
+                    document.getElementById(
+                        `${this.name}Error`
+                    );
+
+                if (error) {
+
+                    error.textContent = "";
+
+                    error.classList.add(
+                        "hidden"
+                    );
+                }
+            }
+        );
+    });
 
                 // =============================SLUG========================
 

@@ -5,7 +5,7 @@ import User from "../../models/user.js";
 export const loadUsers = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = 5;
+    const limit = 5
 
     const {
       users,

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History | Velvet Vogue</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Playfair Display & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Smooth transitions */
+        .transition-all-custom {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Elegant Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F9FAFB;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9CA3AF;
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        kaushan: ['"Kaushan Script"', 'cursive'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#7a9575',// #7a9575,#475845  #7a9575,#475845 00674F ,#2e6f40
+                            dark: '#627a5e',
+                        },
+                        footer: {
+                            DEFAULT: '#4a4a4a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body
+    class="bg-brand-bgLight text-brand-textDark min-h-screen flex flex-col antialiased selection:bg-brand-primary/20 selection:text-brand-primary">
+
+
+
+
+
+    <!-- Breadcrumbs & Dashboard Header -->
+    <section class="bg-white border-b border-gray-100 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <nav class="flex items-center text-xs uppercase tracking-wider text-gray-500 space-x-2 mb-3">
+                <a href="/" class="hover:text-brand">Home</a>
+                <span>/</span>
+                <a href="/profile" class="hover:text-brand">My Account</a>
+                <span>/</span>
+                <span class="text-brand font-medium">Order History</span>
+            </nav>
+
+            <div
+                class="flex flex-col md:flex-row md:justify-between md:items-center gap-5 bg-white rounded-2xl border p-6 shadow-sm">
+
+                <div>
+                    <h1 class="text-3xl font-semibold">
+                        ORDER HISTORY
+                    </h1>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        Manage and view all your previous orders.
+                    </p>
+                </div>
+
+                <form action="/orders" method="GET" class="relative w-full md:w-80">
+
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+
+                    <input type="text"  id="searchInput" name="search" value="<%= data.search %>" placeholder="Search Order ID or Product"
+                        class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand/20 focus:border-brand outline-none">
+
+                </form>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Two-Column Main Layout -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+
+
+
+            <!-- Content Area Column -->
+            <section class="lg:col-span-3 space-y-6 "  id="ordersContainer">
+
+                <!-- Section Title & Subheaders -->
+
+
+                <!-- Orders Container -->
+                <div class="space-y-4" id="orders-list">
+
+                    <% if (data.orders.length>0) { %>
+
+                        <% data.orders.forEach(order=> { %>
+
+                            <div
+                                class="bg-white border border-gray-200 rounded-2xl p-2 shadow-sm hover:shadow-md transition duration-300">
+
+                                <div class="flex flex-col md:flex-row justify-between gap-6">
+
+                                    <!-- Left Section -->
+                                    <div class="flex gap-5">
+
+                                        <!-- Product Image -->
+                                        <div
+                                            class="w-20 h-28 md:w-24 md:h-32 rounded-xl overflow-hidden border bg-gray-50 flex-shrink-0">
+
+                                            <img src="<%= order.items[0].image %>"
+                                                alt="<%= order.items[0].productName %>"
+                                                class="w-full h-full object-cover">
+
+                                        </div>
+
+                                        <!-- Order Details -->
+                                        <div>
+
+                                            <p class="text-xs uppercase tracking-widest text-brand font-semibold mb-1">
+                                                Order ID :
+                                                <%= order.orderId %>
+                                            </p>
+
+                                            <h3 class="text-lg font-semibold text-gray-800">
+
+                                                <%= order.items[0].productName %>
+
+                                                    <% if(order.items.length> 1){ %>
+
+                                                        <span class="text-gray-500 font-normal">
+                                                            +<%= order.items.length-1 %> more
+                                                        </span>
+
+                                                        <% } %>
+
+                                            </h3>
+
+                                            <p class="text-sm text-gray-500 mt-2">
+
+                                                Placed on
+
+                                                <%= new Date(order?.createdAt).toLocaleDateString("en-IN",{
+                                                    day:"2-digit", month:"short", year:"numeric"}) %>
+
+                                            </p>
+
+                                            <p class="text-sm text-gray-500">
+
+                                                <%= order.items.length %>
+
+                                                    Item<%= order.items.length>1 ? "s" : "" %>
+
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Right Section -->
+                                    <div class="flex flex-col justify-center items-end gap-4 md:min-w-[170px]">
+
+                                        <!-- Status -->
+                                        <% let statusClass="" ; if (order.orderStatus==="Pending" ) {
+                                            statusClass="bg-yellow-100 text-yellow-700" ; } else if
+                                            (order.orderStatus==="Processing" ) {
+                                            statusClass="bg-blue-100 text-blue-700" ; } else if
+                                            (order.orderStatus==="Shipped" ) {
+                                            statusClass="bg-purple-100 text-purple-700" ; } else if
+                                            (order.orderStatus==="Delivered" ) {
+                                            statusClass="bg-green-100 text-green-700" ; } else {
+                                            statusClass="bg-red-100 text-red-700" ; } %>
+
+                                            <span class="px-3 py-1 rounded-full text-xs font-medium <%= statusClass %>">
+                                                <%= order.orderStatus %>
+                                            </span>
+
+                                            <div class="text-right mt-4">
+
+                                                <p class="text-xl font-bold">
+
+                                                    ₹<%= order.grandTotal.toLocaleString("en-IN") %>
+
+                                                </p>
+
+                                                <a href="/order/details/<%= order._id %>"
+                                                    class="inline-block mt-2 text-sm text-brand hover:underline">
+
+                                                    View Details →
+
+                                                </a>
+
+                                            </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <% }) %>
+
+                                <% } else { %>
+
+                                    <div class="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+
+                                        <div
+                                            class="w-20 h-20 mx-auto rounded-full bg-gray-100 flex items-center justify-center">
+
+                                            <i data-lucide="package" class="w-10 h-10 text-gray-400"></i>
+
+                                        </div>
+
+                                        <h2 class="text-2xl font-semibold mt-6">
+                                            No Orders Yet
+                                        </h2>
+
+                                        <p class="text-gray-500 mt-2">
+                                            Looks like you haven't placed any orders yet.
+                                        </p>
+
+                                        <a href="/shop"
+                                            class="inline-flex items-center mt-6 px-6 py-3 bg-brand text-white rounded-lg hover:bg-brand-dark transition">
+
+                                            Continue Shopping
+
+                                        </a>
+
+                                    </div>
+
+                                    <% } %>
+
+                </div>
+
+                <!-- Elegant Centered Pagination -->
+                <% if (totalPages> 1) { %>
+
+                    <nav class="flex justify-center items-center gap-2 mt-10">
+
+                        <!-- Previous -->
+
+                        <% if(currentpage> 1){ %>
+
+                            <a href="?page=<%= currentpage-1 %>&search=<%= search %>"
+                                class="w-10 h-10 border rounded-lg flex items-center justify-center hover:bg-gray-100">
+
+                                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+
+                            </a>
+
+                            <% } %>
+
+                                <!-- Page Numbers -->
+
+                                <% for(let i=1;i<=totalPages;i++){ %>
+
+                                    <a href="?page=<%= i %>&search=<%= search %>" class="w-10 h-10 rounded-lg flex items-center justify-center
+
+            <%= currentpage===i
+                ? 'bg-brand text-white'
+                : 'border hover:bg-gray-100' %>">
+
+                                        <%= i %>
+
+                                    </a>
+
+                                    <% } %>
+
+                                        <!-- Next -->
+
+                                        <% if(currentpage < totalPages){ %>
+
+                                            <a href="?page=<%= currentpage+1 %>&search=<%= search %>"
+                                                class="w-10 h-10 border rounded-lg flex items-center justify-center hover:bg-gray-100">
+
+                                                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+
+                                            </a>
+
+                                            <% } %>
+
+                    </nav>
+
+                    <% } %>
+
+            </section>
+
+        </div>
+    </main>
+
+
+
+    <!-- High-Fidelity Custom Order Details Modal -->
+    <div id="order-modal"
+        class="fixed inset-0 z-50 overflow-y-auto bg-brand-textDark/50 backdrop-blur-sm hidden flex items-center justify-center p-4 transition-all duration-300">
+        <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl relative transform transition-all duration-300 scale-95 opacity-0"
+            id="order-modal-box">
+
+            <!-- Close Button -->
+            <button onclick="closeOrderModal()"
+                class="absolute top-4 right-4 p-2 bg-gray-50 text-brand-textDark hover:text-brand-primary rounded-full hover:shadow transition-all duration-150">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Modal Content Header -->
+            <div class="bg-brand-bgLight p-6 border-b border-gray-100">
+                <span class="text-xs font-bold tracking-widest text-brand-primary uppercase">Order Details</span>
+                <h3 class="font-serif text-2xl font-bold text-brand-textDark mt-1" id="modal-product-name">Product Name
+                </h3>
+                <p class="text-xs text-brand-textMuted mt-1 flex items-center">
+                    <span class="mr-3" id="modal-order-id">Order ID: #ZIGO-0000</span>
+                    <span class="flex items-center" id="modal-order-date"><i data-lucide="calendar"
+                            class="w-3.5 h-3.5 mr-1.5"></i> Date</span>
+                </p>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6">
+
+                <!-- Showcase Layout inside Modal -->
+                <div class="flex items-center space-x-4">
+                    <div class="w-20 h-20 rounded-xl overflow-hidden bg-brand-bgLight border border-gray-100">
+                        <img id="modal-product-image" src="" alt="" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <span
+                            class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-brand-statusDeliveredBg text-brand-statusDeliveredText inline-block mb-1">Delivered</span>
+                        <p class="text-lg font-bold text-brand-textDark" id="modal-product-price">Price</p>
+                        <p class="text-xs text-brand-textMuted">Standard Delivery via FedEx Express</p>
+                    </div>
+                </div>
+
+                <!-- Shipping Journey Timeline -->
+                <div class="space-y-4">
+                    <h4 class="text-xs font-semibold tracking-widest uppercase text-brand-textDark">Shipping Timeline
+                    </h4>
+                    <div
+                        class="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-1.5 before:bottom-1.5 before:w-0.5 before:bg-brand-primary/20">
+
+                        <!-- Delivery Stop -->
+                        <div class="relative">
+                            <div
+                                class="absolute -left-5 w-3.5 h-3.5 rounded-full bg-brand-primary ring-4 ring-brand-primary/20 flex items-center justify-center">
+                                <i data-lucide="check" class="w-2 h-2 text-white"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-brand-textDark">Delivered Successfully</p>
+                            <p class="text-[11px] text-brand-textMuted">Signature verified at doorstep</p>
+                        </div>
+
+                        <!-- In-Transit Stop -->
+                        <div class="relative">
+                            <div
+                                class="absolute -left-5 w-3.5 h-3.5 rounded-full bg-brand-primary ring-4 ring-brand-primary/20 flex items-center justify-center">
+                                <i data-lucide="check" class="w-2 h-2 text-white"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-brand-textDark">In Transit</p>
+                            <p class="text-[11px] text-brand-textMuted">Arrived at local hub destination facility</p>
+                        </div>
+
+                        <!-- Shipped Stop -->
+                        <div class="relative">
+                            <div
+                                class="absolute -left-5 w-3.5 h-3.5 rounded-full bg-brand-primary ring-4 ring-brand-primary/20 flex items-center justify-center">
+                                <i data-lucide="check" class="w-2 h-2 text-white"></i>
+                            </div>
+                            <p class="text-xs font-semibold text-brand-textDark">Order Confirmed & Atelier Packaged</p>
+                            <p class="text-[11px] text-brand-textMuted">Shipped from the primary Mumbai Hub</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="bg-brand-bgLight p-4 flex gap-3 border-t border-gray-100">
+                <button onclick="closeOrderModal()"
+                    class="flex-1 py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-brand-textDark text-xs font-semibold tracking-widest uppercase rounded-lg transition-all duration-150">
+                    Close Window
+                </button>
+                <button onclick="window.print()"
+                    class="flex-1 py-2.5 px-4 bg-brand-primary hover:bg-brand-primaryHover text-white text-xs font-semibold tracking-widest uppercase rounded-lg transition-all duration-150 shadow-sm shadow-brand-primary/20">
+                    Print Invoice
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Smooth Action / Status Message Alert Overlay -->
+    <div id="toast-message"
+        class="fixed bottom-6 right-6 z-50 bg-brand-textDark text-white px-5 py-3.5 rounded-xl shadow-2xl flex items-center space-x-3 transition-all duration-300 transform translate-y-24 opacity-0">
+        <div class="p-1 rounded-full bg-brand-primary text-white">
+            <i data-lucide="check" class="w-4 h-4"></i>
+        </div>
+        <p class="text-xs font-medium tracking-wide" id="toast-text">Update executed successfully.</p>
+    </div>
+
+    <!-- Custom Scripts for interactive features -->
+    <script>
+        // Initialize Lucide Icons immediately
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            setupMobileMenu();
+        });
+
+        // Mobile Navigation Drawer logic
+        function setupMobileMenu() {
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const closeBtn = document.getElementById('close-menu-btn');
+            const drawer = document.getElementById('mobile-menu-drawer');
+            const drawerContent = document.getElementById('mobile-drawer-content');
+
+            const openDrawer = () => {
+                drawer.classList.remove('hidden');
+                setTimeout(() => {
+                    drawer.classList.remove('bg-brand-textDark/0');
+                    drawer.classList.add('bg-brand-textDark/40');
+                    drawerContent.classList.remove('-translate-x-full');
+                    drawerContent.classList.add('translate-x-0');
+                }, 50);
+            };
+
+            const closeDrawer = () => {
+                drawerContent.classList.remove('translate-x-0');
+                drawerContent.classList.add('-translate-x-full');
+                drawer.classList.remove('bg-brand-textDark/40');
+                drawer.classList.add('bg-brand-textDark/0');
+                setTimeout(() => {
+                    drawer.classList.add('hidden');
+                }, 300);
+            };
+
+            mobileBtn.addEventListener('click', openDrawer);
+            closeBtn.addEventListener('click', closeDrawer);
+            drawer.addEventListener('click', (e) => {
+                if (e.target === drawer) closeDrawer();
+            });
+        }
+
+        // Interactive Sidebar Switching Simulation
+        function setActiveNavItem(el, targetName) {
+            // Clean up previous active styles
+            const links = document.querySelectorAll('#sidebar-nav a');
+            links.forEach(link => {
+                link.className = "flex items-center space-x-3 px-4 py-3 rounded-lg text-sm text-brand-textMuted hover:bg-gray-50 hover:text-brand-textDark transition-all duration-150 font-medium";
+            });
+
+            // Apply primary styling to selected menu tab
+            el.className = "flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-150 bg-brand-primary text-white shadow-sm shadow-brand-primary/20";
+
+            showToast(`Mapsd to: ${targetName}`);
+        }
+
+        // Subscription Form handler (No Alerts)
+        function handleSubscribe(event) {
+            event.preventDefault();
+            const email = document.getElementById('newsletter-email').value;
+            if (email) {
+                const feedback = document.getElementById('subscription-feedback');
+                feedback.classList.remove('hidden');
+                document.getElementById('newsletter-email').value = '';
+                setTimeout(() => {
+                    feedback.classList.add('hidden');
+                }, 5000);
+                showToast("Subscribed to the atelier newsletter!");
+            }
+        }
+
+  
+
+        // Modal Operations
+        function openOrderModal(id, name, date, price, imageUrl) {
+            document.getElementById('modal-product-name').innerText = name;
+            document.getElementById('modal-order-id').innerText = `Order ID: ${id}`;
+            document.getElementById('modal-order-date').innerHTML = `<i data-lucide="calendar" class="w-3.5 h-3.5 mr-1.5"></i> ${date}`;
+            document.getElementById('modal-product-price').innerText = price;
+            document.getElementById('modal-product-image').src = imageUrl;
+
+            // Unhide and trigger entrance animation
+            const modal = document.getElementById('order-modal');
+            const box = document.getElementById('order-modal-box');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            // Re-trigger icon updates inside modal if any are dynamic
+            lucide.createIcons();
+
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 50);
+        }
+
+        function closeOrderModal() {
+            const modal = document.getElementById('order-modal');
+            const box = document.getElementById('order-modal-box');
+
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+     
+
+        // Custom Toast Helper
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast-message');
+            const text = document.getElementById('toast-text');
+            text.innerText = message;
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, duration);
+        }
+        // =================================
+
+const searchInput = document.getElementById("searchInput");
+const ordersContainer = document.getElementById("ordersContainer");
+
+let debounceTimer;
+
+searchInput.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(() => {
+        searchOrders(searchInput.value.trim());
+    }, 300);
+});
+
+async function searchOrders(search = "") {
+    try {
+        const response = await fetch(
+            `/order/search?search=${encodeURIComponent(search)}`
+        );
+
+        const data = await response.json();
+
+        if (!data.success) {
+            return;
+        }
+
+        renderOrders(data.orders);
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function renderOrders(orders) {
+
+    if (!orders.length) {
+
+        ordersContainer.innerHTML = `
+            <div class="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+
+                <div class="w-20 h-20 mx-auto rounded-full bg-gray-100 flex items-center justify-center">
+
+                    <i data-lucide="package" class="w-10 h-10 text-gray-400"></i>
+
+                </div>
+
+                <h2 class="text-2xl font-semibold mt-6">
+                    No Orders Found
+                </h2>
+
+                <p class="text-gray-500 mt-2">
+                    Try searching with a different keyword.
+                </p>
+
+            </div>
+        `;
+
+        lucide.createIcons();
+        return;
+    }
+
+    let html = "";
+
+    orders.forEach(order => {
+
+        html += `
+        <div class="bg-white border border-gray-200 rounded-2xl px-5 py-4 shadow-sm hover:shadow-md transition duration-300">
+
+            <div class="flex justify-between items-center gap-8">
+
+                <div class="flex items-center gap-5">
+
+                    <div class="w-20 h-28 md:w-24 md:h-32 rounded-xl overflow-hidden border bg-gray-50 flex-shrink-0">
+
+                        <img
+                            src="${order.items[0].image}"
+                            class="w-full h-full object-cover"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs uppercase tracking-widest text-brand font-semibold mb-1">
+
+                            Order ID : ${order.orderId}
+
+                        </p>
+
+                        <h3 class="text-xl font-semibold">
+
+                            ${order.items[0].productName}
+
+                            ${
+                                order.items.length > 1
+                                ? `<span class="text-gray-500 font-normal">
+                                        +${order.items.length-1} more
+                                   </span>`
+                                : ""
+                            }
+
+                        </h3>
+
+                        <p class="text-sm text-gray-500 mt-2">
+
+                            Placed on
+                            ${new Date(order.createdAt).toLocaleDateString("en-IN",{
+                                day:"2-digit",
+                                month:"short",
+                                year:"numeric"
+                            })}
+
+                        </p>
+
+                        <p class="text-sm text-gray-500">
+
+                            ${order.items.length}
+                            Item${order.items.length > 1 ? "s" : ""}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="flex flex-col justify-center items-end gap-4 min-w-[170px]">
+
+                    <span class="${getStatusClass(order.orderStatus)} px-3 py-1 rounded-full text-xs font-medium">
+
+                        ${order.orderStatus}
+
+                    </span>
+
+                    <p class="text-3xl font-bold">
+
+                        ₹${Number(order.grandTotal).toLocaleString("en-IN")}
+
+                    </p>
+
+                    <a
+                        href="/orders/${order._id}"
+                        class="text-brand hover:underline text-sm">
+
+                        View Details →
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+        `;
+    });
+
+    ordersContainer.innerHTML = html;
+
+    lucide.createIcons();
+}
+
+function getStatusClass(status){
+
+    switch(status){
+
+        case "Pending":
+            return "bg-yellow-100 text-yellow-700";
+
+        case "Processing":
+            return "bg-blue-100 text-blue-700";
+
+        case "Shipped":
+            return "bg-purple-100 text-purple-700";
+
+        case "Delivered":
+            return "bg-green-100 text-green-700";
+
+        case "Cancelled":
+            return "bg-red-100 text-red-700";
+
+        default:
+            return "bg-gray-100 text-gray-700";
+    }
+}
+        
+    </script>
+</body>
+
+</html>

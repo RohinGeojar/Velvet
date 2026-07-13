@@ -1,5 +1,5 @@
 export const capitalizeName = (name) => {
-  console.log(name)
+
   return name
     .toLowerCase()
     .trim()

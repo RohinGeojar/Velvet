@@ -22,7 +22,7 @@
 </script>
 <div class="sticky top-0 z-50">
     <div id="top-banner" class="  bg-brand text-white text-center py-2 text-[10px] sm:text-sm tracking-wide z-50">
-        Enjoy Free Shipping On All Orders
+        Enjoy Free Shipping On All Orders Above ₹999
     </div>
 
     <!-- Header Navigation -->
@@ -47,11 +47,11 @@
 
             <!-- Desktop Nav Links -->
             <nav class="hidden md:flex space-x-6 lg:space-x-8">
-                <a href="/shop" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Collection</a>
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">New In</a>
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Wedding</a>
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Plus Size</a>
-                <a href="#" class="text-gray-600 hover:text-brand transition text-sm lg:text-base">Kids</a>
+                <a href="/shop" class="<%= currentPath === '/shop' && !category  ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Collection</a>
+                <a href="/shop?category=dresses" class="<%= typeof category !== 'undefined' && category === 'dresses' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Dresses</a>
+                <a href="/shop?category=ethnic-wear" class="<%= typeof category !== 'undefined' && category === 'ethnic-wear' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %>transition text-sm lg:text-base">Ethnic Wear</a>
+                <a href="/shop?category=activewear" class="<%= typeof category !== 'undefined' && category === 'activewear' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Active Wear</a>
+                <a href="/shop?category=outerwear" class="<%= typeof category !== 'undefined' && category === 'outerwear' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Outer Wear</a>
             </nav>
 
             <!-- Icons -->
@@ -67,7 +67,7 @@
 
                     <i class="ph ph-user text-xl sm:text-2xl"></i>
                 </a>
-                <a href="#" class="text-gray-600 hover:text-brand transition p-1" aria-label="Favorites"><i
+                <a href="/shop/wishlist" class="text-gray-600 hover:text-brand transition p-1" aria-label="Favorites"><i
                         class="ph ph-heart text-xl sm:text-2xl"></i></a>
                 <a href="/shop/cart" class="text-gray-600 hover:text-brand transition p-1" aria-label="Cart">
                     <i class="ph ph-tote text-xl sm:text-2xl"></i>

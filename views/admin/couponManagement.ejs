@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Management - Velvet Vogue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#FBF9F6] text-[#2D251E] flex h-screen overflow-hidden">
+
+     <%- include("../partials/admin/adminSidebar") %>
+
+    <div class="flex-1 flex flex-col ml-[250px] overflow-y-auto">
+        
+        <header class="bg-white border-b border-[#E5DFD5] h-16 flex items-center justify-between px-8 shrink-0">
+            <div class="relative w-96">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="text" placeholder="Search anything..." class="w-full bg-[#F3F4F6] text-sm rounded-lg pl-10 pr-4 py-2 border border-transparent focus:outline-none focus:bg-white focus:border-gray-300 transition-all">
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-all">
+                    <i class="fa-regular fa-bell text-lg"></i>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="flex items-center gap-3 pl-2 border-l border-gray-200">
+                    <div class="text-right">
+                        <p class="text-sm font-semibold text-[#2D251E]">Rohin Geojar</p>
+                        <p class="text-xs text-[#7A7067]">Administrator</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-[#8FB9A8] flex items-center justify-center text-white font-bold shadow-inner">
+                        RG
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-8 space-y-6 max-w-[1600px] w-full mx-auto">
+            
+            <div class="flex items-start justify-between">
+                <div>
+                    <nav class="text-xs text-[#7A7067] flex items-center gap-2 mb-1">
+                        <span>Dashboard</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        
+                        <span class="text-[#2D251E] font-medium">Coupons</span>
+                    </nav>
+                    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Coupon Management</h1>
+                    <p class="text-sm text-[#7A7067]">Create and manage discount coupons for your store.</p>
+                </div>
+                <a href="/couponManagement/create">
+                    <button class="bg-[#704221] hover:bg-[#5C351A] text-white font-medium text-sm px-4 py-2.5 rounded-lg flex items-center gap-2 shadow-sm transition-all">
+                    <i class="fa-solid fa-plus"></i> Create Coupon
+                </button>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                <div class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 tracking-wider uppercase mb-1">Total</p>
+                        <h3 class="text-3xl font-bold text-[#2D251E]">124</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-base">
+                        <i class="fa-solid fa-ticket"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-emerald-600 tracking-wider uppercase mb-1">Active</p>
+                        <h3 class="text-3xl font-bold text-emerald-600">86</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">
+                        <i class="fa-regular fa-circle-check"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-orange-500 tracking-wider uppercase mb-1">Expired</p>
+                        <h3 class="text-3xl font-bold text-orange-500">32</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center text-base">
+                        <i class="fa-regular fa-calendar-xmark"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-purple-600 tracking-wider uppercase mb-1">Used</p>
+                        <h3 class="text-3xl font-bold text-purple-600">4.2k</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-base">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl border border-[#E5DFD5] shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-[#E5DFD5] flex items-center justify-between gap-4 flex-wrap bg-white">
+                    <div class="flex items-center gap-3">
+                        <div class="relative flex-1 min-w-[280px] max-w-md">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                        <input type="text" placeholder="Search by coupon code..." class="w-full text-xs rounded-lg pl-9 pr-4 py-2.5 border border-gray-200 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 bg-white">
+                    </div>
+                    <button > <a href="/couponManagement"
+                                    class="border border-red-200  text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition">
+
+                                    Clear
+
+                                </a>
+                            </button>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <select class="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-gray-400 text-gray-700 font-medium cursor-pointer">
+                            <option>All Status</option>
+                            <option>Active</option>
+                            <option>Expired</option>
+                        </select>
+                        <select class="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-gray-400 text-gray-700 font-medium cursor-pointer">
+                            <option>A-Z</option>
+                            <option>Z-A</option>
+                            
+                        </select>
+                        <select class="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-gray-400 text-gray-700 font-medium cursor-pointer">
+                            <option>Discount Type</option>
+                            <option>Percentage</option>
+                            <option>Fixed Amount</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#F8F9FA] border-b border-[#E5DFD5] text-[11px] font-bold tracking-wider text-gray-400">
+                                <th class="py-4 px-6">COUPON CODE</th>
+                                <th class="py-4 px-6">DISCOUNT</th>
+                                <th class="py-4 px-6 w-64">USAGE</th>
+                                <th class="py-4 px-6">EXPIRY DATE</th>
+                                <th class="py-4 px-6">STATUS</th>
+                                <th class="py-4 px-6 text-right">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-sm">
+                            <tr class="hover:bg-gray-50/50 transition-all">
+                                <td class="py-4 px-6 font-bold text-[#704221]">SUMMER20</td>
+                                <td class="py-4 px-6 font-medium text-gray-700">20% Off</td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                                            <div class="bg-[#704221] h-full rounded-full" style="width: 28.4%"></div>
+                                        </div>
+                                        <span class="text-xs text-gray-500 font-medium whitespace-nowrap">142/500</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-gray-600 font-medium">Jun 30, 2026</td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                        ACTIVE
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <div class="flex items-center justify-end gap-3 text-gray-400">
+                                        <button class="hover:text-blue-600 transition-all"><i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button class="hover:text-amber-600 transition-all"><i class="fa-regular fa-circle-stop"></i></button>
+                                        <button class="hover:text-red-600 transition-all"><i class="fa-regular fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-all">
+                                <td class="py-4 px-6 font-bold text-[#704221]">WELCOME10</td>
+                                <td class="py-4 px-6 font-medium text-gray-700">10% Off</td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                                            <div class="bg-[#704221] h-full rounded-full" style="width: 85%"></div>
+                                        </div>
+                                        <span class="text-xs text-gray-500 font-medium whitespace-nowrap">850/1000</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-gray-600 font-medium">Dec 31, 2025</td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                        ACTIVE
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <div class="flex items-center justify-end gap-3 text-gray-400">
+                                        <a href="/couponManagement/edit/"><button class="hover:text-blue-600 transition-all"><i class="fa-regular fa-pen-to-square"></i></button></a>
+                                        <button class="hover:text-amber-600 transition-all"><i class="fa-regular fa-circle-stop"></i></button>
+                                        <button class="hover:text-red-600 transition-all"><i class="fa-regular fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50/50 transition-all">
+                                <td class="py-4 px-6 font-bold text-[#704221]">FLASH50</td>
+                                <td class="py-4 px-6 font-medium text-gray-700">50% Off</td>
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                                            <div class="bg-gray-400 h-full rounded-full" style="width: 100%"></div>
+                                        </div>
+                                        <span class="text-xs text-gray-500 font-medium whitespace-nowrap">100/100</span>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-6 text-gray-600 font-medium">Oct 12, 2023</td>
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
+                                        EXPIRED
+                                    </span>
+                                </td>
+                                <td class="py-4 px-6 text-right">
+                                    <div class="flex items-center justify-end gap-3 text-gray-400">
+                                        <button class="hover:text-blue-600 transition-all"><i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button class="hover:text-amber-600 transition-all"><i class="fa-regular fa-circle-stop"></i></button>
+                                        <button class="hover:text-red-600 transition-all"><i class="fa-regular fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-4 border-t border-[#E5DFD5] flex items-center justify-between text-xs text-gray-500 font-medium">
+                    <div>
+                        Showing 1–10 of 75 coupons
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-400 disabled:opacity-40" disabled>
+                            <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                        </button>
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-[#704221] text-white font-bold shadow-sm">1</button>
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-700">2</button>
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-700">3</button>
+                        <button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-600">
+                            <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

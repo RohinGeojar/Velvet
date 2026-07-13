@@ -18,7 +18,9 @@ import adminAuth from "./routes/admin/adminAuth.js"
 import categoryRoutes from "./routes/admin/categoryRoutes.js"
 import productRoutes from "./routes/admin/productRoutes.js"
 import shopRoutes from "./routes/user/shopRoutes.js"
-
+import orderRoutes from "./routes/user/orderRoutes.js"
+import orderManagementRoutes from "./routes/admin/orderRoutes.js"
+import couponRoutes from "./routes/admin/couponRoutes.js"
 dotenv.config();
 
 const app = express();
@@ -53,6 +55,17 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash())
 app.use((req, res, next) => {
+
+    res.locals.currentPath =
+        req.path;
+
+    res.locals.category =
+        req.query.category || "";
+
+    next();
+});
+
+app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 })
@@ -62,17 +75,27 @@ app.use((req, res, next) => {
 });
 
 
-
+app.use("/PageNotFound",(req,res)=> {
+  return res.status(404).render(
+    "pageNotFound",
+    {
+        showNavbar: false,
+        showFooter:false
+    }
+);
+} );
 app.use("/",authRoutes );
 app.use("/profile", profileRoutes);
 app.use("/address",addressRoutes)
 app.use("/shop",shopRoutes)
+app.use("/orderManagement",orderManagementRoutes)
+app.use("/couponManagement",couponRoutes)
 
 app.use("/admin", adminUserRoutes);
 app.use("/adminAuth",adminAuth)
 app.use("/admin/category",categoryRoutes)
 app.use("/products",productRoutes)
-
+app.use("/order",orderRoutes)
 
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");

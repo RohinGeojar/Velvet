@@ -125,9 +125,10 @@
                             <!-- Category Name Input -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Category Name</label>
-                                <input type="text" name="name" placeholder="e.g. Summer Collection"
-                                    class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#8B5E3C]/10 focus:border-[#8B5E3C] outline-none transition-all placeholder:text-gray-400"
-                                    >
+                                <input type="text" id="name" name="name" placeholder="e.g. Summer Collection"
+                                    class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#8B5E3C]/10 focus:border-[#8B5E3C] outline-none transition-all placeholder:text-gray-400">
+                                <p id="nameError" class="text-red-500 text-sm mt-1 hidden">
+                                </p>
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Category Slug</label>
@@ -140,13 +141,15 @@
                             <!-- Description Textarea -->
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
-                                <textarea name="description"
+                                <textarea name="description" id="description"
                                     placeholder="Briefly describe the category and its intended audience..."
                                     class="w-full px-4 py-3.5 rounded-xl border border-gray-200 h-44 resize-none focus:ring-2 focus:ring-[#8B5E3C]/10 focus:border-[#8B5E3C] outline-none transition-all placeholder:text-gray-400"></textarea>
+                                <p id="descriptionError" class="text-red-500 text-sm mt-1 hidden">
+                                </p>
                             </div>
 
                             <!-- Parent Category Select -->
-                          
+
                         </div>
 
                         <!-- Right Column -->
@@ -159,6 +162,8 @@
                                 </label>
 
                                 <input type="file" name="image" id="imageInput" accept="image/*" class="hidden">
+                                <p id="imageError" class="text-red-500 text-sm mt-2 hidden">
+                                </p>
 
                                 <div id="uploadBox" onclick="document.getElementById('imageInput').click()"
                                     class="border-2 border-dashed border-gray-200 rounded-3xl bg-[#F9FAFB] overflow-hidden h-[320px] cursor-pointer relative">
@@ -261,11 +266,166 @@
         </main>
 
         <script>
+            function showImageError(message) {
+
+                const error =
+                    document.getElementById("imageError");
+
+                error.textContent = message;
+
+                error.classList.remove("hidden");
+
+                document
+                    .getElementById("uploadBox")
+                    .classList.add(
+                        "border-red-500"
+                    );
+            }
+
+            function clearImageError() {
+
+                const error =
+                    document.getElementById("imageError");
+
+                error.textContent = "";
+
+                error.classList.add("hidden");
+
+                document
+                    .getElementById("uploadBox")
+                    .classList.remove(
+                        "border-red-500"
+                    );
+            }
+            function showFieldError(
+                fieldId,
+                message
+            ) {
+
+                const field =
+                    document.getElementById(fieldId);
+
+                const error =
+                    document.getElementById(
+                        `${fieldId}Error`
+                    );
+
+                field.classList.add(
+                    "border-red-500",
+                    "ring-1",
+                    "ring-red-500"
+                );
+
+                error.textContent = message;
+
+                error.classList.remove("hidden");
+            }
+
+            function clearFieldError(
+                fieldId
+            ) {
+
+                const field =
+                    document.getElementById(fieldId);
+
+                const error =
+                    document.getElementById(
+                        `${fieldId}Error`
+                    );
+
+                field.classList.remove(
+                    "border-red-500",
+                    "ring-1",
+                    "ring-red-500"
+                );
+
+                error.textContent = "";
+
+                error.classList.add("hidden");
+            }
+            document
+                .getElementById("name")
+                .addEventListener(
+                    "input",
+                    () => clearFieldError("name")
+                );
+
+            document
+                .getElementById("description")
+                .addEventListener(
+                    "input",
+                    () => clearFieldError("description")
+                );
             const form = document.getElementById("categoryForm");
 
             form.addEventListener("submit", async function (e) {
 
                 e.preventDefault();
+                let firstInvalidField = null;
+
+                // Clear previous errors
+                clearFieldError("name");
+                clearFieldError("description");
+
+                // Category Name
+                const name =
+                    document.querySelector(
+                        'input[name="name"]'
+                    );
+
+                if (!name.value.trim()) {
+
+                    showFieldError(
+                        "name",
+                        "Category name is required"
+                    );
+
+                    if (!firstInvalidField) {
+                        firstInvalidField = name;
+                    }
+                }
+
+                // Description
+                const description =
+                    document.querySelector(
+                        'textarea[name="description"]'
+                    );
+
+                if (!description.value.trim()) {
+
+                    showFieldError(
+                        "description",
+                        "Description is required"
+                    );
+
+                    if (!firstInvalidField) {
+                        firstInvalidField = description;
+                    }
+                }
+
+                // Image
+                if (!imageInput.files.length) {
+
+                    document
+                        .getElementById("imageError")
+                        .textContent =
+                        "Category image is required";
+
+                    document
+                        .getElementById("imageError")
+                        .classList.remove("hidden");
+
+                    if (!firstInvalidField) {
+                        firstInvalidField = imageInput;
+                    }
+                }
+
+                if (firstInvalidField) {
+
+                    firstInvalidField.focus();
+
+                    return;
+                }
 
                 const formData = new FormData(form);
 
@@ -281,13 +441,14 @@
 
                     if (!data.success) {
 
-                        Toastify({
-                            text: data.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            backgroundColor: "#dc2626"
-                        }).showToast();
+                        showFieldError(
+                            data.field,
+                            data.message
+                        );
+
+                        document
+                            .getElementById(data.field)
+                            ?.focus();
 
                         return;
                     }
@@ -369,6 +530,7 @@
             // ================= SELECT IMAGE =================
 
             imageInput.addEventListener("change", function (e) {
+                clearImageError();
 
                 const file = e.target.files[0];
 
@@ -376,13 +538,9 @@
 
                 if (!file.type.startsWith("image/")) {
 
-                    Toastify({
-                        text: "Only image files are allowed",
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        backgroundColor: "#dc2626"
-                    }).showToast();
+                    showImageError(
+                        "Only image files are allowed"
+                    );
 
                     imageInput.value = "";
 
@@ -391,13 +549,9 @@
 
                 if (file.size > 2 * 1024 * 1024) {
 
-                    Toastify({
-                        text: "Image must be less than 2MB",
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        backgroundColor: "#dc2626"
-                    }).showToast();
+                    showImageError(
+                        "Image must be less than 2MB"
+                    );
 
                     imageInput.value = "";
 
@@ -488,6 +642,7 @@
                     previewImage.classList.remove("hidden");
 
                     uploadPlaceholder.classList.add("hidden");
+                    clearImageError();
 
 
                     // ✅ REPLACE ORIGINAL FILE
