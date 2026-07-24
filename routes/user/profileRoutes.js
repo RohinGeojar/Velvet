@@ -6,10 +6,11 @@ import { changePasswordSchema, profileUpdateSchema } from "../../validators/prof
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { createUploader } from "../../middleware/multer.js";
+import { navbarCounts } from "../../middleware/navbarCounts.js";
 
 const router = express.Router();
 const uploadUser = createUploader("users",2)
-
+router.use(navbarCounts)
 router.get("/", userAuth, loadProfile);
 router.get("/overview",userAuth, loadOverview)
 router.post("/", userAuth, validate(profileUpdateSchema), updateProfile);

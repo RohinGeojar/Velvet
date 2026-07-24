@@ -442,8 +442,8 @@ export const removeCartItem = async (req, res) => {
 
     try {
         const { itemId } = req.params
-       
-        const cart =   await Cart.findOneAndUpdate(
+
+        const cart = await Cart.findOneAndUpdate(
             { userId: req.user._id },
             {
                 $pull: {
@@ -456,23 +456,23 @@ export const removeCartItem = async (req, res) => {
         ).populate("items.productId")
 
         let subtotal = 0
-      
+
 
         cart.items.forEach(item => {
             const variant = item.productId.variants[item.variantIndex]
-            console.log(variant,"          >>>>> ")
+            console.log(variant, "          >>>>> ")
             subtotal += variant.salePrice * item.quantity
         })
 
-        const shipping = subtotal > 999 ?0 :99
+        const shipping = subtotal > 999 ? 0 : 99
 
-        const discount=0
+        const discount = 0
 
-        const grandTotal = subtotal+ shipping - discount 
+        const grandTotal = subtotal + shipping - discount
 
         return res.json({
             success: true,
-            cartCount:cart.items.length,
+            cartCount: cart.items.length,
             subtotal,
             shipping,
             discount,
@@ -665,13 +665,13 @@ export const loadWishlist = async (req, res) => {
                     color: variant?.color,
                     price: variant?.salePrice,
                     variantIndex,
-                    sizes:variant?.sizes ||[],
+                    sizes: variant?.sizes || [],
                     isUnavailable,
                     isOutOfStock
                 }
             })
         }
-       
+
 
         res.render("user/wishlist", {
             wishlistProducts,
@@ -838,11 +838,11 @@ export const checkout = async (req, res) => {
             }
         })
 
-        const shipping = subtotal > 999 ? 0: 99
+        const shipping = subtotal > 999 ? 0 : 99
 
-        const discount=0
+        const discount = 0
 
-        const actualTotal = subtotal+ shipping - discount 
+        const actualTotal = subtotal + shipping - discount
         const grandTotal = Math.round(actualTotal)
         const roundOff = grandTotal - actualTotal
 
@@ -998,12 +998,12 @@ export const placeOrder = async (req, res) => {
             }
             if (item.quantity > sizeData.stock) {
 
-                  item.quantity = sizeData.stock
-                  await cart.save()
+                item.quantity = sizeData.stock
+                await cart.save()
 
                 return res.status(400).json({
                     success: false,
-                    type:"stockUpdated",
+                    type: "stockUpdated",
                     message: `Only ${sizeData.stock} quantity available for ${product.productName}.`,
                     availableStock: sizeData.stock
                 })
@@ -1048,15 +1048,15 @@ export const placeOrder = async (req, res) => {
                 message: "Invalid payment method."
             })
         }
-        if (subtotal > 10000) {
+        if (subtotal > 100000) {
             return res.status(400).json({
                 success: false,
                 message: "Cash on Delivery is unavailable for orders above ₹10000."
             })
         }
- grandTotal = Math.round(grandTotal)
+        grandTotal = Math.round(grandTotal)
         const order = await createOrder(userId, cart, orderItems, subtotal, grandTotal, shipping, paymentMethod, verifiedAddress)
-console.log(grandTotal)
+        console.log(grandTotal)
 
         return res.status(201).json({
             success: true,

@@ -48,6 +48,10 @@ export const couponSchema = new mongoose.Schema(
             type: Number,
             default: 1,
         },
+        isDeleted: {
+            type: Boolean,
+            default: false
+        },
 
         startDate: {
             type: Date,

@@ -67,11 +67,41 @@
 
                     <i class="ph ph-user text-xl sm:text-2xl"></i>
                 </a>
-                <a href="/shop/wishlist" class="text-gray-600 hover:text-brand transition p-1" aria-label="Favorites"><i
-                        class="ph ph-heart text-xl sm:text-2xl"></i></a>
-                <a href="/shop/cart" class="text-gray-600 hover:text-brand transition p-1" aria-label="Cart">
-                    <i class="ph ph-tote text-xl sm:text-2xl"></i>
-                </a>
+                <!-- Wishlist -->
+<div class="relative inline-block">
+    <a href="/shop/wishlist"
+        class="text-gray-600 hover:text-brand transition p-1"
+        aria-label="Favorites">
+
+        <i class="ph ph-heart text-xl sm:text-2xl"></i>
+
+        <% if(typeof wishlistCount !== "undefined" && wishlistCount > 0)  { %>
+            <span
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                <%= wishlistCount %>
+            </span>
+        <% } %>
+
+    </a>
+</div>
+
+<!-- Cart -->
+<div class="relative inline-block">
+    <a href="/shop/cart"
+        class="text-gray-600 hover:text-brand transition p-1"
+        aria-label="Cart">
+
+        <i class="ph ph-tote text-xl sm:text-2xl"></i>
+
+        <% if (typeof cartCount !== "undefined" && cartCount > 0) { %>
+            <span
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                <%= cartCount %>
+            </span>
+        <% } %>
+
+    </a>
+</div>
                 <% if (typeof error !=="undefined" && error) { %>
                     <a class="text-[#475845] mx-4 bg-dark border-b-2 border-[#475845] pb-1 font-bold" href="/register">
                         signup</a></p>

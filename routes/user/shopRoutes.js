@@ -1,10 +1,12 @@
 import express from "express";
 import { userAuth } from "../../middleware/auth.js";
 import { addToCart, checkout, clearCart, loadCart, loadProductDetails, loadShop, loadWishlist, orderStatus, placeOrder, removeCartItem, removeWishlistItem, toggleWishlist, updateCartQuantity } from "../../controllers/user/shopController.js";
+import { navbarCounts } from "../../middleware/navbarCounts.js";
 
 const router = express.Router();
 
 
+router.use(navbarCounts)
 router.get("/", loadShop)
 router.get("/product/:slug",userAuth, loadProductDetails)
 

@@ -4,10 +4,11 @@ import { googleAuth, googleAuthCallback, isLogged, userAuth } from '../../middle
 import { loginSchema, signupSchema } from '../../validators/authValidator.js';
 import { validate } from "../../middleware/validate.js";
 import { loadOverview } from '../../controllers/user/profileController.js';
+import { navbarCounts } from '../../middleware/navbarCounts.js';
 
 
 const router = express.Router()
-
+router.use(navbarCounts)
 router.use((req, res, next) => {
   res.locals.layout = "partials/user/layout";
   next();

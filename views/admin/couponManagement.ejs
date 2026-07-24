@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,242 +9,767 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
+
 <body class="bg-[#FBF9F6] text-[#2D251E] flex h-screen overflow-hidden">
 
-     <%- include("../partials/admin/adminSidebar") %>
+    <%- include("../partials/admin/adminSidebar") %>
 
-    <div class="flex-1 flex flex-col ml-[250px] overflow-y-auto">
-        
-        <header class="bg-white border-b border-[#E5DFD5] h-16 flex items-center justify-between px-8 shrink-0">
-            <div class="relative w-96">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-                <input type="text" placeholder="Search anything..." class="w-full bg-[#F3F4F6] text-sm rounded-lg pl-10 pr-4 py-2 border border-transparent focus:outline-none focus:bg-white focus:border-gray-300 transition-all">
-            </div>
-            
-            <div class="flex items-center gap-4">
-                <button class="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-all">
-                    <i class="fa-regular fa-bell text-lg"></i>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
-                </button>
-                <div class="flex items-center gap-3 pl-2 border-l border-gray-200">
-                    <div class="text-right">
-                        <p class="text-sm font-semibold text-[#2D251E]">Rohin Geojar</p>
-                        <p class="text-xs text-[#7A7067]">Administrator</p>
-                    </div>
-                    <div class="w-10 h-10 rounded-full bg-[#8FB9A8] flex items-center justify-center text-white font-bold shadow-inner">
-                        RG
+        <div class="flex-1 flex flex-col ml-[250px] overflow-y-auto">
+
+            <header class="bg-white border-b border-[#E5DFD5] h-16 flex items-center justify-between px-8 shrink-0">
+                <div class="relative w-96">
+                    <i
+                        class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                    <input type="text" placeholder="Search anything..."
+                        class="w-full bg-[#F3F4F6] text-sm rounded-lg pl-10 pr-4 py-2 border border-transparent focus:outline-none focus:bg-white focus:border-gray-300 transition-all">
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button class="relative p-2 text-gray-500 hover:bg-gray-100 rounded-full transition-all">
+                        <i class="fa-regular fa-bell text-lg"></i>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <div class="flex items-center gap-3 pl-2 border-l border-gray-200">
+                        <div class="text-right">
+                            <p class="text-sm font-semibold text-[#2D251E]">Rohin Geojar</p>
+                            <p class="text-xs text-[#7A7067]">Administrator</p>
+                        </div>
+                        <div
+                            class="w-10 h-10 rounded-full bg-[#8FB9A8] flex items-center justify-center text-white font-bold shadow-inner">
+                            RG
+                        </div>
                     </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <main class="p-8 space-y-6 max-w-[1600px] w-full mx-auto">
-            
-            <div class="flex items-start justify-between">
-                <div>
-                    <nav class="text-xs text-[#7A7067] flex items-center gap-2 mb-1">
-                        <span>Dashboard</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                        
-                        <span class="text-[#2D251E] font-medium">Coupons</span>
-                    </nav>
-                    <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Coupon Management</h1>
-                    <p class="text-sm text-[#7A7067]">Create and manage discount coupons for your store.</p>
-                </div>
-                <a href="/couponManagement/create">
-                    <button class="bg-[#704221] hover:bg-[#5C351A] text-white font-medium text-sm px-4 py-2.5 rounded-lg flex items-center gap-2 shadow-sm transition-all">
-                    <i class="fa-solid fa-plus"></i> Create Coupon
-                </button>
-                </a>
-            </div>
+            <main class="p-8 space-y-6 max-w-[1600px] w-full mx-auto">
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-                <div class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+                <div class="flex items-start justify-between">
                     <div>
-                        <p class="text-xs font-bold text-gray-400 tracking-wider uppercase mb-1">Total</p>
-                        <h3 class="text-3xl font-bold text-[#2D251E]">124</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-base">
-                        <i class="fa-solid fa-ticket"></i>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-emerald-600 tracking-wider uppercase mb-1">Active</p>
-                        <h3 class="text-3xl font-bold text-emerald-600">86</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">
-                        <i class="fa-regular fa-circle-check"></i>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-orange-500 tracking-wider uppercase mb-1">Expired</p>
-                        <h3 class="text-3xl font-bold text-orange-500">32</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center text-base">
-                        <i class="fa-regular fa-calendar-xmark"></i>
-                    </div>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
-                    <div>
-                        <p class="text-xs font-bold text-purple-600 tracking-wider uppercase mb-1">Used</p>
-                        <h3 class="text-3xl font-bold text-purple-600">4.2k</h3>
-                    </div>
-                    <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-base">
-                        <i class="fa-solid fa-chart-simple"></i>
-                    </div>
-                </div>
-            </div>
+                        <nav class="text-xs text-[#7A7067] flex items-center gap-2 mb-1">
+                            <span>Dashboard</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
 
-            <div class="bg-white rounded-xl border border-[#E5DFD5] shadow-sm overflow-hidden">
-                <div class="p-4 border-b border-[#E5DFD5] flex items-center justify-between gap-4 flex-wrap bg-white">
-                    <div class="flex items-center gap-3">
-                        <div class="relative flex-1 min-w-[280px] max-w-md">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                        <input type="text" placeholder="Search by coupon code..." class="w-full text-xs rounded-lg pl-9 pr-4 py-2.5 border border-gray-200 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 bg-white">
+                            <span class="text-[#2D251E] font-medium">Coupons</span>
+                        </nav>
+                        <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Coupon Management</h1>
+                        <p class="text-sm text-[#7A7067]">Create and manage discount coupons for your store.</p>
                     </div>
-                    <button > <a href="/couponManagement"
-                                    class="border border-red-200  text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition">
-
-                                    Clear
-
-                                </a>
-                            </button>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <select class="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-gray-400 text-gray-700 font-medium cursor-pointer">
-                            <option>All Status</option>
-                            <option>Active</option>
-                            <option>Expired</option>
-                        </select>
-                        <select class="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-gray-400 text-gray-700 font-medium cursor-pointer">
-                            <option>A-Z</option>
-                            <option>Z-A</option>
-                            
-                        </select>
-                        <select class="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-gray-400 text-gray-700 font-medium cursor-pointer">
-                            <option>Discount Type</option>
-                            <option>Percentage</option>
-                            <option>Fixed Amount</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-[#F8F9FA] border-b border-[#E5DFD5] text-[11px] font-bold tracking-wider text-gray-400">
-                                <th class="py-4 px-6">COUPON CODE</th>
-                                <th class="py-4 px-6">DISCOUNT</th>
-                                <th class="py-4 px-6 w-64">USAGE</th>
-                                <th class="py-4 px-6">EXPIRY DATE</th>
-                                <th class="py-4 px-6">STATUS</th>
-                                <th class="py-4 px-6 text-right">ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 text-sm">
-                            <tr class="hover:bg-gray-50/50 transition-all">
-                                <td class="py-4 px-6 font-bold text-[#704221]">SUMMER20</td>
-                                <td class="py-4 px-6 font-medium text-gray-700">20% Off</td>
-                                <td class="py-4 px-6">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                                            <div class="bg-[#704221] h-full rounded-full" style="width: 28.4%"></div>
-                                        </div>
-                                        <span class="text-xs text-gray-500 font-medium whitespace-nowrap">142/500</span>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-6 text-gray-600 font-medium">Jun 30, 2026</td>
-                                <td class="py-4 px-6">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                        ACTIVE
-                                    </span>
-                                </td>
-                                <td class="py-4 px-6 text-right">
-                                    <div class="flex items-center justify-end gap-3 text-gray-400">
-                                        <button class="hover:text-blue-600 transition-all"><i class="fa-regular fa-pen-to-square"></i></button>
-                                        <button class="hover:text-amber-600 transition-all"><i class="fa-regular fa-circle-stop"></i></button>
-                                        <button class="hover:text-red-600 transition-all"><i class="fa-regular fa-trash-can"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50/50 transition-all">
-                                <td class="py-4 px-6 font-bold text-[#704221]">WELCOME10</td>
-                                <td class="py-4 px-6 font-medium text-gray-700">10% Off</td>
-                                <td class="py-4 px-6">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                                            <div class="bg-[#704221] h-full rounded-full" style="width: 85%"></div>
-                                        </div>
-                                        <span class="text-xs text-gray-500 font-medium whitespace-nowrap">850/1000</span>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-6 text-gray-600 font-medium">Dec 31, 2025</td>
-                                <td class="py-4 px-6">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                        ACTIVE
-                                    </span>
-                                </td>
-                                <td class="py-4 px-6 text-right">
-                                    <div class="flex items-center justify-end gap-3 text-gray-400">
-                                        <a href="/couponManagement/edit/"><button class="hover:text-blue-600 transition-all"><i class="fa-regular fa-pen-to-square"></i></button></a>
-                                        <button class="hover:text-amber-600 transition-all"><i class="fa-regular fa-circle-stop"></i></button>
-                                        <button class="hover:text-red-600 transition-all"><i class="fa-regular fa-trash-can"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50/50 transition-all">
-                                <td class="py-4 px-6 font-bold text-[#704221]">FLASH50</td>
-                                <td class="py-4 px-6 font-medium text-gray-700">50% Off</td>
-                                <td class="py-4 px-6">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                                            <div class="bg-gray-400 h-full rounded-full" style="width: 100%"></div>
-                                        </div>
-                                        <span class="text-xs text-gray-500 font-medium whitespace-nowrap">100/100</span>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-6 text-gray-600 font-medium">Oct 12, 2023</td>
-                                <td class="py-4 px-6">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
-                                        EXPIRED
-                                    </span>
-                                </td>
-                                <td class="py-4 px-6 text-right">
-                                    <div class="flex items-center justify-end gap-3 text-gray-400">
-                                        <button class="hover:text-blue-600 transition-all"><i class="fa-regular fa-pen-to-square"></i></button>
-                                        <button class="hover:text-amber-600 transition-all"><i class="fa-regular fa-circle-stop"></i></button>
-                                        <button class="hover:text-red-600 transition-all"><i class="fa-regular fa-trash-can"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="p-4 border-t border-[#E5DFD5] flex items-center justify-between text-xs text-gray-500 font-medium">
-                    <div>
-                        Showing 1–10 of 75 coupons
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-400 disabled:opacity-40" disabled>
-                            <i class="fa-solid fa-chevron-left text-[10px]"></i>
+                    <a href="/couponManagement/create">
+                        <button
+                            class="bg-[#704221] hover:bg-[#5C351A] text-white font-medium text-sm px-4 py-2.5 rounded-lg flex items-center gap-2 shadow-sm transition-all">
+                            <i class="fa-solid fa-plus"></i> Create Coupon
                         </button>
-                        <button class="w-8 h-8 rounded-lg flex items-center justify-center bg-[#704221] text-white font-bold shadow-sm">1</button>
-                        <button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-700">2</button>
-                        <button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-700">3</button>
-                        <button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-600">
-                            <i class="fa-solid fa-chevron-right text-[10px]"></i>
-                        </button>
-                    </div>
+                    </a>
                 </div>
-            </div>
 
-        </main>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+                    <div
+                        class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 tracking-wider uppercase mb-1">Total</p>
+                            <h3 class="text-3xl font-bold text-[#2D251E]">
+                                <%= totalCoupons %>
+                            </h3>
+                        </div>
+                        <div
+                            class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-base">
+                            <i class="fa-solid fa-ticket"></i>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-emerald-600 tracking-wider uppercase mb-1">Active</p>
+                            <h3 class="text-3xl font-bold text-emerald-600">
+                                <%= activeCoupons %>
+                            </h3>
+                        </div>
+                        <div
+                            class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+
+                        <div>
+                            <p class="text-xs font-bold text-amber-600 uppercase mb-1">
+                                Blocked
+                            </p>
+
+                            <h3 class="text-3xl font-bold text-amber-600">
+                                <%= blockedCoupons %>
+                            </h3>
+                        </div>
+
+                        <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                            <i class="fa-solid fa-ban"></i>
+                        </div>
+
+                    </div>
+                    <div
+    class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+
+    <div>
+        <p class="text-xs font-bold text-blue-600 tracking-wider uppercase mb-1">
+            Upcoming
+        </p>
+
+        <h3 class="text-3xl font-bold text-blue-600">
+            <%= upcomingCoupons %>
+        </h3>
     </div>
 
+    <div
+        class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-base">
+
+        <i class="fa-regular fa-calendar-plus"></i>
+
+    </div>
+
+</div>
+                    <div
+                        class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-orange-500 tracking-wider uppercase mb-1">Expired</p>
+                            <h3 class="text-3xl font-bold text-orange-500">
+                                <%= expiredCoupons %>
+                            </h3>
+                        </div>
+                        <div
+                            class="w-10 h-10 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center text-base">
+                            <i class="fa-regular fa-calendar-xmark"></i>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+
+                        <div>
+                            <p class="text-xs font-bold text-red-600 uppercase mb-1">
+                                Deleted
+                            </p>
+
+                            <h3 class="text-3xl font-bold text-red-600">
+                                <%= deletedCoupons %>
+                            </h3>
+                        </div>
+
+                        <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </div>
+
+                    </div>
+                    <div
+                        class="bg-white p-5 rounded-xl border border-[#E5DFD5] shadow-sm flex items-start justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-purple-600 tracking-wider uppercase mb-1">Used</p>
+                            <h3 class="text-3xl font-bold text-purple-600">
+                                <%= totalUsedCoupons %>
+                            </h3>
+                        </div>
+                        <div
+                            class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-base">
+                            <i class="fa-solid fa-chart-simple"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-[#E5DFD5] shadow-sm overflow-hidden">
+                    <form action="/couponManagement" method="GET"
+                        class="p-4 border-b border-[#E5DFD5] flex items-center justify-between gap-4 flex-wrap bg-white">
+                        <div
+                            class="p-4 border-b border-[#E5DFD5] flex items-center justify-between gap-4 flex-wrap bg-white">
+                            <div class="flex items-center gap-3">
+                                <div class="relative flex-1 min-w-[280px] max-w-md">
+                                    <i
+                                        class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                                    <input type="text" name="search" value="<%= search || '' %>"
+                                        placeholder="Search by coupon code..."
+                                        class="w-full text-xs rounded-lg pl-9 pr-4 py-2.5 border border-gray-200 focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-400 bg-white">
+                                </div>
+                                <button> <a href="/couponManagement"
+                                        class="border border-red-200  text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition">
+
+                                        Clear
+
+                                    </a>
+                                </button>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <select name="status" onchange="this.form.submit()"
+                                    class="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-gray-400 text-gray-700 font-medium cursor-pointer">
+
+
+                                    <option value="">All Status</option>
+
+                                    <option value="active" <%=status==="active" ? "selected" : "" %>>
+                                        Active
+                                    </option>
+                                    <option value="upcoming" <%=status==="upcoming" ? "selected" : "" %>>
+                                        Upcoming
+                                    </option>
+
+                                    <option value="blocked" <%=status==="blocked" ? "selected" : "" %>>
+                                        Blocked
+                                    </option>
+
+                                    <option value="expired" <%=status==="expired" ? "selected" : "" %>>
+                                        Expired
+                                    </option>
+
+                                    <option value="deleted" <%=status==="deleted" ? "selected" : "" %>>
+                                        Deleted
+                                    </option>
+
+
+                                </select>
+                                <select name="sort" onchange="this.form.submit()"
+                                    class="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-gray-400 text-gray-700 font-medium cursor-pointer">
+
+
+                                    <option value="latest" <%=sort==="latest" ? "selected" : "" %>>
+                                        Latest
+                                    </option>
+
+                                    <option value="a-z" <%=sort==="a-z" ? "selected" : "" %>>
+                                        A-Z
+                                    </option>
+
+                                    <option value="z-a" <%=sort==="z-a" ? "selected" : "" %>>
+                                        Z-A
+                                    </option>
+
+                                    <option value="expiry" <%=sort==="expiry" ? "selected" : "" %>>
+                                        Expiry Date
+                                    </option>
+
+
+
+                                </select>
+                                <select name="discountType" onchange="this.form.submit()"
+                                    class="text-xs bg-white border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:border-gray-400 text-gray-700 font-medium cursor-pointer">
+
+
+                                    <option value="">All</option>
+
+                                    <option value="percentage" <%=discountType==="percentage" ? "selected" : "" %>>
+
+                                        Percentage
+
+                                    </option>
+
+                                    <option value="fixed" <%=discountType==="fixed" ? "selected" : "" %>>
+
+                                        Fixed
+
+                                    </option>
+
+
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr
+                                    class="bg-[#F8F9FA] border-b border-[#E5DFD5] text-[11px] font-bold tracking-wider text-gray-400">
+                                    <th class="py-4 px-6">COUPON CODE</th>
+                                    <th class="py-4 px-6">DISCOUNT</th>
+                                    <th class="py-4 px-6 w-64">USAGE</th>
+                                    <th class="py-4 px-6">EXPIRY DATE</th>
+                                    <th class="py-4 px-6">STATUS</th>
+                                    <th class="py-4 px-6 text-right">ACTIONS</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-gray-100 text-sm">
+
+                                <% coupons.forEach(coupon=> { %>
+
+                                    <tr class="hover:bg-gray-50/50 transition-all">
+
+                                        <td class="py-4 px-6 font-bold text-[#704221]">
+                                            <%= coupon.couponCode %>
+                                        </td>
+
+                                        <td class="py-4 px-6 font-medium text-gray-700">
+
+                                            <% if(coupon.discountType==="percentage" ){ %>
+
+                                                <%= coupon.discountValue %>% Off
+
+                                                    <% }else{ %>
+
+                                                        ₹<%= coupon.discountValue %> Off
+
+                                                            <% } %>
+
+                                        </td>
+
+                                        <td class="py-4 px-6">
+
+                                            <div class="flex items-center gap-3">
+
+                                                <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+
+                                                    <div class="bg-[#704221] h-full rounded-full"
+                                                        style="width:<%= (coupon.usedCount / coupon.usageLimit) * 100 %>%">
+                                                    </div>
+
+                                                </div>
+
+                                                <span class="text-xs text-gray-500 font-medium whitespace-nowrap">
+
+                                                    <%= coupon.usedCount %>/<%= coupon.usageLimit %>
+
+                                                </span>
+
+                                            </div>
+
+                                        </td>
+
+                                        <td class="py-4 px-6 text-gray-600 font-medium">
+
+                                            <%= coupon.expiryDate.toLocaleDateString("en-IN",{ day:"2-digit",
+                                                month:"short", year:"numeric" }) %>
+
+                                        </td>
+
+                                        <td class="py-4 px-6">
+
+                                            <% const today=new Date(); %>
+
+                                                <% if (coupon.isDeleted) { %>
+
+                                                    <span
+                                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
+                                                        DELETED
+                                                    </span>
+
+                                                    <% } else if (!coupon.isActive) { %>
+
+                                                        <span
+                                                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700 border border-yellow-200">
+                                                            BLOCKED
+                                                        </span>
+
+                                                        <% } else if (coupon.startDate> today) { %>
+
+                                                            <span
+                                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200">
+                                                                UPCOMING
+                                                            </span>
+
+                                                            <% } else if (coupon.expiryDate < today) { %>
+
+                                                                <span
+                                                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 border border-orange-200">
+                                                                    EXPIRED
+                                                                </span>
+
+                                                                <% } else { %>
+
+                                                                    <span
+                                                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                                                        ACTIVE
+                                                                    </span>
+
+                                                                    <% } %>
+
+                                        </td>
+
+                                        <td class="py-4 px-6 text-right">
+
+                                            <% const isExpired=coupon.expiryDate < new Date(); %>
+
+                                                <div class="flex items-center justify-end gap-3 text-gray-400">
+
+                                                    <% if (coupon.isDeleted) { %>
+
+                                                        <button class="hover:text-emerald-600"
+                                                            onclick="restoreCoupon('<%= coupon._id %>')"
+                                                            title="Restore">
+
+                                                            <i class="fa-solid fa-arrow-rotate-left"></i>
+
+                                                        </button>
+
+                                                        <% } else if (isExpired) { %>
+
+                                                            <a href="/couponManagement/edit/<%= coupon._id %>">
+
+                                                                <button class="hover:text-blue-600" title="Edit">
+
+                                                                    <i class="fa-regular fa-pen-to-square"></i>
+
+                                                                </button>
+
+                                                            </a>
+
+                                                            <button class="hover:text-red-600"
+                                                                onclick="deleteCoupon('<%= coupon._id %>')"
+                                                                title="Delete">
+
+                                                                <i class="fa-regular fa-trash-can"></i>
+
+                                                            </button>
+
+                                                            <% } else { %>
+
+                                                                <a href="/couponManagement/edit/<%= coupon._id %>">
+
+                                                                    <button class="hover:text-blue-600" title="Edit">
+
+                                                                        <i class="fa-regular fa-pen-to-square"></i>
+
+                                                                    </button>
+
+                                                                </a>
+
+                                                                <button
+                                                                    class="<%= coupon.isActive ? 'hover:text-amber-600' : 'hover:text-emerald-600' %>"
+                                                                    onclick="toggleCoupon('<%= coupon._id %>', <%= coupon.isActive %>)"
+                                                                    title="<%= coupon.isActive ? 'Block' : 'Activate' %>">
+
+                                                                    <% if (coupon.isActive) { %>
+
+                                                                        <i class="fa-solid fa-ban"></i>
+
+                                                                        <% } else { %>
+
+                                                                            <i class="fa-solid fa-circle-check"></i>
+
+                                                                            <% } %>
+
+                                                                </button>
+
+                                                                <button class="hover:text-red-600"
+                                                                    onclick="deleteCoupon('<%= coupon._id %>')"
+                                                                    title="Delete">
+
+                                                                    <i class="fa-regular fa-trash-can"></i>
+
+                                                                </button>
+
+                                                                <% } %>
+
+                                                </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <% }) %>
+
+                            </tbody>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div
+                        class="p-4 border-t border-[#E5DFD5] flex items-center justify-between text-xs text-gray-500 font-medium">
+                        <div>
+                            Showing
+                            <%= (currentPage-1)*limit+1 %>
+                                -
+                                <%= Math.min(currentPage*limit,totalCoupons) %>
+                                    of
+                                    <%= totalCoupons %>
+                                        coupons
+                        </div>
+                        <div class="flex items-center gap-1">
+
+                            <% if(currentPage> 1){ %>
+
+                                <a href="?page=<%= currentPage-1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>&discountType=<%= discountType %>"
+                                    class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-600">
+
+                                    <i class="fa-solid fa-chevron-left text-[10px]"></i>
+
+                                </a>
+
+                                <% } %>
+
+                                    <% for(let i=1;i<=totalPages;i++){ %>
+
+                                        <a href="?page=<%= i %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>&discountType=<%= discountType %>"
+                                            class="w-8 h-8 rounded-lg flex items-center justify-center <%= currentPage===i ? 'bg-[#704221] text-white font-bold' : 'hover:bg-gray-100 text-gray-700' %>">
+
+                                            <%= i %>
+
+                                        </a>
+
+                                        <% } %>
+
+                                            <% if(currentPage < totalPages){ %>
+
+                                                <a href="?page=<%= currentPage+1 %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>&discountType=<%= discountType %>"
+                                                    class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-gray-100 text-gray-600">
+
+                                                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+
+                                                </a>
+
+                                                <% } %>
+
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+        <div id="toast">
+            ...
+            <p id="toast-message"></p>
+        </div>
+        <!-- Universal Confirmation Modal -->
+        <div id="confirmModal"
+            class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50">
+
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden">
+
+                <div class="px-6 pt-6 pb-3 text-center">
+
+                    <div id="confirmIcon"
+                        class="mx-auto w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
+
+                        <i id="confirmIconClass" class="fa-solid fa-trash text-red-600 text-2xl"></i>
+
+                    </div>
+
+                    <h2 id="confirmTitle" class="text-xl font-bold text-gray-900">
+                        Delete Coupon?
+                    </h2>
+
+                    <p id="confirmMessage" class="text-sm text-gray-500 mt-2 leading-relaxed">
+                        Are you sure?
+                    </p>
+
+                </div>
+
+                <div class="flex justify-end gap-3 px-6 py-5 border-t">
+
+                    <button id="cancelConfirm"
+                        class="px-5 py-2.5 rounded-lg border border-gray-300 hover:bg-gray-100 text-sm font-medium">
+                        Cancel
+                    </button>
+
+                    <button id="confirmAction"
+                        class="px-5 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium">
+                        Confirm
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+        <script>
+
+            let confirmCallback = null;
+
+            const confirmModal = document.getElementById("confirmModal");
+            const confirmTitle = document.getElementById("confirmTitle");
+            const confirmMessage = document.getElementById("confirmMessage");
+            const confirmAction = document.getElementById("confirmAction");
+            const cancelConfirm = document.getElementById("cancelConfirm");
+            const confirmIcon = document.getElementById("confirmIcon");
+            const confirmIconClass = document.getElementById("confirmIconClass");
+
+            function openConfirmModal(options) {
+
+                confirmTitle.textContent = options.title;
+                confirmMessage.textContent = options.message;
+
+                confirmAction.textContent = options.buttonText;
+
+                confirmAction.className =
+                    `px-5 py-2.5 rounded-lg text-white text-sm font-medium ${options.buttonColor}`;
+
+                confirmIcon.className =
+                    `mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 ${options.iconBg}`;
+
+                confirmIconClass.className =
+                    `${options.icon} text-2xl ${options.iconColor}`;
+
+                confirmCallback = options.onConfirm;
+
+                confirmModal.classList.remove("hidden");
+                confirmModal.classList.add("flex");
+            }
+
+            function closeConfirmModal() {
+
+                confirmModal.classList.remove("flex");
+                confirmModal.classList.add("hidden");
+
+            }
+
+            cancelConfirm.addEventListener("click", closeConfirmModal);
+
+            confirmAction.addEventListener("click", () => {
+
+                closeConfirmModal();
+
+                if (confirmCallback) {
+
+                    confirmCallback();
+
+                }
+
+            });
+
+            // ======================= delete
+
+            async function deleteCoupon(id) {
+
+                openConfirmModal({
+
+                    title: "Delete Coupon",
+
+                    message: "This coupon will be moved to deleted coupons. You can restore it later.",
+
+                    buttonText: "Delete",
+
+                    buttonColor: "bg-red-600 hover:bg-red-700",
+
+                    icon: "fa-solid fa-trash",
+
+                    iconBg: "bg-red-100",
+
+                    iconColor: "text-red-600",
+
+                    onConfirm: async () => {
+
+                        const res = await fetch(`/couponManagement/delete/${id}`, {
+                            method: "DELETE"
+                        });
+
+                        const data = await res.json();
+
+                        if (data.success) {
+
+                            location.reload();
+
+                        }
+
+                    }
+
+                });
+
+            }
+            // ============================block unblock============
+
+            async function toggleCoupon(id, isActive) {
+
+                openConfirmModal({
+
+                    title: isActive ? "Block Coupon" : "Activate Coupon",
+
+                    message: isActive
+                        ? "Customers won't be able to use this coupon."
+                        : "Customers can use this coupon again.",
+
+                    buttonText: isActive ? "Block" : "Activate",
+
+                    buttonColor: isActive
+                        ? "bg-amber-600 hover:bg-amber-700"
+                        : "bg-emerald-600 hover:bg-emerald-700",
+
+                    icon: isActive
+                        ? "fa-solid fa-ban"
+                        : "fa-solid fa-circle-check",
+
+                    iconBg: isActive
+                        ? "bg-amber-100"
+                        : "bg-emerald-100",
+
+                    iconColor: isActive
+                        ? "text-amber-600"
+                        : "text-emerald-600",
+
+                    onConfirm: async () => {
+
+                        const res = await fetch(`/couponManagement/toggle/${id}`, {
+                            method: "PATCH"
+                        });
+
+                        const data = await res.json();
+
+                        if (data.success) {
+
+                            location.reload();
+
+                        }
+
+                    }
+
+                });
+
+            }
+            // ====================restore ============
+
+            async function restoreCoupon(id) {
+
+                openConfirmModal({
+
+                    title: "Restore Coupon",
+
+                    message: "This coupon will become available again.",
+
+                    buttonText: "Restore",
+
+                    buttonColor: "bg-emerald-600 hover:bg-emerald-700",
+
+                    icon: "fa-solid fa-arrow-rotate-left",
+
+                    iconBg: "bg-emerald-100",
+
+                    iconColor: "text-emerald-600",
+
+                    onConfirm: async () => {
+
+                        const res = await fetch(`/couponManagement/restore/${id}`, {
+                            method: "PATCH"
+                        });
+
+                        const data = await res.json();
+
+                        if (data.success) {
+
+                            location.reload();
+
+                        }
+
+                    }
+
+                });
+
+            }
+
+
+
+
+            const params = new URLSearchParams(window.location.search);
+
+            const success = params.get("success");
+
+            if (success) {
+
+                showToast(success);
+
+                window.history.replaceState({}, "", "/couponManagement");
+
+            }
+
+        </script>
 </body>
+
 </html>

@@ -325,6 +325,7 @@
                       </span>
                       <input type="date" id="startDate" name="startDate"
                         value="<%= coupon ? coupon.startDate.toISOString().split('T')[0] : '' %>"
+                         <%= isEdit ? '' : `min="${new Date().toISOString().split('T')[0]}"` %>
                         class="w-full bg-white pl-10 pr-4 py-3 text-sm rounded-lg border border-gray-200 focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand transition">
                       <p id="startDateError" class="mt-1 text-xs text-red-500"></p>
                     </div>
@@ -342,6 +343,7 @@
                       </span>
                       <input type="date" id="expiryDate" name="expiryDate"
                         value="<%= coupon ? coupon.expiryDate.toISOString().split('T')[0] : '' %>"
+                         <%= isEdit ? '' : `min="${new Date().toISOString().split('T')[0]}"` %>
                         class="w-full bg-white pl-10 pr-4 py-3 text-sm rounded-lg border border-gray-200 focus:outline-hidden focus:ring-2 focus:ring-brand/20 focus:border-brand transition">
                       <p id="expiryDateError" class="mt-1 text-xs text-red-500"></p>
                     </div>
@@ -490,10 +492,6 @@
       discardBtn.addEventListener('click', openModal);
       cancelDiscardBtn.addEventListener('click', closeModal);
 
-      // Perform actual form restoration upon confirmation
-
-
-      // Handle Form Submit Event
 
 
       // Make sidebar links interactively selectable for premium feel
@@ -522,57 +520,64 @@
       const startDate = document.getElementById("startDate");
       const expiryDate = document.getElementById("expiryDate");
 
-      const today = new Date().toISOString().split("T")[0];
 
-      // Both dates cannot be before today
-      startDate.min = today;
-      expiryDate.min = today;
+const today = new Date().toISOString().split("T")[0];
+const editing = <%= isEdit %>;
 
-      // When start date changes
-      startDate.addEventListener("change", () => {
-
-        // Expiry must be on or after start date
+// Only restrict past dates while creating
+if (!editing) {
+    startDate.min = today;
+    expiryDate.min = today;
+} else {
+    // While editing, expiry cannot be before the existing start date
+    if (startDate.value) {
         expiryDate.min = startDate.value;
+    }
+}
 
-        // Remove invalid expiry
-        if (expiryDate.value && expiryDate.value < startDate.value) {
-          expiryDate.value = "";
+// When start date changes
+startDate.addEventListener("change", () => {
+
+    expiryDate.min = startDate.value;
+
+    if (expiryDate.value && expiryDate.value < startDate.value) {
+        expiryDate.value = "";
+    }
+
+});
+
+// When expiry changes
+expiryDate.addEventListener("change", () => {
+
+    startDate.max = expiryDate.value;
+
+    if (startDate.value && startDate.value > expiryDate.value) {
+        startDate.value = "";
+    }
+
+});
+
+// Clear constraints when dates are removed
+startDate.addEventListener("input", () => {
+
+    if (!startDate.value) {
+
+        if (!editing) {
+            expiryDate.min = today;
         }
 
-      });
+        startDate.removeAttribute("max");
+    }
 
-      // When expiry date changes
-      expiryDate.addEventListener("change", () => {
+});
 
-        // Start date cannot be after expiry
-        startDate.max = expiryDate.value;
+expiryDate.addEventListener("input", () => {
 
-        // Remove invalid start date
-        if (startDate.value && startDate.value > expiryDate.value) {
-          startDate.value = "";
-        }
+    if (!expiryDate.value) {
+        startDate.removeAttribute("max");
+    }
 
-      });
-
-      // If user clears start date
-      startDate.addEventListener("input", () => {
-
-        if (!startDate.value) {
-          expiryDate.min = today;
-          startDate.removeAttribute("max");
-        }
-
-      });
-
-      // If user clears expiry date
-      expiryDate.addEventListener("input", () => {
-
-        if (!expiryDate.value) {
-          startDate.removeAttribute("max");
-        }
-
-      })
-
+});
 
       // ======
       const couponCode = document.getElementById("couponCode");
@@ -664,51 +669,62 @@
       }
 
 
+couponForm.addEventListener("submit", async (e) => {
 
-      couponForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        clearErrors();
+    clearErrors();
 
-        const formData = Object.fromEntries(new FormData(couponForm));
+    const formData = Object.fromEntries(new FormData(couponForm));
 
+    try {
 
-
-        try {
-
-          const response = await fetch(couponForm.action, {
+        const response = await fetch(couponForm.action, {
             method: "POST",
             headers: {
-              "Content-Type": "application/json"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(formData)
-          });
+        });
 
-          const data = await response.json();
+        const data = await response.json();
 
-          if (!data.success) {
+        if (!response.ok || !data.success) {
 
-            Object.keys(data.errors).forEach(field => {
+            if (data.errors) {
 
-              showError(field, data.errors[field]);
-            });
+                Object.keys(data.errors).forEach(field => {
+                    showError(field, data.errors[field]);
+                });
 
+            } else {
 
+                showToast(data.message || "Something went wrong.", "discard");
+
+            }
 
             return;
-          }
-
-          showToast(data.message);
-
-          setTimeout(() => {
-            window.location.href = "/couponManagement";
-          }, 1500);
-
-        } catch (error) {
-          console.log(error);
         }
 
-      });
+        showToast(data.message);
+
+        setTimeout(() => {
+
+            window.location.href =
+                "/couponManagement?success=" +
+                encodeURIComponent(data.message);
+
+        }, 1500);
+
+    } catch (error) {
+
+        console.error(error);
+
+        showToast("Something went wrong. Please try again.", "discard");
+
+    }
+
+});
       document.querySelectorAll("input, select").forEach(input => {
 
         input.addEventListener("input", () => {
