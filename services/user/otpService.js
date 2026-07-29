@@ -10,24 +10,27 @@ export const sendOtpService = async (email) => {
     const existingOtp = await Otp.findOne({ email });
 
     if (existingOtp && existingOtp.expiresAt > new Date()) {
-       return {
-    reused: true
-  };
+        return {
+            reused: true
+        }
     }
 
     const otp = generateOTP();
 
-    const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 2 * 60 * 1000)
 
-    const hashedOtp = await bcrypt.hash(otp, 10);
-        console.log("otp :",otp)
+    const hashedOtp = await bcrypt.hash(otp, 10)
+    console.log("otp :", otp)
     await Otp.findOneAndUpdate(
         { email },
-        { otp:hashedOtp, expiresAt },
-        { upsert: true, new: true }
-    );
+        { otp: hashedOtp, expiresAt },
+        {
+            upsert: true,
+            returnDocument: "after"
+        }
+    )
 
-    await sendMail(email, otp);
+    await sendMail(email, otp)
 
     return otp;
-};
+}

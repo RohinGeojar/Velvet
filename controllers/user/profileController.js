@@ -71,6 +71,7 @@ export const loadProfile = async (req, res) => {
 // ================= UPDATE PROFILE =================
 export const updateProfile = async (req, res) => {
     try {
+        console.log("profile update hit")
         let   { firstName, lastName } = req.body
 
         firstName= capitalizeName(firstName)

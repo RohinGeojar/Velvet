@@ -1,287 +1,355 @@
 <%- include('../partials/user/otpModal') %>
-      <!-- Main Section -->
-      <div class="grid grid-cols-1 ml-[180px] lg:grid-cols-2 min-h-[90vh]">
+  <!-- Main Section -->
+  <div class="grid grid-cols-1 ml-[180px] lg:grid-cols-2 min-h-[90vh]">
 
-        <!-- Left Image -->
-        <div class="hidden lg:flex items-center justify-center p-10">
-          <img src="/images/Frame 26086866.png" class="w-full max-w-md object-cover rounded-lg shadow">
+    <!-- Left Image -->
+    <div class="hidden lg:flex items-start justify-center p-10 sticky top-0 self-start">
+      <img src="/images/Frame 26086866.png" class="w-full max-w-md object-cover rounded-lg shadow">
+    </div>
+
+    <!-- Form Section -->
+    <div class="flex flex-col justify-center px-6 sm:px-12 lg:px-20 py-10">
+
+      <h2 class="text-2xl sm:text-3xl font-semibold mb-8 text-center lg:text-left">
+        Create Account
+      </h2>
+
+
+      <form id="signupForm" method="POST" class="space-y-4 max-w-md mx-auto lg:mx-0">
+
+        <div>
+          <input type="text" name="firstName" placeholder="First Name " minlength="3"
+            class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
 
-        <!-- Form Section -->
-        <div class="flex flex-col justify-center px-6 sm:px-12 lg:px-20 py-10">
-
-          <h2 class="text-2xl sm:text-3xl font-semibold mb-8 text-center lg:text-left">
-            Create Account
-          </h2>
-          
-
-              <form id="signupForm" method="POST" class="space-y-4 max-w-md mx-auto lg:mx-0">
-
-                <input type="text" name="firstName" placeholder="First Name "  minlength="3"
-                  class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
-
-                <input type="text" name="lastName" placeholder="Last Name" 
-                  class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
-
-                <input type="email" name="email" placeholder="Email"  pattern="[^\s@]+@[^\s@]+\.[^\s@]+$"
-                  class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
-
-                <!-- Password -->
-                <div class="relative">
-                  <input type="password" id="password" name="password" placeholder="Password"  minlength="6"
-                    class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
-                  <span onclick="togglePassword('password', this)"
-                    class="absolute right-3 top-3 cursor-pointer">👁</span>
-                </div>
-
-                <!-- Confirm Password -->
-                <div class="relative">
-                  <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password"
-                     minlength="6"
-                    class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
-                  <span onclick="togglePassword('confirmPassword', this)"
-                    class="absolute right-3 top-3 cursor-pointer">👁</span>
-                </div>
-
-                <button type="submit" class="w-full bg-primary text-white py-3 rounded bg-[#4c5c49] transition">
-                  Register Now
-                </button>
-
-              </form>
-
-              <!-- Login -->
-              <p class="text-sm mt-4  text-start">
-                Already Have An Account?
-                <a href="/login" class="text-primary font-medium">Log In</a>
-              </p>
-
-              <div class="space-y-4 max-w-md mx-auto lg:mx-0 text-center my-4 text-gray-400">Or</div>
-
-
-              <!-- Google -->
-              <div class="flex justify-center space-y-4 max-w-md mx-auto lg:mx-0 ">
-                <a href="/auth/google"> <button class="border p-3 rounded-full hover:bg-gray-100 transition ">
-                    <img src="/images/Google__G__logo.svg.webp" class="w-6 h-6  ">
-                  </button></a>
-              </div>
-
-              <!-- Terms -->
-              <p class="text-xs text-gray-500 text-start mt-6 px-4">
-                By Clicking Register Now you Agree To
-                <span class="underline">Terms & Conditions</span>
-                And
-                <span class="underline">Privacy Policy</span>
-              </p>
-
+        <div>
+          <input type="text" name="lastName" placeholder="Last Name"
+            class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
         </div>
+
+        <div>
+          <input type="email" name="email" placeholder="Email" pattern="[^\s@]+@[^\s@]+\.[^\s@]+$"
+            class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+
+        <!-- Password -->
+        <div class="relative">
+          <input type="password" id="password" name="password" placeholder="Password" minlength="6"
+            class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+          <span onclick="togglePassword('password', this)" class="absolute right-3 top-3 cursor-pointer">👁</span>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="relative">
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password"
+            minlength="6" class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-primary">
+          <span onclick="togglePassword('confirmPassword', this)"
+            class="absolute right-3 top-3 cursor-pointer">👁</span>
+        </div>
+
+        <button type="submit" id="registerBtn"
+          class="w-full bg-primary text-white py-3 rounded bg-[#4c5c49] transition">
+          Register Now
+        </button>
+
+      </form>
+
+      <!-- Login -->
+      <p class="text-sm mt-4  text-start">
+        Already Have An Account?
+        <a href="/login" class="text-primary font-medium">Log In</a>
+      </p>
+
+      <div class="space-y-4 max-w-md mx-auto lg:mx-0 text-center my-4 text-gray-400">Or</div>
+
+
+      <!-- Google -->
+      <div class="flex justify-center space-y-4 max-w-md mx-auto lg:mx-0 ">
+        <a href="/auth/google"> <button class="border p-3 rounded-full hover:bg-gray-100 transition ">
+            <img src="/images/Google__G__logo.svg.webp" class="w-6 h-6  ">
+          </button></a>
       </div>
 
-      <!-- Script -->
-      <script>
-        const form = document.getElementById("signupForm");
+      <!-- Terms -->
+      <p class="text-xs text-gray-500 text-start mt-6 px-4">
+        By Clicking Register Now you Agree To
+        <span class="underline">Terms & Conditions</span>
+        And
+        <span class="underline">Privacy Policy</span>
+      </p>
 
-// Inputs
-const firstNameInput = document.querySelector('input[name="firstName"]');
-const lastNameInput = document.querySelector('input[name="lastName"]');
-const emailInput = document.querySelector('input[name="email"]');
-const passwordInput = document.querySelector('input[name="password"]');
-const confirmPasswordInput = document.querySelector('input[name="confirmPassword"]');
+    </div>
+  </div>
 
-// Regex
-const nameRegex = /^[A-Za-z\s]+$/;
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  <!-- Script -->
+  <script>
+    const form = document.getElementById("signupForm");
 
-// ------------------ ERROR HANDLING ------------------
-function showFieldError(input, message) {
-  let errorEl = document.getElementById(input.name + "Error");
+    // Inputs
+    const firstNameInput = document.querySelector('input[name="firstName"]');
+    const lastNameInput = document.querySelector('input[name="lastName"]');
+    const emailInput = document.querySelector('input[name="email"]');
+    const passwordInput = document.querySelector('input[name="password"]');
+    const confirmPasswordInput = document.querySelector('input[name="confirmPassword"]');
+    const registerBtn = document.getElementById("registerBtn");
 
-  if (!errorEl) {
-    errorEl = document.createElement("p");
-    errorEl.id = input.name + "Error";
-    errorEl.className = "text-red-500 text-sm mt-1";
-    input.parentNode.appendChild(errorEl);
-  }
+    // Regex
+    const nameRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  errorEl.textContent = message;
-  input.classList.add("border-red-500");
-  input.classList.remove("focus:ring-2");
-  input.classList.remove("focus:ring-primary");
-}
+    // ---------------- ERROR HANDLING ----------------
 
-function clearFieldError(input) {
-  const errorEl = document.getElementById(input.name + "Error");
+    function showFieldError(input, message) {
 
-  if (errorEl) {
-    errorEl.textContent = "";
-  }
+      let error = input.parentElement.querySelector(".field-error");
 
-  input.classList.remove("border-red-500");
-  input.classList.add("focus:ring-2");
-  input.classList.add("focus:ring-primary");
-}
+      if (!error) {
+        error = document.createElement("p");
+        error.className = "field-error text-red-500 text-sm mt-1";
+        input.parentElement.appendChild(error);
+      }
 
-// ------------------ LIVE VALIDATION ------------------
-
-// First Name
-firstNameInput.addEventListener("input", () => {
-  const value = firstNameInput.value;
-
-  if (!nameRegex.test(value)) {
-    showFieldError(firstNameInput, "Only letters allowed as First Name");
-  } else {
-    clearFieldError(firstNameInput);
-  }
-});
-
-// Last Name
-lastNameInput.addEventListener("input", () => {
-  const value = lastNameInput.value;
-
-  if (value && !nameRegex.test(value)) {
-    showFieldError(lastNameInput, "Only letters allowed as Last Name");
-  } else {
-    clearFieldError(lastNameInput);
-  }
-});
-
-// Email
-emailInput.addEventListener("input", () => {
-  const value = emailInput.value;
-
-  if (!emailRegex.test(value)) {
-    showFieldError(emailInput, "Invalid email format");
-  } else {
-    clearFieldError(emailInput);
-  }
-});
-
-// Password
-passwordInput.addEventListener("input", () => {
-  const value = passwordInput.value;
-
-  if (value.length < 6) {
-    showFieldError(passwordInput, "Minimum 6 characters");
-  } else {
-    clearFieldError(passwordInput);
-  }
-});
-
-// Confirm Password
-confirmPasswordInput.addEventListener("input", () => {
-  const value = confirmPasswordInput.value;
-
-  if (value !== passwordInput.value) {
-    showFieldError(confirmPasswordInput, "Passwords do not match");
-  } else {
-    clearFieldError(confirmPasswordInput);
-  }
-});
-
-// ------------------ SUBMIT ------------------
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(form);
-
-  const data = {
-    firstName: formData.get("firstName").trim(),
-    lastName: formData.get("lastName").trim(),
-    email: formData.get("email").trim(),
-    password: formData.get("password"),
-    confirmPassword: formData.get("confirmPassword")
-  };
-
-  let isValid = true;
-
-  // First Name
-  if (!nameRegex.test(data.firstName)) {
-    showFieldError(firstNameInput, "First name is invalid");
-    isValid = false;
-  }
-
-  // Last Name
-  if (data.lastName && !nameRegex.test(data.lastName)) {
-    showFieldError(lastNameInput, "Last name is invalid");
-    isValid = false;
-  }
-
-  // Email
-  if (!emailRegex.test(data.email)) {
-    showFieldError(emailInput, "Invalid email");
-    isValid = false;
-  }
-
-  // Password
-  if (data.password.length < 6) {
-    showFieldError(passwordInput, "Minimum 6 characters");
-    isValid = false;
-  }
-
-  // Confirm Password
-  if (data.password !== data.confirmPassword) {
-    showFieldError(confirmPasswordInput, "Passwords do not match");
-    isValid = false;
-  }
-
-  if (!isValid) return;
-
-  try {
-    document.getElementById("otpModal").classList.remove("hidden");
-    
-    document.getElementById("otpEmail").textContent = data.email;
-    showToast("Sending OTP ... ","success")
-    openOtpModal(data.email, "/verifyOtp", "signup");
-
-   
-    const res = await fetch("/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(data)
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) {
-      document.getElementById("otpModal").classList.add("hidden");
-      showToast(result.message || "Email already exists", "error");
-      return showFieldError(emailInput, result.message || "Signup failed");
+      error.textContent = message;
+      input.classList.add("border-red-500");
     }
 
+    function clearFieldError(input) {
 
-    showToast(`OTP has been send to ${result.email} `,"success")
-    
-  } catch (err) {
-    console.error(err);
-    alert(err,"Something went wrong");
-  }
-});
- function showToast(message, type = "success") {
-            const toast = document.createElement("div");
+      const error = input.parentElement.querySelector(".field-error");
 
-            toast.className = `
-        fixed top-5 left-1/2 -translate-x-1/2 px-4 py-2 rounded text-white z-50 shadow-lg
+      if (error) {
+        error.remove();
+      }
+
+      input.classList.remove("border-red-500");
+    }
+
+    // ---------------- VALIDATION ----------------
+
+    function validateFirstName() {
+
+      const value = firstNameInput.value.trim();
+
+      clearFieldError(firstNameInput);
+
+      if (!value) {
+        showFieldError(firstNameInput, "First name is required");
+        return false;
+      }
+
+      if (value.length < 3) {
+        showFieldError(firstNameInput, "Minimum 3 characters");
+        return false;
+      }
+
+      if (!nameRegex.test(value)) {
+        showFieldError(firstNameInput, "Only letters are allowed");
+        return false;
+      }
+
+      return true;
+    }
+
+    function validateLastName() {
+
+      const value = lastNameInput.value.trim();
+
+      clearFieldError(lastNameInput);
+
+      if (!value) {
+        showFieldError(lastNameInput, "Last name is required");
+        return false;
+      }
+
+      if (!nameRegex.test(value)) {
+        showFieldError(lastNameInput, "Only letters are allowed");
+        return false;
+      }
+
+      return true;
+    }
+
+    function validateEmail() {
+
+      const value = emailInput.value.trim();
+
+      clearFieldError(emailInput);
+
+      if (!value) {
+        showFieldError(emailInput, "Email is required");
+        return false;
+      }
+
+      if (!emailRegex.test(value)) {
+        showFieldError(emailInput, "Invalid email format");
+        return false;
+      }
+
+      return true;
+    }
+
+    function validatePassword() {
+
+      const value = passwordInput.value;
+
+      clearFieldError(passwordInput);
+
+      if (!value) {
+        showFieldError(passwordInput, "Password is required");
+        return false;
+      }
+
+      if (value.length < 6) {
+        showFieldError(passwordInput, "Password must be at least 6 characters");
+        return false;
+      }
+
+      return true;
+    }
+
+    function validateConfirmPassword() {
+
+      const value = confirmPasswordInput.value;
+
+      clearFieldError(confirmPasswordInput);
+
+      if (!value) {
+        showFieldError(confirmPasswordInput, "Confirm your password");
+        return false;
+      }
+
+      if (value !== passwordInput.value) {
+        showFieldError(confirmPasswordInput, "Passwords do not match");
+        return false;
+      }
+
+      return true;
+    }
+
+    function validateForm() {
+
+      const firstNameValid = validateFirstName();
+      const lastNameValid = validateLastName();
+      const emailValid = validateEmail();
+      const passwordValid = validatePassword();
+      const confirmPasswordValid = validateConfirmPassword();
+
+      return (
+        firstNameValid &&
+        lastNameValid &&
+        emailValid &&
+        passwordValid &&
+        confirmPasswordValid
+      );
+    }
+
+    // ---------------- LIVE VALIDATION ----------------
+
+    firstNameInput.addEventListener("input", validateFirstName);
+
+    lastNameInput.addEventListener("input", validateLastName);
+
+    emailInput.addEventListener("input", validateEmail);
+
+    passwordInput.addEventListener("input", () => {
+      validatePassword();
+      validateConfirmPassword();
+    });
+
+    confirmPasswordInput.addEventListener("input", validateConfirmPassword);
+
+    // ---------------- SUBMIT ----------------
+
+    form.addEventListener("submit", async (e) => {
+
+      e.preventDefault();
+
+      if (!validateForm()) return;
+
+      const data = {
+        firstName: firstNameInput.value.trim(),
+        lastName: lastNameInput.value.trim(),
+        email: emailInput.value.trim(),
+        password: passwordInput.value,
+        confirmPassword: confirmPasswordInput.value
+      };
+
+      try {
+
+        document.getElementById("otpModal").classList.remove("hidden");
+        document.getElementById("otpEmail").textContent = data.email;
+
+        showToast("Sending OTP...", "success");
+
+        openOtpModal(data.email, "/verifyOtp", "signup");
+       
+
+        const res = await fetch("/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+
+          document.getElementById("otpModal").classList.add("hidden");
+
+          showToast(result.message || "Signup failed", "error");
+
+          if (result.message?.toLowerCase().includes("email")) {
+            showFieldError(emailInput, result.message);
+          }
+
+          return;
+        }
+
+        showToast(`OTP has been sent to ${result.email}`, "success");
+
+      } catch (err) {
+
+        console.error(err);
+
+        showToast("Something went wrong", "error");
+      }
+    });
+
+    // ---------------- TOAST ----------------
+
+    function showToast(message, type = "success") {
+
+      const toast = document.createElement("div");
+
+      toast.className = `
+        fixed top-5 left-1/2 -translate-x-1/2
+        px-4 py-2 rounded text-white z-50 shadow-lg
         ${type === "error" ? "bg-red-500" : "bg-green-600"}
     `;
 
-            toast.innerText = message;
+      toast.innerText = message;
 
-            document.body.appendChild(toast);
+      document.body.appendChild(toast);
 
-            setTimeout(() => toast.remove(), 3000);
-        }
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
 
+    // ---------------- PASSWORD TOGGLE ----------------
 
+    function togglePassword(id, el) {
 
-        function togglePassword(id, el) {
-          const input = document.getElementById(id);
-          if (input.type === "password") {
-            input.type = "text";
-            el.textContent = "🙈";
-          } else {
-            input.type = "password";
-            el.textContent = "👁";
-          }
-        }
-      </script>
+      const input = document.getElementById(id);
+
+      if (input.type === "password") {
+        input.type = "text";
+        el.textContent = "🙈";
+      } else {
+        input.type = "password";
+        el.textContent = "👁";
+      }
+    }
+  </script>

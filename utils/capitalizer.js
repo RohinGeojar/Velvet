@@ -6,13 +6,13 @@ export const capitalizeName = (name) => {
     .replace(/\s+/g, " ")
     .split(" ")
     .map(word => {
-      if (word.length === 1) return word.toUpperCase();
+      if (word.length === 1) return word.toUpperCase()
 
-      if (word === word.toUpperCase()) return word;
+      if (word === word.toUpperCase()) return word
 
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     })
-    .join(" ");
+    .join(" ")
 }
 export const normalizeText = (text) => {
 
@@ -20,5 +20,5 @@ export const normalizeText = (text) => {
         .trim()
         .toLowerCase()
         .replace(/\s+/g, " ")
-        .replace(/(^\w)|([.!?]\s*\w)/g, char => char.toUpperCase());
-};
+        .replace(/(^\w)|([.!?]\s*\w)/g, char => char.toUpperCase())
+}

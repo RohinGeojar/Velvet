@@ -15,7 +15,7 @@ export const loadHome = async (req, res) => {
             showNavbar: true,
             showSidebar: false,
             showFooter: true,
-        });
+        })
     }
     return res.render("user/home", {
         title: "Home",
@@ -23,7 +23,7 @@ export const loadHome = async (req, res) => {
         showNavbar: true,
         showSidebar: false,
 
-    });
+    })
 
 }
 
@@ -94,36 +94,44 @@ export const signup = async (req, res) => {
             });
         }
 
-        req.session.tempUser = tempUser;
+        req.session.tempUser = tempUser
+
+
+
+        await new Promise((resolve, reject) => {
+            req.session.save(err => {
+                if (err) return reject(err);
+                resolve()   
+            })
+        })
 
         return res.status(200).json({
             success: true,
             message: "OTP sent successfully",
             email
-        });
+        })
 
     } catch (err) {
-        console.error(err);
+        console.error(err)
 
         return res.status(400).json({
             success: false,
             message: err.message || "Signup failed"
-        });
+        })
     }
-};
+}
 
 //verifyOtp
 export const verifyOtp = async (req, res) => {
     try {
-        const { otp1, otp2, otp3, otp4 } = req.body;
-        const OTP = otp1 + otp2 + otp3 + otp4;
-        console.log(OTP)
-        const tempUser = req.session.tempUser;
+        const { otp1, otp2, otp3, otp4 } = req.body
+        const OTP = otp1 + otp2 + otp3 + otp4
+        const tempUser = req.session.tempUser
         if (OTP == '' || null) {
             return res.status(400).json({
                 success: false,
                 message: "Please enter the OTP."
-            });
+            })
         }
 
 
@@ -131,54 +139,54 @@ export const verifyOtp = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "Session expired. Please register again."
-            });
+            })
         }
 
-        const email = tempUser.email;
+        const email = tempUser.email
 
-        const otpDoc = await Otp.findOne({ email });
+        const otpDoc = await Otp.findOne({ email })
 
 
         if (!otpDoc) {
             return res.status(400).json({
                 success: false,
                 message: "OTP expired"
-            });
+            })
         }
 
-        const isMatch = await bcrypt.compare(OTP, otpDoc.otp);
+        const isMatch = await bcrypt.compare(OTP, otpDoc.otp)
 
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid OTP"
-            });
+            })
         }
 
 
         const user = await User.create({
             ...tempUser,
             isVerified: true
-        });
+        })
 
-        req.session.user = user._id;
+        req.session.user = user._id
 
-        await Otp.deleteMany({ email });
+        await Otp.deleteMany({ email })
         delete req.session.tempUser;
 
 
         return res.status(200).json({
             success: true,
             message: "OTP verified successfully"
-        });
+        })
 
     } catch (err) {
-        console.error(err);
+        console.error(err)
 
         return res.status(500).json({
             success: false,
             message: "Something went wrong"
-        });
+        })
     }
 };
 
@@ -186,25 +194,31 @@ export const verifyOtp = async (req, res) => {
 
 export const resendSignupOtp = async (req, res) => {
     try {
-        const tempUser = req.session.tempUser;
+        console.log("resendSignupOtp hit")
+        const tempUser = req.session.tempUser
 
 
         if (!tempUser) {
             return res.status(400).json({
                 success: false,
                 message: "Session expired. Please register again."
-            });
+            })
         }
 
-        const email = tempUser.email;
+        const email = tempUser.email
+        console.time("Resend OTP");
 
+console.log("Before sendOtpService");
 
-        await sendOtpService(email);
+        await sendOtpService(email)
+        console.log("After sendOtpService");
+
+console.timeEnd("Resend OTP");
 
         return res.status(200).json({
             success: true,
             message: "OTP resent successfully"
-        });
+        })
 
     } catch (err) {
         console.error(err);
@@ -212,9 +226,9 @@ export const resendSignupOtp = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Failed to resend OTP"
-        });
+        })
     }
-};
+}
 //loadLogin
 
 export const loadLogin = async (req, res) => {
@@ -268,7 +282,7 @@ export const login = async (req, res) => {
                 showFooter: false
             });
         }
-     
+
         const isMatch = await comparePassword(password, user.password)
 
         if (!isMatch) {
@@ -380,7 +394,7 @@ export const loadResetPassword = (req, res) => {
     return res.render("auth/resetPassword", {
         title: "Reset Password",
         error: null,
-        showFooter:false
+        showFooter: false
     });
 };
 
@@ -388,7 +402,7 @@ export const loadResetPassword = (req, res) => {
 export const resetPassword = async (req, res) => {
     try {
         const { password, confirmPassword } = req.body;
-        console.log("pass",password)
+        console.log("pass", password)
         if (password.length < 6) {
             return res.render("auth/resetPassword", {
                 title: "Reset Password",

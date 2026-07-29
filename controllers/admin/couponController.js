@@ -1,5 +1,8 @@
 import { createCouponService, deleteCouponService, getCouponByIdService, getCouponService, restoreCouponService, toggleCouponService, updateCouponService } from "../../services/admin/couponService.js"
+import { createOfferService, getCreateOfferData, getEditOfferData, getOfferService } from "../../services/admin/offerService.js"
+import { capitalizeName } from "../../utils/capitalizer.js"
 import { couponSchema } from "../../validators/couponValidator.js"
+import { offerSchema } from "../../validators/offerValidator.js"
 
 
 
@@ -7,7 +10,7 @@ export const loadCouponManagement = async (req, res) => {
     try {
         const page = Number(req.query.page) || 1
 
-        const limit =  5
+        const limit = 5
 
         const search = req.query.search || ""
         const status = req.query.status || ""
@@ -22,8 +25,8 @@ export const loadCouponManagement = async (req, res) => {
             discountType,
             sort
         })
-      
-        
+
+
 
         res.render("admin/couponManagement", {
             ...data,
@@ -145,12 +148,12 @@ export const loadEditCoupon = async (req, res) => {
 export const updateCoupon = async (req, res) => {
 
     try {
-        
+
         const { error, value } = couponSchema.validate(req.body, {
             abortEarly: false
         })
 
-      
+
         const errors = {}
         if (error) {
             error.details.forEach(err => {
@@ -176,16 +179,16 @@ export const updateCoupon = async (req, res) => {
             errors.discountValue = "Percentage discount cannot exceed 100."
         }
 
-        if (discountType === "percentage" &&(!maxDiscountAmount || Number(maxDiscountAmount) <= 0)) {
+        if (discountType === "percentage" && (!maxDiscountAmount || Number(maxDiscountAmount) <= 0)) {
             errors.maxDiscountAmount = "Maximum discount amount is required."
         }
 
-        if (discountType === "fixed" && Number(discountValue) > Number(minOrderAmount) ) {
+        if (discountType === "fixed" && Number(discountValue) > Number(minOrderAmount)) {
             errors.discountValue = "Discount cannot exceed minimum order amount."
         }
 
         if (Number(perUserLimit) > Number(usageLimit)) {
-            errors.perUserLimit ="Per user limit cannot exceed usage limit."
+            errors.perUserLimit = "Per user limit cannot exceed usage limit."
         }
 
         if (Object.keys(errors).length) {
@@ -306,18 +309,138 @@ export const restoreCoupon = async (req, res) => {
 
 
 
-                                            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-                                            //================= OFFER MANAGEMENT =======================
-                                            //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//================= OFFER MANAGEMENT =======================
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
+// LOAD OFFER MANAGEMENT
 export const loadOfferManagement = async (req, res) => {
     try {
+
+        const page = Number(req.query.page) || 1
+        const limit = 5
+
+        const search = req.query.search?.trim() || ""
+        const status = req.query.status || "";
+        const offerType = req.query.offerType || ""
+        const sort = req.query.sort || "latest"
+
+        const data = await getOfferService({
+            page,
+            limit,
+            search,
+            status,
+            offerType,
+            sort
+        })
+
         res.render("admin/offerManagement", {
+    ...data,
+    page,
+    search,
+    status,
+    offerType,
+    sort,
+    activeNavLink: "Offers",
+    showFooter: false
+})
+
+    } catch (error) {
+
+        console.log("Load Offer Management Error :", error)
+
+        res.status(500).render("admin/error", {
+            message: "Something went wrong.",
             activeNavLink: "Offers",
             showFooter: false
         })
+
+    }
+}
+
+// LOAD CREATE Offer
+
+export const loadCreateOffer = async (req, res) => {
+
+    try {
+
+        const { products, categories } = await getCreateOfferData();
+
+        res.render("admin/createOffer", {
+            offer: null,
+            products,
+            categories,
+            activeNavLink: "Offers",
+            showFooter:false
+        })
+
     } catch (error) {
+        console.log("Load create offer error", error)
+    }
+
+}
+
+// CREATE OFFER
+
+export const createOffer = async (req, res) => {
+    try {
+      
+       req.body.isActive = req.body.isActive === "on";
+        const { error, value } = offerSchema.validate(req.body, {
+            abortEarly: false
+        })
+     
+        if (error) {
+            const errors = {}
+            
+            error.details.forEach(err => {
+                errors[err.path[0]] = err.message;
+            })
+            
+            return res.status(400).json({
+                success: false,
+                errors
+            })
+        }
+       
+        const offerName = capitalizeName(value.offerName)
+        const result =  await createOfferService(value,offerName)
+      
+        return res.json({
+            success: true,
+            message: "Offer Created Successfully"
+        })
+    } catch (error) {
+        console.log(" create offer error", error)
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong"
+        })
+    }
+}
+
+// Load edit offer 
+
+export const loadEditOffer = async (req, res) => {
+
+    try {
+
+        const data = await getEditOfferData(req.params.id);
+
+        if (!data) {
+            return res.redirect("/couponManagement/offers")
+        }
+
+        res.render("admin/createOffer", {
+            offer: data.offer,
+            products: data.products,
+            categories: data.categories,
+            activeNavLink: "Offers",
+            showfooter:false
+        })
+
+    } catch (error) {
+        console.log(error)
 
     }
 }

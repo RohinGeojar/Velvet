@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Vogue Admin Panel - Create Offer</title>
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            sidebar: '#f2ebd9',
+                            bg: '#f8f6f0',
+                            card: '#ffffff',
+                            accent: '#8a582b',
+                            'accent-hover': '#734822',
+                            dark: '#2b2b2b',
+                            muted: '#8c8c8c',
+                            danger: '#e05252',
+                            border: '#e5e0d8',
+                            preview: '#f9f6ef'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+                    },
+                    boxShadow: {
+                        'soft': '0 2px 10px -3px rgba(0, 0, 0, 0.05)',
+                        'btn': '0 4px 6px -1px rgba(138, 88, 43, 0.2), 0 2px 4px -1px rgba(138, 88, 43, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        /* Remove default input styling for date/select arrows */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            cursor: pointer;
+        }
+
+        .date-input-wrapper {
+            position: relative;
+        }
+
+        .date-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #8c8c8c;
+        }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: none;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #8c8c8c;
+        }
+    </style>
+</head>
+
+<body class="bg-brand-bg text-brand-dark h-screen overflow-hidden antialiased">
+
+    <div class="flex h-screen">
+
+        <%- include("../partials/admin/adminSidebar") %>
+
+            <main class="ml-[250px] flex-1 flex flex-col h-screen overflow-hidden bg-brand-card">
+
+                <!-- Header -->
+                <header class="h-[76px] flex items-center shadow-sm justify-between px-8 bg-transparent shrink-0">
+                    <!-- Search Bar -->
+                    <div class="relative w-96 max-w-md">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text"
+                            class="block w-full pl-10 pr-4 py-2.5 bg-white border-transparent rounded-full text-sm placeholder-gray-500 focus:bg-white focus:border-brand-border focus:ring-0 transition-colors shadow-inner"
+                            placeholder="Search anything...">
+                    </div>
+
+                    <!-- User Profile & Notifications -->
+                    <div class="flex items-center gap-6">
+                        <button class="relative text-gray-500 hover:text-brand-dark transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                                </path>
+                            </svg>
+                            <!-- Notification Dot -->
+                            <span
+                                class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-brand-danger ring-2 ring-[#fbfaf8]"></span>
+                        </button>
+
+                        <div class="h-8 w-px bg-brand-border"></div>
+
+                        <div class="flex items-center gap-3">
+                            <div class="text-right">
+                                <div class="text-sm font-semibold text-brand-dark leading-none">Rohin Geojar</div>
+                                <div class="text-xs text-brand-muted mt-1">Administrator</div>
+                            </div>
+                            <div
+                                class="w-9 h-9 rounded-full bg-[#82a995] shadow-sm flex items-center justify-center text-white overflow-hidden border-2 border-white">
+                                <!-- Placeholder for Avatar -->
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Scrollable Content -->
+                <div class="flex-1 overflow-y-auto px-8 pb-12 pt-2">
+                    <div class="max-w-[1100px] mx-auto">
+
+                        <!-- Breadcrumbs -->
+                        <nav class="flex text-sm text-brand-muted mb-6" aria-label="Breadcrumb">
+                            <ol class="inline-flex items-center space-x-1 md:space-x-2">
+                                <li class="inline-flex items-center">
+                                    <a href="#" class="hover:text-brand-dark transition-colors">Dashboard</a>
+                                </li>
+                                <li>
+                                    <div class="flex items-center">
+                                        <span class="mx-1">/</span>
+                                        <a href="/couponManagement/offers"
+                                            class="hover:text-brand-dark transition-colors">Offers</a>
+                                    </div>
+                                </li>
+                                <li aria-current="page">
+                                    <div class="flex items-center">
+                                        <span class="mx-1">/</span>
+                                        <span class="text-brand-accent font-medium">
+                                            <%= offer ? "Edit Offer" : "Create Offer" %>
+                                        </span>
+                                    </div>
+                                </li>
+                            </ol>
+                        </nav>
+
+                        <!-- Page Header -->
+                        <div class="mb-8">
+                            <h1 class="text-[28px] font-bold text-brand-dark tracking-tight mb-2">
+                                <%= offer ? "Edit Offer" : "Create Offer" %>
+                            </h1>
+                            <p class="text-[15px] text-[#6b6b6b]">Create promotional offers for specific products or
+                                categories to boost your sales.</p>
+                        </div>
+
+                        <!-- Form Grid -->
+                        <form id="offerForm"
+                            action="<%= offer ? `/couponManagement/offers/edit/${offer._id}` : '/couponManagement/offers/create' %>"
+                            method="POST">
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                                <!-- Left Column: Offer Details (col-span-7) -->
+                                <div class="lg:col-span-7 space-y-6">
+
+                                    <!-- Card 1: Offer Details -->
+                                    <div
+                                        class="bg-brand-card rounded-[20px] p-7 shadow-soft border border-brand-border/60">
+                                        <div class="flex items-center gap-2.5 mb-6">
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-brand-accent">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <h2 class="text-[17px] font-semibold text-brand-dark">Offer Details</h2>
+                                        </div>
+
+                                        <div class="space-y-5">
+                                            <!-- Offer Name -->
+                                            <div>
+                                                <label class="block text-[13px] font-medium text-gray-700 mb-1.5">Offer
+                                                    Name</label>
+                                                <input type="text" name="offerName"
+                                                    value="<%= offer?.offerName || '' %>"
+                                                    placeholder="e.g. Summer Clearance"
+                                                    class="w-full border border-brand-border rounded-xl px-4 py-2.5 text-sm text-brand-dark placeholder-gray-400 focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent shadow-sm bg-brand-card transition-all">
+                                                <p id="offerNameError" class="text-red-500 text-xs mt-1"></p>
+                                            </div>
+
+                                            <!-- Offer Description -->
+                                            <div>
+                                                <label class="block text-[13px] font-medium text-gray-700 mb-1.5">Offer
+                                                    Description</label>
+                                                <textarea name="description" rows="4"
+                                                    class="w-full border border-brand-border rounded-xl px-4 py-3 text-sm"><%= offer?.description || "" %></textarea>
+                                                <p id="descriptionError" class="text-red-500 text-xs mt-1"></p>
+                                            </div>
+
+                                            <!-- Discount Type & Value Row -->
+                                            <div class="grid grid-cols-2 gap-5">
+                                                <div>
+                                                    <label class="block text-[13px] font-medium text-gray-700 mb-1.5">
+                                                        Discount Type
+                                                    </label>
+
+                                                    <div class="select-wrapper shadow-sm rounded-xl">
+                                                        <select name="discountType"
+                                                            class="w-full border border-brand-border rounded-xl pl-4 pr-10 py-2.5 focus:border-brand-accent text-sm bg-brand-card">
+
+                                                            <option value="percentage"
+                                                                <%=offer?.discountType==="percentage" ? "selected" : ""
+                                                                %>>
+                                                                Percentage (%)
+                                                            </option>
+
+                                                            <option value="fixed" <%=offer?.discountType==="fixed"
+                                                                ? "selected" : "" %>>
+                                                                Fixed Amount
+                                                            </option>
+
+                                                        </select>
+
+                                                        <svg class="select-icon w-4 h-4" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M19 9l-7 7-7-7">
+                                                            </path>
+                                                        </svg>
+                                                    </div>
+
+                                                    <p id="discountTypeError" class="text-red-500 text-xs mt-1"></p>
+
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="block text-[13px] font-medium text-gray-700 mb-1.5">Discount
+                                                        Value</label>
+                                                    <input type="number" name="discountValue"
+                                                        value="<%= offer?.discountValue || '' %>"
+                                                        class="w-full border border-brand-border rounded-xl px-4 py-2.5 text-sm text-brand-dark focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent shadow-sm bg-brand-card">
+                                                    <p id="discountValueError" class="text-red-500 text-xs mt-1"></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Dates Row -->
+                                            <div class="grid grid-cols-2 gap-5">
+                                                <div>
+                                                    <label
+                                                        class="block text-[13px] font-medium text-gray-700 mb-1.5">Start
+                                                        Date</label>
+                                                    <div class="date-input-wrapper shadow-sm rounded-xl relative">
+                                                        <input type="date" name="startDate"
+                                                            value="<%= offer ? offer.startDate.toISOString().split('T')[0] : '' %>"
+                                                            class="w-full border border-brand-border rounded-xl pl-4 pr-10 py-2.5 text-sm text-brand-dark placeholder-gray-400 focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent bg-brand-card relative z-10 bg-transparent">
+                                                        <!-- Visual Placeholder/Text underneath transparent input -->
+                                                        <svg class="date-icon w-4 h-4 z-20" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                            </path>
+                                                        </svg>
+                                                        <p id="startDateError" class="text-red-500 text-xs mt-1"></p>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="block text-[13px] font-medium text-gray-700 mb-1.5">End
+                                                        Date</label>
+                                                    <div class="date-input-wrapper shadow-sm rounded-xl relative">
+                                                        <input type="date" name="expiryDate"
+                                                            value="<%= offer ? offer.expiryDate.toISOString().split('T')[0] : '' %>"
+                                                            class="w-full border border-brand-border rounded-xl pl-4 pr-10 py-2.5 text-sm text-brand-dark placeholder-gray-400 focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent bg-brand-card relative z-10 bg-transparent">
+                                                        <svg class="date-icon w-4 h-4 z-20" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                            </path>
+                                                        </svg>
+                                                        <p id="expiryDateError" class="text-red-500 text-xs mt-1"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column: Target & Preview (col-span-5) -->
+                                <div class="lg:col-span-5 space-y-6">
+
+                                    <!-- Card 2: Offer Target -->
+                                    <div
+                                        class="bg-brand-card rounded-[20px] p-7 shadow-soft border border-brand-border/60">
+                                        <div class="flex items-center gap-2.5 mb-6">
+                                            <div
+                                                class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-brand-accent">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+                                            <h2 class="text-[17px] font-semibold text-brand-dark">Offer Target</h2>
+                                        </div>
+
+                                        <div class="space-y-5">
+                                            <!-- Offer Type -->
+                                            <div>
+                                                <label class="block text-[13px] font-medium text-gray-700 mb-1.5">
+                                                    Offer Type
+                                                </label>
+
+                                                <div class="select-wrapper shadow-sm rounded-xl">
+                                                    <select id="offerType" name="offerType"
+                                                        class="w-full border border-brand-border rounded-xl pl-4 pr-10 py-2.5 text-sm bg-brand-card">
+
+                                                        <option value="product" <%=offer?.offerType==="product"
+                                                            ? "selected" : "" %>>
+                                                            Product Offer
+                                                        </option>
+
+                                                        <option value="category" <%=offer?.offerType==="category"
+                                                            ? "selected" : "" %>>
+                                                            Category Offer
+                                                        </option>
+
+                                                    </select>
+
+                                                    <svg class="select-icon w-4 h-4" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                    </svg>
+                                                </div>
+                                                <p id="offerTypeError" class="text-red-500 text-xs mt-1"></p>
+                                            </div>
+
+                                            <!-- Select Products (Tag Input) -->
+                                            <div id="productSection">
+
+                                                <label class="block text-[13px] font-medium text-gray-700 mb-1.5">
+                                                    Product
+                                                </label>
+
+                                                <select name="products" id="products" multiple
+                                                    class="w-full border border-brand-border rounded-xl px-4 py-2.5">
+
+
+
+                                                    <% products.forEach(product=> { %>
+
+                                                        <option value="<%= product._id %>" <%=offer?.products?.some(id=>
+                                                            id.toString() === product._id.toString()) ? "selected" : ""
+                                                            %>>
+
+                                                            <%= product.productName %>
+
+                                                        </option>
+
+                                                        <% }) %>
+
+                                                </select>
+                                                <p id="productsError" class="text-red-500 text-xs mt-1"></p>
+
+                                            </div>
+                                            <!-- category section -->
+                                            <div id="categorySection"
+                                                class="<%= offer?.offerType==='category' ? '' : 'hidden' %>">
+
+                                                <label class="block text-[13px] font-medium text-gray-700 mb-1.5">
+                                                    Category
+                                                </label>
+
+                                                <select name="categories" id="categories" multiple
+                                                    class="w-full border border-brand-border rounded-xl px-4 py-2.5">
+
+                                                    <% categories.forEach(category=> { %>
+
+                                                        <option value="<%= category._id %>"
+                                                            <%=offer?.categories?.some(id=> id.toString() ===
+                                                            category._id.toString()) ? "selected" : "" %>>
+
+                                                            <%= category.name %>
+
+                                                        </option>
+
+                                                        <% }) %>
+                                                </select>
+                                                <p id="categoriesError" class="text-red-500 text-xs mt-1"></p>
+                                            </div>
+                                            <!-- Max Discount -->
+                                            <div>
+                                                <label class="block text-[13px] font-medium text-gray-700 mb-1.5">Max
+                                                    Discount Amount</label>
+                                                <div class="relative shadow-sm rounded-xl">
+                                                    <div
+                                                        class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                                        <span class="text-gray-500 text-sm">$</span>
+                                                    </div>
+                                                    <input type="number" name="maxDiscountAmount"
+                                                        value="<%= offer?.maxDiscountAmount || '' %>"
+                                                        class="w-full border border-brand-border rounded-xl pl-8 pr-4 py-2.5 text-sm text-brand-dark focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent bg-brand-card">
+                                                </div>
+                                                <p id="maxDiscountAmountError" class="text-red-500 text-xs mt-1"></p>
+                                            </div>
+
+                                            <!-- Offer Status Toggle Box -->
+                                            <div
+                                                class="mt-6 border border-brand-border/60 bg-[#fbfaf8] rounded-xl p-4 flex items-center justify-between">
+                                                <div>
+                                                    <div class="text-[14px] font-semibold text-brand-dark">Offer Status
+                                                    </div>
+                                                    <div class="text-[12px] text-gray-500 mt-0.5">Enable or disable this
+                                                        offer immediately</div>
+                                                </div>
+                                                <!-- Toggle Switch -->
+                                                <label class="relative inline-flex items-center cursor-pointer">
+                                                    <input type="checkbox" name="isActive" <%=offer?.isActive
+                                                        ? "checked" : "" %> checked class="sr-only peer">
+                                                    <div
+                                                        class="w-12 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-accent">
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 3: Live Preview -->
+                                    <div
+                                        class="bg-brand-card rounded-[20px] p-7 shadow-soft border border-brand-border/60">
+                                        <h3 class="text-[11px] font-bold text-gray-400 tracking-wider uppercase mb-4">
+                                            Live Preview Summary</h3>
+
+                                        <!-- Preview Box -->
+                                        <div
+                                            class="border-2 border-dashed border-[#e0dcd3] bg-[#fdfcf9] rounded-2xl p-5 flex gap-4">
+                                            <!-- Icon Box -->
+                                            <div
+                                                class="w-14 h-14 rounded-xl bg-[#f2ecdf] text-brand-accent flex items-center justify-center flex-shrink-0">
+                                                <span class="text-2xl font-bold">%</span>
+                                            </div>
+                                            <!-- Content -->
+                                            <div class="flex-1">
+                                                <div class="text-lg font-bold text-brand-dark leading-tight">20% OFF
+                                                </div>
+                                                <div class="text-[14px] font-medium text-brand-dark mt-1">Summer
+                                                    Clearance Campaign</div>
+                                                <div class="text-[12px] text-gray-500 mt-1.5 flex items-center gap-1.5">
+                                                    Valid for Selected Products • Max $500 cap
+                                                </div>
+                                                <div class="text-[11px] text-gray-400 mt-3 flex items-center gap-1.5">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                        </path>
+                                                    </svg>
+                                                    Oct 24, 2023 - Nov 24, 2023
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="mt-8 flex justify-end items-center gap-4 border-t border-gray-200/60 pt-6">
+
+                                <a href="/couponManagement/offers"
+                                    class="px-6 py-2.5 text-sm font-medium text-gray-600 hover:text-brand-dark transition-colors bg-transparent border-transparent focus:outline-none">
+
+                                    Cancel
+
+                                </a>
+                                <button type="submit"
+                                    class="px-7 py-2.5 bg-brand-accent hover:bg-brand-accent-hover text-white text-sm font-medium rounded-xl shadow-btn transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-accent">
+                                    <%= offer ? "Update Offer" : "Create Offer" %>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Bottom Action Buttons -->
+
+                    </div>
+                </div>
+            </main>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const offerType = document.getElementById("offerType");
+
+            const product = document.getElementById("productSection");
+
+            const category = document.getElementById("categorySection");
+
+            function toggle() {
+
+                if (offerType.value === "product") {
+
+                    product.classList.remove("hidden");
+
+                    category.classList.add("hidden");
+
+                } else {
+
+                    category.classList.remove("hidden");
+
+                    product.classList.add("hidden");
+
+                }
+
+            }
+
+            toggle();
+
+            offerType.addEventListener("change", toggle);
+
+        });
+
+
+
+        new TomSelect("#products", {
+            plugins: ["remove_button"],
+            create: false,
+            persist: false,
+            closeAfterSelect: false,
+            hideSelected: true,
+            placeholder: "Select Products..."
+        });
+
+        new TomSelect("#categories", {
+            plugins: ["remove_button"],
+            create: false,
+            persist: false,
+            closeAfterSelect: false,
+            hideSelected: true,
+            placeholder: "Select Categories..."
+        });
+
+
+        // ===================
+
+        const form = document.getElementById("offerForm");
+
+        form.addEventListener("submit", submitOffer);
+
+        async function submitOffer(e) {
+
+            e.preventDefault();
+
+            clearErrors();
+
+            const formData = new FormData(form);
+
+            const data = {
+                ...Object.fromEntries(formData.entries()),
+                products: formData.getAll("products"),
+                categories: formData.getAll("categories")
+            }
+
+            try {
+
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success",
+                        text: result.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location = "/couponManagement/offers";
+                    });
+
+                    return;
+                }
+
+                if (!response.ok) {
+
+                    if (result.errors) {
+
+                        showErrors(result.errors);
+
+                        return;
+                    }
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: result.message || "Something went wrong"
+                    });
+
+                    return;
+                }
+            }
+
+            catch (error) {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Something went wrong"
+                })
+
+            }
+
+        }
+        function showErrors(errors) {
+
+            Object.keys(errors).forEach(field => {
+
+                const errorField = document.getElementById(field + "Error");
+
+                if (errorField) {
+                    errorField.innerText = errors[field];
+                }
+
+                const input = document.querySelector(`[name="${field}"]`);
+
+                if (input) {
+
+                    const wrapper = input.tomselect
+                        ? input.tomselect.wrapper
+                        : input;
+
+                    wrapper.classList.add("border-red-500");
+                }
+
+            });
+
+        }
+        function clearErrors() {
+
+            document.querySelectorAll("[id$='Error']").forEach(error => {
+
+                error.innerText = "";
+
+            });
+
+            document.querySelectorAll("input, textarea, select").forEach(input => {
+
+                const wrapper = input.tomselect
+                    ? input.tomselect.wrapper
+                    : input;
+
+                wrapper.classList.remove(
+                    "border-red-500",
+                    "focus:border-red-500"
+                );
+
+            });
+
+        }
+
+        document.querySelectorAll("input, textarea, select").forEach(input => {
+
+            const clearField = () => {
+
+                const error = document.getElementById(input.name + "Error");
+
+                if (error) {
+
+                    error.innerText = "";
+
+                }
+
+                const wrapper = input.tomselect
+                    ? input.tomselect.wrapper
+                    : input;
+
+                wrapper.classList.remove(
+                    "border-red-500",
+                    "focus:border-red-500"
+                );
+            };
+
+            input.addEventListener("input", clearField);
+
+            input.addEventListener("change", clearField);
+
+        });
+    </script>
+</body>
+
+</html>

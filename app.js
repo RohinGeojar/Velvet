@@ -6,10 +6,8 @@ import expressLayouts from "express-ejs-layouts";
 import dotenv from "dotenv";
 import MongoStore from "connect-mongo";
 import { connectDB } from "./config/db.js";
-import "dotenv/config";
-import flash from "connect-flash";
+import "dotenv/config"
 import passport from "./config/passport.js";
-import { setAdmin } from "./middleware/admin/authMiddilware.js";
 import authRoutes from "./routes/user/authRoutes.js"
 import profileRoutes from "./routes/user/profileRoutes.js"
 import addressRoutes from "./routes/user/addressRoutes.js"
@@ -53,7 +51,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash())
+
 app.use((req, res, next) => {
 
     res.locals.currentPath =
@@ -62,17 +60,14 @@ app.use((req, res, next) => {
     res.locals.category =
         req.query.category || "";
 
-    next();
-});
+    next()
+})
 
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
-  next();
+  next()
 })
-app.use((req, res, next) => {
-    res.locals.messages = req.flash();
-    next();
-});
+
 
 
 app.use("/PageNotFound",(req,res)=> {
@@ -81,9 +76,9 @@ app.use("/PageNotFound",(req,res)=> {
     {
         showNavbar: false,
         showFooter:false
-    }
-);
-} );
+   }
+)
+} )
 app.use("/",authRoutes );
 app.use("/profile", profileRoutes);
 app.use("/address",addressRoutes)
@@ -99,4 +94,4 @@ app.use("/order",orderRoutes)
 
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
-});
+})

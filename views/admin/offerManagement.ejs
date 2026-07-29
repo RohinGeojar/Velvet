@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-gray-50">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,8 @@
     <!-- Google Fonts - Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Custom Style Config -->
@@ -40,284 +42,780 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+
         /* Custom scrollbar for premium feel */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #c7b29a;
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #8c6239;
         }
     </style>
 </head>
+
 <body class="h-full flex flex-col overflow-hidden  text-textDark">
 
-    
+
     <!-- Toast Notification Banner -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
     <!-- Main Shell Layout -->
     <div class="flex h-full ml-[250px] overflow-hidden">
-        
-          <%- include("../partials/admin/adminSidebar") %>
-      
+
+        <%- include("../partials/admin/adminSidebar") %>
 
 
-        <!-- Mobile Drawer Navigation Overlay -->
-        <div id="mobile-sidebar" class="fixed inset-0 z-40 hidden md:hidden" role="dialog" aria-modal="true">
-            <div class="fixed inset-0 bg-gray-600/75" onclick="toggleMobileSidebar()"></div>
-            <div class="fixed inset-y-0 left-0 flex w-full max-w-xs flex-col bg-bgSidebar py-4 shadow-xl">
-                <div class="flex items-center justify-between px-6 pb-4 border-b border-gray-200">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-[#8C6239] rounded-lg flex items-center justify-center text-white">
-                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+
+            <!-- Mobile Drawer Navigation Overlay -->
+            <div id="mobile-sidebar" class="fixed inset-0 z-40 hidden md:hidden" role="dialog" aria-modal="true">
+                <div class="fixed inset-0 bg-gray-600/75" onclick="toggleMobileSidebar()"></div>
+                <div class="fixed inset-y-0 left-0 flex w-full max-w-xs flex-col bg-bgSidebar py-4 shadow-xl">
+                    <div class="flex items-center justify-between px-6 pb-4 border-b border-gray-200">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-[#8C6239] rounded-lg flex items-center justify-center text-white">
+                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                            </div>
+                            <span class="text-base font-bold text-primary">Velvet Vogue</span>
                         </div>
-                        <span class="text-base font-bold text-primary">Velvet Vogue</span>
+                        <button onclick="toggleMobileSidebar()" class="rounded-md p-1 text-gray-500 hover:bg-gray-100">
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
                     </div>
-                    <button onclick="toggleMobileSidebar()" class="rounded-md p-1 text-gray-500 hover:bg-gray-100">
-                        <i data-lucide="x" class="w-6 h-6"></i>
-                    </button>
-                </div>
-                <nav class="flex-1 space-y-1 px-4 py-4 overflow-y-auto">
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
-                        <i data-lucide="shopping-bag" class="w-4 h-4"></i> Products
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
-                        <i data-lucide="shopping-cart" class="w-4 h-4"></i> Orders
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
-                        <i data-lucide="users" class="w-4 h-4"></i> Users
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
-                        <i data-lucide="folder" class="w-4 h-4"></i> Categories
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
-                        <i data-lucide="ticket" class="w-4 h-4"></i> Coupons
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
-                        <i data-lucide="image" class="w-4 h-4"></i> Banners
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
-                        <i data-lucide="trending-up" class="w-4 h-4"></i> Sales Report
-                    </a>
-                    <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium bg-[#8C6239] text-white">
-                        <i data-lucide="tag" class="w-4 h-4"></i> Offers
-                    </a>
-                </nav>
-                <div class="px-4 border-t border-gray-200 pt-4">
-                    <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50">
-                        <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
-                    </button>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- Right Side Frame Content Panel -->
-        <main class="flex-1 flex flex-col h-full overflow-hidden bg-bgMain">
-            <!-- Header Bar -->
-            <header class="h-16 flex items-center justify-between px-6 bg-white border-b border-gray-200">
-                <!-- Hamburger and Global Search Group -->
-                <div class="flex items-center gap-4 flex-1">
-                    <button onclick="toggleMobileSidebar()" class="md:hidden p-1.5 rounded-lg hover:bg-gray-100 text-gray-500">
-                        <i data-lucide="menu" class="w-6 h-6"></i>
-                    </button>
-                    <!-- Beautiful Custom Global Search -->
-                    <div class="relative w-full max-w-md hidden sm:block">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                            <i data-lucide="search" class="w-4 h-4"></i>
-                        </div>
-                        <input type="text" placeholder="Search anything..." class="w-full max-w-md bg-gray-50 border border-gray-200 rounded-full pl-10 pr-4 py-1.5 text-sm outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primaryLight transition-all">
-                    </div>
-                </div>
-
-                <!-- Profile and Notification Group -->
-                <div class="flex items-center gap-4">
-                    <!-- Notification Bell -->
-                    <div class="relative cursor-pointer p-1.5 rounded-full hover:bg-gray-100 text-gray-600 transition-all">
-                        <i data-lucide="bell" class="w-5 h-5"></i>
-                        <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-                    </div>
-
-                    <div class="h-8 w-[1px] bg-gray-200"></div>
-
-                    <!-- User Information Info Grid -->
-                    <div class="flex items-center gap-3">
-                        <div class="hidden lg:flex flex-col text-right">
-                            <span class="text-xs font-semibold text-textDark">Rohin Geojar</span>
-                            <span class="text-[10px] text-textMuted uppercase font-bold tracking-wider">Administrator</span>
-                        </div>
-                        <img class="w-9 h-9 rounded-full object-cover border-2 border-primaryLight shadow-sm" src="https://placehold.co/100x100/8C6239/ffffff?text=RG" alt="User Avatar">
-                    </div>
-                </div>
-            </header>
-
-
-            <!-- Scrollable Content Viewport -->
-            <div class="flex-1 overflow-y-auto p-6 md:p-8 space-y-8">
-                <!-- Breadcrumbs & Document Info -->
-                <div>
-                    <nav class="flex items-center gap-2 text-xs text-textMuted font-medium mb-2">
-                        <span class="hover:text-primary cursor-pointer transition">Dashboard</span>
-                        <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                        <span class="hover:text-primary cursor-pointer transition">Marketing</span>
-                        <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                        <span class="text-[#8C6239] font-semibold">Offers</span>
+                    <nav class="flex-1 space-y-1 px-4 py-4 overflow-y-auto">
+                        <a href="#"
+                            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
+                            <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+                        </a>
+                        <a href="#"
+                            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
+                            <i data-lucide="shopping-bag" class="w-4 h-4"></i> Products
+                        </a>
+                        <a href="#"
+                            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i> Orders
+                        </a>
+                        <a href="#"
+                            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
+                            <i data-lucide="users" class="w-4 h-4"></i> Users
+                        </a>
+                        <a href="#"
+                            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
+                            <i data-lucide="folder" class="w-4 h-4"></i> Categories
+                        </a>
+                        <a href="#"
+                            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
+                            <i data-lucide="ticket" class="w-4 h-4"></i> Coupons
+                        </a>
+                        <a href="#"
+                            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
+                            <i data-lucide="image" class="w-4 h-4"></i> Banners
+                        </a>
+                        <a href="#"
+                            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-textMuted hover:bg-white/50">
+                            <i data-lucide="trending-up" class="w-4 h-4"></i> Sales Report
+                        </a>
+                        <a href="#"
+                            class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium bg-[#8C6239] text-white">
+                            <i data-lucide="tag" class="w-4 h-4"></i> Offers
+                        </a>
                     </nav>
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div>
-                            <h2 class="text-2xl font-bold tracking-tight text-textDark md:text-3xl">Offer Management</h2>
-                            <p class="text-sm text-textMuted mt-1">Manage product-based and category-based promotional offers.</p>
-                        </div>
-                        <!-- Secondary mobile-friendly Create Button -->
-                        <button onclick="openCreateModal()" class="sm:hidden flex items-center justify-center gap-2 bg-[#8C6239] text-white px-4 py-2 rounded-lg font-medium shadow-md hover:bg-[#724f2d] transition-all">
-                            <i data-lucide="plus" class="w-4 h-4"></i> Create Offer
+                    <div class="px-4 border-t border-gray-200 pt-4">
+                        <button onclick="handleLogout()"
+                            class="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50">
+                            <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
                         </button>
                     </div>
                 </div>
-
-
-                <!-- Stat Cards Grid Section -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Total Offer Stat -->
-                    <div class="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm flex items-center justify-between hover:border-gray-200 transition-all">
-                        <div class="space-y-1">
-                            <span class="text-xs text-textMuted font-medium tracking-wide">Total Offers</span>
-                            <h3 id="stat-total" class="text-3xl font-extrabold text-textDark">128</h3>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center">
-                            <i data-lucide="ticket" class="w-6 h-6"></i>
-                        </div>
-                    </div>
-
-                    <!-- Active Offer Stat -->
-                    <div class="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm flex items-center justify-between hover:border-gray-200 transition-all">
-                        <div class="space-y-1">
-                            <span class="text-xs text-textMuted font-medium tracking-wide">Active Offers</span>
-                            <h3 id="stat-active" class="text-3xl font-extrabold text-textDark">84</h3>
-                        </div>
-                        <div class="w-12 h-12 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center">
-                            <i data-lucide="check-circle" class="w-6 h-6"></i>
-                        </div>
-                    </div>
-
-                    <!-- Expired Offer Stat -->
-                    <div class="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm flex items-center justify-between hover:border-gray-200 transition-all">
-                        <div class="space-y-1">
-                            <span class="text-xs text-textMuted font-medium tracking-wide">Expired Offers</span>
-                            <h3 id="stat-expired" class="text-3xl font-extrabold text-textDark">44</h3>
-                        </div>
-                        <div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center">
-                            <i data-lucide="clock" class="w-6 h-6"></i>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Offers Central Workspace/Container -->
-                <div class="bg-white border border-gray-150 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-                    
-                    <!-- Table Action Tabs and Control Filters Bar -->
-                    <div class="px-6 border-b border-gray-200 bg-gray-50/50 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 py-4">
-                        
-                        <!-- Tabs -->
-                        <div class="flex gap-2 border-b lg:border-b-0 pb-2 lg:pb-0" id="offer-type-tabs">
-                            <button onclick="switchTab('product')" id="tab-product" class="px-4 py-2 font-semibold text-sm rounded-lg transition-all focus:outline-none border-b-2 border-primary text-[#8C6239] bg-[#F5EFEB]">
-                                Product Offers
-                            </button>
-                            <button onclick="switchTab('category')" id="tab-category" class="px-4 py-2 font-semibold text-sm text-textMuted hover:text-primary rounded-lg transition-all focus:outline-none">
-                                Category Offers
-                            </button>
-                        </div>
-
-                        <!-- Search, Filter, Action Button Container -->
-                        <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-                            <!-- Local Live Search -->
-                            <div class="relative flex-1 sm:w-64">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                    <i data-lucide="search" class="w-4 h-4"></i>
-                                </div>
-                                <input type="text" id="table-search" placeholder="Search offers..." oninput="handleSearch()" class="w-full bg-white border border-gray-300 rounded-lg pl-9 pr-4 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all">
-                            </div>
-
-                            <!-- Filter Dropdown -->
-                            <div class="relative flex items-center bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm text-textMuted cursor-pointer hover:border-gray-400">
-                                <i data-lucide="filter" class="w-4 h-4 mr-2"></i>
-                                <select id="status-filter" onchange="handleStatusFilter()" class="bg-transparent border-none text-textDark outline-none cursor-pointer text-sm font-medium pr-2">
-                                    <option value="ALL">All Status</option>
-                                    <option value="ACTIVE">Active</option>
-                                    <option value="EXPIRED">Expired</option>
-                                </select>
-                            </div>
-
-                            <!-- Add Offer Action Button -->
-                            <button onclick="openCreateModal()" class="hidden sm:flex items-center gap-2 bg-[#8C6239] text-white px-4 py-2 rounded-lg font-medium shadow hover:bg-[#724f2d] transition-all">
-                                <i data-lucide="plus" class="w-4 h-4"></i> Create Offer
-                            </button>
-                        </div>
-                    </div>
-
-
-                    <!-- Main Dynamic Content Table Wrapper -->
-                    <div class="overflow-x-auto min-h-[300px]">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 border-b border-gray-200 text-[11px] font-bold tracking-wider text-textMuted select-none">
-                                    <th class="px-6 py-4" id="col-target-type">PRODUCT</th>
-                                    <th class="px-6 py-4">OFFER NAME</th>
-                                    <th class="px-6 py-4">DISCOUNT</th>
-                                    <th class="px-6 py-4">END DATE</th>
-                                    <th class="px-6 py-4">STATUS</th>
-                                    <th class="px-6 py-4 text-right">ACTIONS</th>
-                                </tr>
-                            </thead>
-                            <tbody id="offers-table-body" class="divide-y divide-gray-100 text-sm">
-                                <!-- Generated Dynamic Table Rows here -->
-                            </tbody>
-                        </table>
-                        <!-- Empty State View -->
-                        <div id="table-empty-state" class="hidden flex-col items-center justify-center p-12 text-center text-gray-400">
-                            <i data-lucide="inbox" class="w-12 h-12 stroke-1 mb-3"></i>
-                            <p class="font-semibold text-textDark text-base">No offers found</p>
-                            <p class="text-xs text-textMuted max-w-xs mt-1">Try adapting your search parameters or make a fresh promotion right away.</p>
-                        </div>
-                    </div>
-
-
-                    <!-- Footer Pagination Row -->
-                    <div class="px-6 py-4 border-t border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <span id="pagination-summary" class="text-xs text-textMuted font-medium">
-                            Showing 1 to 10 of 128 results
-                        </span>
-                        
-                        <div class="flex items-center gap-1.5" id="pagination-controls">
-                            <!-- Prev, Next & Page Number Badges -->
-                        </div>
-                    </div>
-
-                </div>
             </div>
-        </main>
+
+
+            <!-- Right Side Frame Content Panel -->
+            <main class="flex-1 flex flex-col h-full overflow-hidden bg-bgMain">
+                <!-- Header Bar -->
+                <header class="h-16 flex items-center justify-between px-6 bg-white border-b border-gray-200">
+                    <!-- Hamburger and Global Search Group -->
+                    <div class="flex items-center gap-4 flex-1">
+                        <button onclick="toggleMobileSidebar()"
+                            class="md:hidden p-1.5 rounded-lg hover:bg-gray-100 text-gray-500">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
+                        </button>
+                        <!-- Beautiful Custom Global Search -->
+                        <div class="relative w-full max-w-md hidden sm:block">
+                            <div
+                                class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                                <i data-lucide="search" class="w-4 h-4"></i>
+                            </div>
+                            <input type="text" placeholder="Search anything..."
+                                class="w-full max-w-md bg-gray-50 border border-gray-200 rounded-full pl-10 pr-4 py-1.5 text-sm outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primaryLight transition-all">
+                        </div>
+                    </div>
+
+                    <!-- Profile and Notification Group -->
+                    <div class="flex items-center gap-4">
+                        <!-- Notification Bell -->
+                        <div
+                            class="relative cursor-pointer p-1.5 rounded-full hover:bg-gray-100 text-gray-600 transition-all">
+                            <i data-lucide="bell" class="w-5 h-5"></i>
+                            <span
+                                class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                        </div>
+
+                        <div class="h-8 w-[1px] bg-gray-200"></div>
+
+                        <!-- User Information Info Grid -->
+                        <div class="flex items-center gap-3">
+                            <div class="hidden lg:flex flex-col text-right">
+                                <span class="text-xs font-semibold text-textDark">Rohin Geojar</span>
+                                <span
+                                    class="text-[10px] text-textMuted uppercase font-bold tracking-wider">Administrator</span>
+                            </div>
+                            <img class="w-9 h-9 rounded-full object-cover border-2 border-primaryLight shadow-sm"
+                                src="https://placehold.co/100x100/8C6239/ffffff?text=RG" alt="User Avatar">
+                        </div>
+                    </div>
+                </header>
+
+
+                <!-- Scrollable Content Viewport -->
+                <div class="flex-1 overflow-y-auto p-6 md:p-8 space-y-8">
+                    <!-- Breadcrumbs & Document Info -->
+                    <div>
+                        <nav class="flex items-center gap-2 text-xs text-textMuted font-medium mb-2">
+                            <span class="hover:text-primary cursor-pointer transition">Dashboard</span>
+                            <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                            <span class="hover:text-primary cursor-pointer transition">Marketing</span>
+                            <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                            <span class="text-[#8C6239] font-semibold">Offers</span>
+                        </nav>
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold tracking-tight text-textDark md:text-3xl">Offer Management
+                                </h2>
+                                <p class="text-sm text-textMuted mt-1">Manage product-based and category-based
+                                    promotional offers.</p>
+                            </div>
+                            <!-- Secondary mobile-friendly Create Button -->
+                            <a href="/couponManagement/offers/create"
+                                class="hidden sm:inline-flex items-center gap-2 bg-[#8C6239] text-white px-4 py-2 rounded-lg font-medium shadow hover:bg-[#724f2d] transition-all">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                Create Offer
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <!-- Stat Cards Grid Section -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+                        <!-- Total -->
+                        <a href="/couponManagement/offers?search=<%= search %>&offerType=<%= offerType %>&sort=<%= sort %>"
+                            class="bg-white border rounded-2xl p-5 shadow-sm flex items-center justify-between hover:shadow-lg transition duration-200 cursor-pointer">
+                            <div>
+                                <p class="text-xs text-gray-500 font-medium">Total Offers</p>
+                                <h2 id="stat-total" class="text-3xl font-bold mt-1">
+                                    <%= dashboard.total %>
+                                </h2>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                                <i data-lucide="ticket-percent" class="w-6 h-6"></i>
+                            </div>
+                        </a>
+
+                        <!-- Active -->
+                        <a href="/couponManagement/offers?status=active&search=<%= search %>&offerType=<%= offerType %>&sort=<%= sort %>"
+                            class="bg-white border rounded-2xl p-5 shadow-sm flex items-center justify-between hover:shadow-lg transition duration-200 cursor-pointer">
+                            <div>
+                                <p class="text-xs text-gray-500 font-medium">Active</p>
+                                <h2 id="stat-active" class="text-3xl font-bold mt-1">
+                                    <%= dashboard.active %>
+                                </h2>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-xl bg-green-100 text-green-600 flex items-center justify-center">
+                                <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                            </div>
+                        </a>
+
+                        <!-- Upcoming -->
+                        <a href="/couponManagement/offers?status=upcoming&search=<%= search %>&offerType=<%= offerType %>&sort=<%= sort %>"
+                            class="bg-white border rounded-2xl p-5 shadow-sm flex items-center justify-between hover:shadow-lg transition duration-200 cursor-pointer">
+                            <div>
+                                <p class="text-xs text-gray-500 font-medium">Upcoming</p>
+                                <h2 id="stat-upcoming" class="text-3xl font-bold mt-1">
+                                    <%= dashboard.upcoming %>
+                                </h2>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                                <i data-lucide="calendar-clock" class="w-6 h-6"></i>
+                            </div>
+                        </a>
+
+                        <!-- Blocked -->
+                        <a href="/couponManagement/offers?status=blocked&search=<%= search %>&offerType=<%= offerType %>&sort=<%= sort %>"
+                            class="bg-white border rounded-2xl p-5 shadow-sm flex items-center justify-between hover:shadow-lg transition duration-200 cursor-pointer">
+                            <div>
+                                <p class="text-xs text-gray-500 font-medium">Blocked</p>
+                                <h2 id="stat-blocked" class="text-3xl font-bold mt-1">
+                                    <%= dashboard.blocked %>
+                                </h2>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-xl bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                                <i data-lucide="ban" class="w-6 h-6"></i>
+                            </div>
+                        </a>
+
+                        <!-- Expired -->
+                        <a href="/couponManagement/offers?status=expired&search=<%= search %>&offerType=<%= offerType %>&sort=<%= sort %>"
+                            class="bg-white border rounded-2xl p-5 shadow-sm flex items-center justify-between hover:shadow-lg transition duration-200 cursor-pointer">
+                            <div>
+                                <p class="text-xs text-gray-500 font-medium">Expired</p>
+                                <h2 id="stat-expired" class="text-3xl font-bold mt-1">
+                                    <%= dashboard.expired %>
+                                </h2>
+                            </div>
+                            <div
+                                class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                                <i data-lucide="clock-3" class="w-6 h-6"></i>
+                            </div>
+                        </a>
+
+                        <!-- Deleted -->
+                        <a href="/couponManagement/offers?status=deleted&search=<%= search %>&offerType=<%= offerType %>&sort=<%= sort %>"
+                            class="bg-white border rounded-2xl p-5 shadow-sm flex items-center justify-between hover:shadow-lg transition duration-200 cursor-pointer">
+                            <div>
+                                <p class="text-xs text-gray-500 font-medium">Deleted</p>
+                                <h2 id="stat-deleted" class="text-3xl font-bold mt-1">
+                                    <%= dashboard.deleted %>
+                                </h2>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
+                                <i data-lucide="trash-2" class="w-6 h-6"></i>
+                            </div>
+                        </a>
+
+                    </div>
+
+                    <!-- Offers Central Workspace/Container -->
+                    <div class="bg-white border border-gray-150 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+
+                        <!-- Table Action Tabs and Control Filters Bar -->
+                        <!-- Filter Bar -->
+<!-- ===================== OFFER TOOLBAR ===================== -->
+
+<form
+    id="filterForm"
+    action="/couponManagement/offers"
+    method="GET"
+    class="bg-white border rounded-xl px-5 py-4 flex items-center gap-4">
+
+    <!-- Preserve Selected Offer Type -->
+    <input
+        type="hidden"
+        id="offerTypeInput"
+        name="offerType"
+        value="<%= offerType || 'product' %>">
+
+    <!-- Product / Category Toggle -->
+    <div class="flex rounded-lg overflow-hidden border shrink-0">
+
+        <button
+            type="button"
+            data-type="product"
+            class="offerTab px-5 py-2 text-sm font-medium transition
+            <%= offerType !== 'category'
+                ? 'bg-[#8C6239] text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100' %>">
+
+            Product
+
+        </button>
+
+        <button
+            type="button"
+            data-type="category"
+            class="offerTab px-5 py-2 text-sm font-medium border-l transition
+            <%= offerType === 'category'
+                ? 'bg-[#8C6239] text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100' %>">
+
+            Category
+
+        </button>
+
+    </div>
+
+    <!-- Search -->
+    <div class="relative flex-1">
+
+        <i
+            data-lucide="search"
+            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400">
+        </i>
+
+        <input
+            id="searchInput"
+            type="text"
+            name="search"
+            value="<%= search %>"
+            placeholder="Search offer..."
+            class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6239]">
+
+    </div>
+
+    <!-- Status -->
+    <select
+        id="statusFilter"
+        name="status"
+        class="w-40 px-3 py-2 border rounded-lg">
+
+        <option value="">All Status</option>
+
+        <option value="active"
+            <%= status==="active" ? "selected" : "" %>>
+            Active
+        </option>
+
+        <option value="upcoming"
+            <%= status==="upcoming" ? "selected" : "" %>>
+            Upcoming
+        </option>
+
+        <option value="blocked"
+            <%= status==="blocked" ? "selected" : "" %>>
+            Blocked
+        </option>
+
+        <option value="expired"
+            <%= status==="expired" ? "selected" : "" %>>
+            Expired
+        </option>
+
+        <option value="deleted"
+            <%= status==="deleted" ? "selected" : "" %>>
+            Deleted
+        </option>
+
+    </select>
+
+    <!-- Sort -->
+    <select
+        id="sortFilter"
+        name="sort"
+        class="w-44 px-3 py-2 border rounded-lg">
+
+        <option
+            value="latest"
+            <%= !sort || sort==="latest" ? "selected" : "" %>>
+
+            Latest
+
+        </option>
+
+        <option
+            value="a-z"
+            <%= sort==="a-z" ? "selected" : "" %>>
+
+            A-Z
+
+        </option>
+
+        <option
+            value="z-a"
+            <%= sort==="z-a" ? "selected" : "" %>>
+
+            Z-A
+
+        </option>
+
+        <option
+            value="highest"
+            <%= sort==="highest" ? "selected" : "" %>>
+
+            Highest Discount
+
+        </option>
+
+        <option
+            value="lowest"
+            <%= sort==="lowest" ? "selected" : "" %>>
+
+            Lowest Discount
+
+        </option>
+
+        <option
+            value="start"
+            <%= sort==="start" ? "selected" : "" %>>
+
+            Start Date
+
+        </option>
+
+        <option
+            value="expiry"
+            <%= sort==="expiry" ? "selected" : "" %>>
+
+            Expiry Date
+
+        </option>
+
+    </select>
+
+    <!-- Clear -->
+    <a
+        href="/couponManagement/offers?offerType=<%= offerType || 'product' %>"
+        class="px-5 py-2 border rounded-lg hover:bg-gray-100 transition">
+
+        Clear
+
+    </a>
+
+</form>
+
+
+
+                        <!-- Main Dynamic Content Table Wrapper -->
+                        <div class="overflow-x-auto min-h-[300px]">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr
+                                        class="bg-gray-50 border-b border-gray-200 text-[11px] font-bold tracking-wider text-textMuted select-none">
+                                        <th class="px-6 py-4" id="col-target-type"> <%= offerType === "category" ? "CATEGORY" : "PRODUCT" %></th>
+                                        <th class="px-6 py-4">OFFER NAME</th>
+                                        <th class="px-6 py-4">DISCOUNT</th>
+                                        <th class="px-6 py-4">EXPIERY</th>
+                                        <th class="px-6 py-4">STATUS</th>
+                                        <th class="px-6 py-4 text-center">ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="offers-table-body" class="divide-y divide-gray-100 text-sm">
+                                    <% if (offers.length) { %>
+
+                                        <% offers.forEach(offer=> { %>
+
+                                            <tr class="hover:bg-gray-50 transition-all">
+
+                                                <!-- Product / Category -->
+                                                <td class="py-4 px-6">
+                                                    <% const items=offer.offerType==="product" ? (offer.products || [])
+                                                        : (offer.categories || []); %>
+
+                                                        <% items.slice(0,2).forEach(item=>{ %>
+
+                                                            <p class="font-medium text-gray-800">
+
+                                                                <%= offer.offerType==="product" ? item.productName :
+                                                                    item.name %>
+
+                                                            </p>
+
+                                                            <% }) %>
+
+                                                                <% if(items.length>2){ %>
+
+                                                                    <button onclick="showOfferItems('<%= offer._id %>')"
+                                                                        class="text-xs text-[#704221] hover:underline font-semibold">
+
+                                                                        +<%= items.length-2 %> more
+
+                                                                    </button>
+
+                                                                    <% } %>
+
+                                                </td>
+                                                <!-- Offer Name -->
+                                                <td class="py-4 px-6">
+
+                                                    <p class="font-bold text-[#704221]">
+                                                        <%= offer.offerName %>
+                                                    </p>
+
+                                                    <p class="text-xs text-gray-500 mt-1">
+                                                        <%= offer.offerType==="product" ? "Product Offer"
+                                                            : "Category Offer" %>
+                                                    </p>
+
+                                                </td>
+
+                                                <!-- Discount -->
+                                                <td class="py-4 px-6">
+
+                                                    <span class="font-semibold text-green-700">
+
+                                                        <%= offer.discountValue %>% OFF
+
+                                                    </span>
+
+                                                </td>
+
+                                                <!-- End Date -->
+                                                <td class="py-4 px-6 text-gray-600 font-medium">
+
+                                                    <%= offer.expiryDate.toLocaleDateString("en-IN",{ day:"2-digit",
+                                                        month:"short", year:"numeric" }) %>
+
+                                                </td>
+
+                                                <!-- Status -->
+                                                <td class="py-4 px-6">
+
+                                                    <% if (offer.status==="Active" ) { %>
+
+                                                        <span
+                                                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                                            ACTIVE
+                                                        </span>
+
+                                                        <% } else if (offer.status==="Upcoming" ) { %>
+
+                                                            <span
+                                                                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200">
+                                                                UPCOMING
+                                                            </span>
+
+                                                            <% } else if (offer.status==="Blocked" ) { %>
+
+                                                                <span
+                                                                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700 border border-yellow-200">
+                                                                    BLOCKED
+                                                                </span>
+
+                                                                <% } else if (offer.status==="Expired" ) { %>
+
+                                                                    <span
+                                                                        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-700 border border-orange-200">
+                                                                        EXPIRED
+                                                                    </span>
+
+                                                                    <% } else { %>
+
+                                                                        <span
+                                                                            class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-200">
+                                                                            DELETED
+                                                                        </span>
+
+                                                                        <% } %>
+
+                                                </td>
+
+                                                <!-- Actions -->
+                                                <td class="px-6 py-4">
+
+    <div class="flex items-center justify-center gap-2">
+
+        <!-- View -->
+       <button
+    onclick="openOfferModal(this)"
+    data-id="<%= offer._id %>"
+    data-offer-name="<%= offer.offerName %>"
+    data-offer-type="<%= offer.offerType %>"
+    data-apply='<%= JSON.stringify(
+    offer.offerType === "product"
+        ? offer.products.map(product => product.productName)
+        : offer.categories.map(category => category.name)
+) %>'
+    data-discount="<%= offer.discountValue %>"
+    data-start="<%= new Date(offer.startDate).toLocaleDateString('en-IN') %>"
+    data-expiry="<%= new Date(offer.expiryDate).toLocaleDateString('en-IN') %>"
+    data-status="<%= offer.status %>"
+    class="w-9 h-9 rounded-lg border flex items-center justify-center text-blue-600 hover:bg-blue-50">
+
+    <i data-lucide="eye" class="w-4 h-4"></i>
+
+</button>
+
+        <!-- Edit -->
+        <a
+            href="/couponManagement/offers/edit/<%= offer._id %>"
+            class="w-9 h-9 rounded-lg border flex items-center justify-center text-amber-600 hover:bg-amber-50 transition"
+            title="Edit">
+
+            <i data-lucide="square-pen" class="w-4 h-4"></i>
+
+        </a>
+
+        <!-- Block / Unblock -->
+        <% if(offer.isActive){ %>
+
+            <button
+                class="w-9 h-9 rounded-lg border flex items-center justify-center text-orange-600 hover:bg-orange-50 transition"
+                title="Block"
+                onclick="blockOffer('<%= offer._id %>')">
+
+                <i data-lucide="ban" class="w-4 h-4"></i>
+
+            </button>
+
+        <% } else { %>
+
+            <button
+                class="w-9 h-9 rounded-lg border flex items-center justify-center text-green-600 hover:bg-green-50 transition"
+                title="Unblock"
+                onclick="unblockOffer('<%= offer._id %>')">
+
+                <i data-lucide="check" class="w-4 h-4"></i>
+
+            </button>
+
+        <% } %>
+
+        <!-- Delete -->
+        <button
+            class="w-9 h-9 rounded-lg border flex items-center justify-center text-red-600 hover:bg-red-50 transition"
+            title="Delete"
+            onclick="deleteOffer('<%= offer._id %>')">
+
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+
+        </button>
+
+    </div>
+
+</td>
+
+                                            </tr>
+
+                                            <% }) %>
+
+                                                <% } else { %>
+
+                                                    <tr>
+
+                                                        <td colspan="6" class="py-16 text-center">
+
+                                                            <i data-lucide="ticket-percent"
+                                                                class="w-12 h-12 mx-auto text-gray-300 mb-4"></i>
+
+                                                            <h3 class="text-lg font-semibold text-gray-700">
+                                                                No Offers Found
+                                                            </h3>
+
+                                                            <p class="text-sm text-gray-500 mt-2">
+                                                                Create your first offer to start promoting products or
+                                                                categories.
+                                                            </p>
+
+                                                        </td>
+
+                                                    </tr>
+
+                                                    <% } %>
+
+
+                                                        <!-- Generated Dynamic Table Rows here -->
+                                </tbody>
+                            </table>
+                            <!-- Empty State View -->
+                            <div id="table-empty-state"
+                                class="hidden flex-col items-center justify-center p-12 text-center text-gray-400">
+                                <i data-lucide="inbox" class="w-12 h-12 stroke-1 mb-3"></i>
+                                <p class="font-semibold text-textDark text-base">No offers found</p>
+                                <p class="text-xs text-textMuted max-w-xs mt-1">Try adapting your search parameters or
+                                    make a fresh promotion right away.</p>
+                            </div>
+                        </div>
+
+
+                        <!-- Footer Pagination Row -->
+<% if (totalPages > 1) { %>
+
+<div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+
+    <p class="text-sm text-gray-600">
+
+        Showing
+
+        <strong><%= (currentPage - 1) * limit + 1 %></strong>
+
+        -
+
+        <strong><%= Math.min(currentPage * limit, totalOffers) %></strong>
+
+        of
+
+        <strong><%= totalOffers %></strong>
+
+        offers
+
+    </p>
+    
+
+    <div class="flex items-center gap-2">
+
+        <% if(currentPage > 1){ %>
+
+            <a
+                href="?page=<%= currentPage-1 %>&offerType=<%= offerType %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                class="w-10 h-10 rounded-lg border flex items-center justify-center hover:bg-gray-100">
+
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+
+            </a>
+
+        <% } %>
+
+        <% for(let i=1;i<=totalPages;i++){ %>
+
+            <a
+                href="?page=<%= i %>&offerType=<%= offerType %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                class="w-10 h-10 rounded-lg border flex items-center justify-center transition
+                <%= currentPage === i
+                    ? 'bg-[#8C6239] text-white border-[#8C6239]'
+                    : 'hover:bg-gray-100' %>">
+
+                <%= i %>
+
+            </a>
+
+        <% } %>
+
+        <% if(currentPage < totalPages){ %>
+
+            <a
+                href="?page=<%= currentPage+1 %>&offerType=<%= offerType %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                class="w-10 h-10 rounded-lg border flex items-center justify-center hover:bg-gray-100">
+
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+
+            </a>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+<% } %>
+
+                    </div>
+                </div>
+            </main>
     </div>
 
 
     <!-- Form Modal (Unified Create/Edit Offer Dialog) -->
     <div id="offer-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
         <!-- Backdrop Backdrop -->
-        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeFormModal()"></div>
-        
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeFormModal()">
+        </div>
+
         <!-- Modal Center Window -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
+        <div
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
             <!-- Modal Header -->
             <div class="bg-primaryLight p-6 border-b border-gray-200/50 flex justify-between items-center">
                 <div class="flex items-center gap-3">
@@ -326,10 +824,12 @@
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-[#8C6239]" id="modal-title">Create New Offer</h3>
-                        <p class="text-xs text-textMuted" id="modal-subtitle">Setup customizable discounts for active sales campaigns.</p>
+                        <p class="text-xs text-textMuted" id="modal-subtitle">Setup customizable discounts for active
+                            sales campaigns.</p>
                     </div>
                 </div>
-                <button onclick="closeFormModal()" class="text-gray-400 hover:text-gray-600 rounded-lg p-1.5 hover:bg-gray-100 transition-all">
+                <button onclick="closeFormModal()"
+                    class="text-gray-400 hover:text-gray-600 rounded-lg p-1.5 hover:bg-gray-100 transition-all">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
@@ -340,12 +840,15 @@
 
                 <!-- Target Category / Product Tab Switcher Inside Form -->
                 <div>
-                    <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Campaign Category Type</label>
+                    <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Campaign Category
+                        Type</label>
                     <div class="grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-xl">
-                        <button type="button" onclick="setFormType('product')" id="form-type-product" class="py-2 text-xs font-semibold rounded-lg text-center transition-all bg-white text-[#8C6239] shadow-sm">
+                        <button type="button" onclick="setFormType('product')" id="form-type-product"
+                            class="py-2 text-xs font-semibold rounded-lg text-center transition-all bg-white text-[#8C6239] shadow-sm">
                             Product Offer
                         </button>
-                        <button type="button" onclick="setFormType('category')" id="form-type-category" class="py-2 text-xs font-semibold rounded-lg text-center transition-all text-textMuted hover:text-[#8C6239]">
+                        <button type="button" onclick="setFormType('category')" id="form-type-category"
+                            class="py-2 text-xs font-semibold rounded-lg text-center transition-all text-textMuted hover:text-[#8C6239]">
                             Category Offer
                         </button>
                     </div>
@@ -353,50 +856,63 @@
 
                 <!-- Targeted Target Field (Product or Category Select input dependently) -->
                 <div>
-                    <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2" id="form-label-target">Product Selection</label>
+                    <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2"
+                        id="form-label-target">Product Selection</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                             <i data-lucide="shopping-bag" id="form-target-icon" class="w-4 h-4"></i>
                         </div>
-                        <input type="text" id="form-target-name" required placeholder="Enter Product Name (e.g. Silk Midi Dress)" class="w-full bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all">
+                        <input type="text" id="form-target-name" required
+                            placeholder="Enter Product Name (e.g. Silk Midi Dress)"
+                            class="w-full bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all">
                     </div>
                 </div>
 
                 <!-- Custom Campaign Name -->
                 <div>
-                    <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Offer Campaign Name</label>
+                    <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Offer Campaign
+                        Name</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                             <i data-lucide="edit-3" class="w-4 h-4"></i>
                         </div>
-                        <input type="text" id="form-offer-name" required placeholder="Summer Flash, Clearance 2026..." class="w-full bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all">
+                        <input type="text" id="form-offer-name" required placeholder="Summer Flash, Clearance 2026..."
+                            class="w-full bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all">
                     </div>
                 </div>
 
                 <!-- Discount Matrix & Value Combo Section -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Discount Type</label>
-                        <select id="form-discount-type" onchange="adaptDiscountInputPlaceholder()" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all font-medium">
+                        <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Discount
+                            Type</label>
+                        <select id="form-discount-type" onchange="adaptDiscountInputPlaceholder()"
+                            class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all font-medium">
                             <option value="PERCENTAGE">Percentage (% Off)</option>
                             <option value="FIXED">Fixed Price Discount ($)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2" id="form-label-discount-val">Discount Value</label>
-                        <input type="number" id="form-discount-val" required min="1" placeholder="25" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all">
+                        <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2"
+                            id="form-label-discount-val">Discount Value</label>
+                        <input type="number" id="form-discount-val" required min="1" placeholder="25"
+                            class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all">
                     </div>
                 </div>
 
                 <!-- Date & Initial Status Inputs Group -->
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Campaign End Date</label>
-                        <input type="date" id="form-end-date" required class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all">
+                        <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Campaign End
+                            Date</label>
+                        <input type="date" id="form-end-date" required
+                            class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Initial Campaign Status</label>
-                        <select id="form-status" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all font-semibold">
+                        <label class="block text-xs font-bold text-textDark uppercase tracking-wider mb-2">Initial
+                            Campaign Status</label>
+                        <select id="form-status"
+                            class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primaryLight outline-none transition-all font-semibold">
                             <option value="ACTIVE">ACTIVE</option>
                             <option value="EXPIRED">EXPIRED</option>
                         </select>
@@ -405,10 +921,12 @@
 
                 <!-- Footer Modals CTA Buttons -->
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-150">
-                    <button type="button" onclick="closeFormModal()" class="px-4 py-2 text-sm font-semibold text-textMuted bg-gray-50 rounded-lg border border-gray-300 hover:bg-gray-100 transition-all">
+                    <button type="button" onclick="closeFormModal()"
+                        class="px-4 py-2 text-sm font-semibold text-textMuted bg-gray-50 rounded-lg border border-gray-300 hover:bg-gray-100 transition-all">
                         Cancel
                     </button>
-                    <button type="submit" class="px-5 py-2 text-sm font-semibold bg-[#8C6239] hover:bg-[#724f2d] text-white rounded-lg shadow-md transition-all">
+                    <button type="submit"
+                        class="px-5 py-2 text-sm font-semibold bg-[#8C6239] hover:bg-[#724f2d] text-white rounded-lg shadow-md transition-all">
                         Save Offer Campaign
                     </button>
                 </div>
@@ -418,715 +936,361 @@
 
 
     <!-- Preview Modal (Inspect Detailed Offer Content) -->
-    <div id="preview-modal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
-        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closePreviewModal()"></div>
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden transition-all duration-300">
-            
-            <div class="bg-primaryLight p-6 border-b border-gray-200/50 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 bg-[#8C6239] text-white rounded-xl flex items-center justify-center shadow">
-                        <i data-lucide="eye" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-[#8C6239]">Offer Overview</h3>
-                        <p class="text-xs text-textMuted">Explore live configuration properties.</p>
-                    </div>
-                </div>
-                <button onclick="closePreviewModal()" class="text-gray-400 hover:text-gray-600 rounded-lg p-1.5 hover:bg-gray-100 transition-all">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
+   
 
-            <!-- Visual Presentation Container -->
-            <div class="p-6 space-y-6">
-                <!-- Main Header Card Visual representation -->
-                <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
-                    <div id="preview-avatar-wrap" class="w-16 h-16 rounded-xl overflow-hidden shadow-sm flex-shrink-0 flex items-center justify-center text-white font-bold text-xl">
-                        <!-- Img or initials loaded dynamically -->
-                    </div>
-                    <div class="space-y-1">
-                        <h4 class="text-xs uppercase font-extrabold tracking-widest text-[#8C6239]" id="preview-badge-type">Product</h4>
-                        <h3 class="text-base font-bold text-textDark leading-tight" id="preview-target-name">Velvet Evening Gown</h3>
-                        <p class="text-xs text-textMuted" id="preview-offer-name">Winter Special</p>
-                    </div>
-                </div>
+<!-- ================= VIEW OFFER MODAL ================= -->
 
-                <!-- Structured Properties Specs List -->
-                <div class="grid grid-cols-2 gap-4 text-xs font-semibold">
-                    <div class="p-3 bg-gray-50/50 border border-gray-100 rounded-lg">
-                        <span class="text-textMuted block text-[10px] uppercase font-bold tracking-wider mb-0.5">Campaign Type</span>
-                        <span class="text-textDark" id="preview-type">Product Offer</span>
-                    </div>
-                    <div class="p-3 bg-gray-50/50 border border-gray-100 rounded-lg">
-                        <span class="text-textMuted block text-[10px] uppercase font-bold tracking-wider mb-0.5">Assigned Status</span>
-                        <span id="preview-status" class="px-2 py-0.5 rounded-full inline-block text-[10px] font-bold mt-0.5">ACTIVE</span>
-                    </div>
-                    <div class="p-3 bg-gray-50/50 border border-gray-100 rounded-lg">
-                        <span class="text-textMuted block text-[10px] uppercase font-bold tracking-wider mb-0.5">Active Discount</span>
-                        <span class="text-[#8C6239] text-sm font-bold" id="preview-discount">25% Off</span>
-                    </div>
-                    <div class="p-3 bg-gray-50/50 border border-gray-100 rounded-lg">
-                        <span class="text-textMuted block text-[10px] uppercase font-bold tracking-wider mb-0.5">Target Finish Date</span>
-                        <span class="text-textDark" id="preview-end-date">Dec 15, 2026</span>
-                    </div>
-                </div>
+<div
+    id="offerModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
 
-                <!-- Promotional Template Box Presentation Mock -->
-                <div class="border-2 border-dashed border-[#8C6239]/20 bg-[#F5EFEB]/30 p-4 rounded-xl text-center space-y-1">
-                    <p class="text-[10px] text-textMuted uppercase font-bold tracking-widest">Active Front-store Coupon Banner</p>
-                    <h5 class="text-lg font-black text-primary tracking-tight" id="preview-banner-text">Save 25% on Silk Midi Dress!</h5>
-                    <p class="text-[10px] text-[#8C6239]/80 font-medium">Automatic promotion applied at checkout checkout.</p>
-                </div>
-            </div>
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 overflow-hidden">
 
-            <div class="px-6 py-4 bg-gray-50 border-t border-gray-150 flex items-center justify-end">
-                <button onclick="closePreviewModal()" class="px-5 py-2 text-xs font-bold bg-[#8C6239] hover:bg-[#724f2d] text-white rounded-lg transition-all shadow-md">
-                    Done
-                </button>
-            </div>
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-5 border-b">
+
+            <h2 class="text-xl font-semibold text-gray-800">
+                Offer Details
+            </h2>
+
+            <button
+                onclick="closeOfferModal()"
+                class="p-2 rounded-lg hover:bg-gray-100 transition">
+
+                <i data-lucide="x" class="w-5 h-5"></i>
+
+            </button>
+
         </div>
+
+        <!-- Body -->
+        <div class="p-6 max-h-[65vh] overflow-y-auto">
+
+            <div class="grid grid-cols-2 gap-x-10 gap-y-5">
+
+                <div>
+                    <p class="text-sm text-gray-500">Offer Name</p>
+                    <p id="viewOfferName" class="font-semibold text-gray-800"></p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500">Offer Type</p>
+                    <p id="viewOfferType" class="font-semibold text-gray-800"></p>
+                </div>
+
+                <div class="col-span-2">
+
+    <p class="text-sm text-gray-500 mb-2">
+        <span id="viewApplyLabel">Products</span>
+    </p>
+
+    <div
+        id="viewApplyTo"
+        class="flex flex-wrap gap-2">
+
     </div>
 
+</div>
 
+                <div>
+                    <p class="text-sm text-gray-500">Discount</p>
+                    <p id="viewDiscount" class="font-semibold text-green-600"></p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500">Start Date</p>
+                    <p id="viewStartDate" class="font-semibold text-gray-800"></p>
+                </div>
+
+                <div>
+                    <p class="text-sm text-gray-500">Expiry Date</p>
+                    <p id="viewExpiryDate" class="font-semibold text-gray-800"></p>
+                </div>
+
+                <div c>
+                    <p class="text-sm text-gray-500 mb-1">Status</p>
+
+                    <span
+                        id="viewStatus"
+                        class="inline-flex px-3 py-1 rounded-full text-xs font-semibold">
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t flex justify-end gap-3">
+
+            <button
+                onclick="closeOfferModal()"
+                class="px-5 py-2 border rounded-lg hover:bg-gray-100">
+
+                Close
+
+            </button>
+
+            <a
+                id="editOfferBtn"
+                href="#"
+                class="px-5 py-2 rounded-lg bg-[#8C6239] text-white hover:bg-[#704221] transition">
+
+                Edit Offer
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>>
+
+    </div>
     <script>
-        // Real Mock DB Database Data Storage (State Management)
-        let dataset = [
-            {
-                id: 1,
-                type: 'product',
-                productName: 'Silk Midi Dress',
-                categoryName: 'Dresses',
-                offerName: 'Summer Sale 2024',
-                discountType: 'PERCENTAGE',
-                discountValue: 25,
-                endDate: '2024-08-30',
-                status: 'ACTIVE',
-                image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=150&auto=format&fit=crop&q=60'
-            },
-            {
-                id: 2,
-                type: 'product',
-                productName: 'Chelsea Boots',
-                categoryName: 'Footwear',
-                offerName: 'Flash Footwear',
-                discountType: 'FIXED',
-                discountValue: 50.00,
-                endDate: '2024-05-12',
-                status: 'EXPIRED',
-                image: 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?w=150&auto=format&fit=crop&q=60'
-            },
-            {
-                id: 3,
-                type: 'product',
-                productName: 'Cashmere Knitwear',
-                categoryName: 'Knitwear',
-                offerName: 'Winter Special',
-                discountType: 'PERCENTAGE',
-                discountValue: 15,
-                endDate: '2024-12-15',
-                status: 'ACTIVE',
-                image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=150&auto=format&fit=crop&q=60'
-            },
-            {
-                id: 4,
-                type: 'category',
-                productName: 'Handbags Collection',
-                categoryName: 'Accessories',
-                offerName: 'Lux Bags Special',
-                discountType: 'PERCENTAGE',
-                discountValue: 20,
-                endDate: '2026-09-30',
-                status: 'ACTIVE',
-                image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=150&auto=format&fit=crop&q=60'
-            },
-            {
-                id: 5,
-                type: 'category',
-                productName: 'All Accessories',
-                categoryName: 'Accessories',
-                offerName: 'Category Kickoff',
-                discountType: 'PERCENTAGE',
-                discountValue: 10,
-                endDate: '2026-11-20',
-                status: 'ACTIVE',
-                image: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=150&auto=format&fit=crop&q=60'
-            },
-            {
-                id: 6,
-                type: 'product',
-                productName: 'Suede Loafers',
-                categoryName: 'Footwear',
-                offerName: 'Summer Breeze Footwear',
-                discountType: 'PERCENTAGE',
-                discountValue: 30,
-                endDate: '2026-07-28',
-                status: 'ACTIVE',
-                image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=150&auto=format&fit=crop&q=60'
-            },
-            {
-                id: 7,
-                type: 'category',
-                productName: 'Winter Outerwear',
-                categoryName: 'Coats & Jackets',
-                offerName: 'Pre-season Warmth',
-                discountType: 'FIXED',
-                discountValue: 75.00,
-                endDate: '2024-10-15',
-                status: 'EXPIRED',
-                image: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=150&auto=format&fit=crop&q=60'
-            }
-        ];
 
-        // Active State Filter Engine variables
-        let currentTab = 'product'; // 'product' | 'category'
-        let searchQuery = '';
-        let statusFilter = 'ALL'; // 'ALL' | 'ACTIVE' | 'EXPIRED'
-        let currentPage = 1;
-        const itemsPerPage = 5;
+        const offerItems = {
 
+<% offers.forEach(offer => { %>
 
-        // Run setup actions on launch
-        window.addEventListener('DOMContentLoaded', () => {
-            renderDashboard();
-            updateStats();
-            lucide.createIcons();
+            "<%= offer._id %>": [
+
+<% if (offer.offerType === "product") { %>
+
+<% (offer.products || []).forEach((product, index) => { %>
+
+            {
+                name: "<%- product.productName %>"
+            } <%= index !== offer.products.length - 1 ? "," : "" %>
+
+<% }) %>
+
+<% } else { %>
+
+<% (offer.categories || []).forEach((category, index) => { %>
+
+            {
+                name: "<%- category.name %>"
+            } <%= index !== offer.categories.length - 1 ? "," : "" %>
+
+<% }) %>
+
+<% } %>
+
+],
+
+<% }) %>
+
+}
+        function showOfferItems(id) {
+
+            const body = document.getElementById("offerItemsBody");
+
+            body.innerHTML = "";
+
+            offerItems[id].forEach(item => {
+
+                body.innerHTML += `
+
+        <div class="flex items-center gap-3 border rounded-lg p-3">
+
+            <div
+                class="w-8 h-8 rounded-full bg-[#704221] text-white flex items-center justify-center">
+
+                <i class="fa-solid fa-check"></i>
+
+            </div>
+
+            <span class="font-medium">
+
+                ${item.name}
+
+            </span>
+
+        </div>
+
+        `;
+
+            });
+
+            document
+                .getElementById("offerItemsModal")
+                .classList.remove("hidden");
+
+            document
+                .getElementById("offerItemsModal")
+                .classList.add("flex");
+
+        }
+
+        function closeOfferItems() {
+
+            document
+                .getElementById("offerItemsModal")
+                .classList.remove("flex");
+
+            document
+                .getElementById("offerItemsModal")
+                .classList.add("hidden");
+
+        }
+
+    </script>
+    <script>
+
+        lucide.createIcons();
+
+    const form = document.getElementById("filterForm");
+
+    const offerTypeInput = document.getElementById("offerTypeInput");
+
+    const searchInput = document.getElementById("searchInput");
+
+    const statusFilter = document.getElementById("statusFilter");
+
+    const sortFilter = document.getElementById("sortFilter");
+
+    const offerTabs = document.querySelectorAll(".offerTab");
+
+    let debounce;
+
+    // Product / Category Toggle
+    offerTabs.forEach(tab => {
+
+        tab.addEventListener("click", () => {
+
+            offerTypeInput.value = tab.dataset.type;
+
+            form.submit();
+
         });
 
-        // Toggle Sidebar Drawer on mobile layout screens
-        function toggleMobileSidebar() {
-            const drawer = document.getElementById('mobile-sidebar');
-            drawer.classList.toggle('hidden');
-        }
-
-        // Display beautiful toast notifications inside browser viewport
-        function showNotification(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            // Build dynamic colors for the toast alert banner
-            let bgClass = 'bg-white border-blue-500';
-            let iconColor = 'text-blue-500';
-            let icon = 'info';
-
-            if (type === 'success') {
-                bgClass = 'bg-white border-green-500';
-                iconColor = 'text-green-500';
-                icon = 'check-circle';
-            } else if (type === 'danger') {
-                bgClass = 'bg-white border-red-500';
-                iconColor = 'text-red-500';
-                icon = 'alert-triangle';
-            }
-
-            toast.className = `flex items-center gap-3 px-4 py-3 bg-white border-l-4 rounded-xl shadow-lg pointer-events-auto transition-all transform translate-x-12 opacity-0 duration-300 w-80 max-w-sm ${bgClass}`;
-            toast.innerHTML = `
-                <div class="${iconColor}">
-                    <i data-lucide="${icon}" class="w-5 h-5"></i>
-                </div>
-                <div class="flex-1 text-xs font-semibold text-textDark">
-                    ${message}
-                </div>
-                <button class="text-gray-400 hover:text-gray-600 ml-2" onclick="this.parentElement.remove()">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-            `;
-            
-            container.appendChild(toast);
-            lucide.createIcons({attrs: {class: ["w-4", "h-4"]}});
-
-            // Animate in the notification
-            setTimeout(() => {
-                toast.classList.remove('translate-x-12', 'opacity-0');
-            }, 50);
-
-            // Animate out automatically
-            setTimeout(() => {
-                toast.classList.add('translate-x-12', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
-        }
-
-        // Update top row metrics dynamically
-        function updateStats() {
-            const total = dataset.length;
-            const active = dataset.filter(item => item.status === 'ACTIVE').length;
-            const expired = dataset.filter(item => item.status === 'EXPIRED').length;
-
-            document.getElementById('stat-total').innerText = total;
-            document.getElementById('stat-active').innerText = active;
-            document.getElementById('stat-expired').innerText = expired;
-        }
-
-
-        // Tab selection engine switches
-        function switchTab(tab) {
-            currentTab = tab;
-            
-            // Adjust buttons active styling state
-            const tabProduct = document.getElementById('tab-product');
-            const tabCategory = document.getElementById('tab-category');
-            
-            const activeClasses = 'border-b-2 border-primary text-[#8C6239] bg-[#F5EFEB]'.split(' ');
-            const inactiveClasses = 'text-textMuted hover:text-primary'.split(' ');
-
-            if (tab === 'product') {
-                tabProduct.classList.add(...activeClasses);
-                tabProduct.classList.remove(...inactiveClasses);
-                tabCategory.classList.add(...inactiveClasses);
-                tabCategory.classList.remove(...activeClasses);
-                document.getElementById('col-target-type').innerText = 'PRODUCT';
-            } else {
-                tabCategory.classList.add(...activeClasses);
-                tabCategory.classList.remove(...inactiveClasses);
-                tabProduct.classList.add(...inactiveClasses);
-                tabProduct.classList.remove(...activeClasses);
-                document.getElementById('col-target-type').innerText = 'CATEGORY';
-            }
-
-            currentPage = 1;
-            renderDashboard();
-        }
-
-        // Process status search filters input
-        function handleSearch() {
-            searchQuery = document.getElementById('table-search').value.toLowerCase();
-            currentPage = 1;
-            renderDashboard();
-        }
-
-        // Status select query processor
-        function handleStatusFilter() {
-            statusFilter = document.getElementById('status-filter').value;
-            currentPage = 1;
-            renderDashboard();
-        }
-
-
-        // Standard render engine dashboard
-        function renderDashboard() {
-            const tbody = document.getElementById('offers-table-body');
-            const emptyState = document.getElementById('table-empty-state');
-            tbody.innerHTML = '';
-
-            // Apply logical query pipeline
-            const filteredData = dataset.filter(item => {
-                const matchesTab = item.type === currentTab;
-                const matchesStatus = statusFilter === 'ALL' || item.status === statusFilter;
-                
-                const matchesSearch = item.productName.toLowerCase().includes(searchQuery) || 
-                                      item.offerName.toLowerCase().includes(searchQuery) ||
-                                      (item.categoryName && item.categoryName.toLowerCase().includes(searchQuery));
-                
-                return matchesTab && matchesStatus && matchesSearch;
-            });
-
-            // If empty, trigger design layout empty placeholder overlay
-            if (filteredData.length === 0) {
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
-                document.getElementById('pagination-summary').innerText = 'Showing 0 results';
-                document.getElementById('pagination-controls').innerHTML = '';
-                return;
-            } else {
-                emptyState.classList.remove('flex');
-                emptyState.classList.add('hidden');
-            }
-
-            // Calculation Pagination variables
-            const totalItems = filteredData.length;
-            const totalPages = Math.ceil(totalItems / itemsPerPage);
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
-            const paginatedItems = filteredData.slice(startIndex, endIndex);
-
-            // Populate active rows
-            paginatedItems.forEach(offer => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-gray-50/70 transition-all';
-
-                // Display form discount rate visually
-                const discountDisplay = offer.discountType === 'PERCENTAGE' 
-                    ? `${offer.discountValue}% Off` 
-                    : `$${parseFloat(offer.discountValue).toFixed(2)} Fixed`;
-
-                // Display dynamic actions block dependently on Active or Expired state
-                let actionsHTML = '';
-                if (offer.status === 'ACTIVE') {
-                    actionsHTML = `
-                        <div class="flex items-center justify-end gap-2">
-                            <button onclick="previewOffer(${offer.id})" title="View Details" class="p-1.5 rounded-lg text-textMuted hover:text-primary hover:bg-[#F5EFEB] transition-all">
-                                <i data-lucide="eye" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="editOffer(${offer.id})" title="Edit Offer" class="p-1.5 rounded-lg text-textMuted hover:text-primary hover:bg-[#F5EFEB] transition-all">
-                                <i data-lucide="edit-3" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="deleteOffer(${offer.id})" title="Delete Offer" class="p-1.5 rounded-lg text-textMuted hover:text-red-500 hover:bg-red-50 transition-all">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    `;
-                } else {
-                    actionsHTML = `
-                        <div class="flex items-center justify-end gap-2">
-                            <button onclick="restoreOffer(${offer.id})" title="Restore Campaign" class="p-1.5 rounded-lg text-textMuted hover:text-green-500 hover:bg-green-50 transition-all">
-                                <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="deleteOffer(${offer.id})" title="Delete Permanently" class="p-1.5 rounded-lg text-textMuted hover:text-red-500 hover:bg-red-50 transition-all">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    `;
-                }
-
-                // Pick an alternative graphic banner background or fallback
-                const fallbackImg = `https://placehold.co/100x100/EFEAE4/8C6239?text=${encodeURIComponent(offer.productName.charAt(0))}`;
-                const rowImg = offer.image || fallbackImg;
-
-                // Create Status Styles matching original specifications
-                const badgeStyle = offer.status === 'ACTIVE' 
-                    ? 'bg-green-100 text-green-700 text-[10px] px-2.5 py-1 rounded-full font-bold inline-block' 
-                    : 'bg-gray-100 text-gray-500 text-[10px] px-2.5 py-1 rounded-full font-bold inline-block';
-
-                // Format end dates nicely
-                const formattedDate = new Date(offer.endDate).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                });
-
-                tr.innerHTML = `
-                    <td class="px-6 py-4.5 whitespace-nowrap">
-                        <div class="flex items-center gap-3">
-                            <img class="w-10 h-10 rounded-xl object-cover border border-gray-100 shadow-sm" src="${rowImg}" onerror="this.onerror=null; this.src='${fallbackImg}'" alt="Row Graphic">
-                            <div>
-                                <span class="font-bold text-textDark block leading-tight">${offer.productName}</span>
-                                <span class="text-[10px] text-textMuted uppercase font-bold tracking-wider">${offer.categoryName || 'General'}</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4.5 whitespace-nowrap align-middle">
-                        <span class="font-medium text-textDark text-sm">${offer.offerName}</span>
-                    </td>
-                    <td class="px-6 py-4.5 whitespace-nowrap align-middle">
-                        <span class="text-[#8C6239] font-bold text-sm tracking-tight">${discountDisplay}</span>
-                    </td>
-                    <td class="px-6 py-4.5 whitespace-nowrap text-textMuted text-xs font-semibold align-middle">
-                        ${formattedDate}
-                    </td>
-                    <td class="px-6 py-4.5 whitespace-nowrap align-middle">
-                        <span class="${badgeStyle}">${offer.status}</span>
-                    </td>
-                    <td class="px-6 py-4.5 whitespace-nowrap text-right align-middle">
-                        ${actionsHTML}
-                    </td>
-                `;
-
-                tbody.appendChild(tr);
-            });
-
-            // Build/Update Pagination controls inside panel
-            document.getElementById('pagination-summary').innerText = `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} results`;
-            renderPaginationControls(totalPages);
-
-            // Reapply Lucide Icon renders
-            lucide.createIcons();
-        }
-
-
-        // Construct intuitive navigation button matrices
-        function renderPaginationControls(totalPages) {
-            const container = document.getElementById('pagination-controls');
-            container.innerHTML = '';
-
-            if (totalPages <= 1) return;
-
-            // Generate Prev Indicator button
-            const prevBtn = document.createElement('button');
-            prevBtn.disabled = currentPage === 1;
-            prevBtn.className = `p-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-gray-500 disabled:opacity-40 disabled:hover:bg-transparent transition-all`;
-            prevBtn.innerHTML = `<i data-lucide="chevron-left" class="w-4 h-4"></i>`;
-            prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderDashboard(); } };
-            container.appendChild(prevBtn);
-
-            // Draw numerical page selection
-            for (let i = 1; i <= totalPages; i++) {
-                // Reduce excess numbers using simple ellipses logic if dataset gets extremely long
-                if (totalPages > 5 && Math.abs(currentPage - i) > 1 && i !== 1 && i !== totalPages) {
-                    if (i === 2 || i === totalPages - 1) {
-                        const dot = document.createElement('span');
-                        dot.className = 'px-2 text-textMuted text-sm font-semibold';
-                        dot.innerText = '...';
-                        container.appendChild(dot);
-                    }
-                    continue;
-                }
-
-                const pageBtn = document.createElement('button');
-                const isSelected = i === currentPage;
-                pageBtn.className = isSelected 
-                    ? `w-8 h-8 flex items-center justify-center rounded-lg text-xs font-bold bg-[#8C6239] text-white shadow-md transition-all` 
-                    : `w-8 h-8 flex items-center justify-center rounded-lg text-xs font-semibold text-textMuted hover:bg-gray-100 transition-all`;
-                
-                pageBtn.innerText = i;
-                pageBtn.onclick = () => { currentPage = i; renderDashboard(); };
-                container.appendChild(pageBtn);
-            }
-
-            // Generate Next Indicator button
-            const nextBtn = document.createElement('button');
-            nextBtn.disabled = currentPage === totalPages;
-            nextBtn.className = `p-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-gray-500 disabled:opacity-40 disabled:hover:bg-transparent transition-all`;
-            nextBtn.innerHTML = `<i data-lucide="chevron-right" class="w-4 h-4"></i>`;
-            nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderDashboard(); } };
-            container.appendChild(nextBtn);
-
-            lucide.createIcons();
-        }
-
-
-        // Set state values inside target selection container on custom Modal
-        let activeFormType = 'product';
-        
-        function setFormType(type) {
-            activeFormType = type;
-            const btnProd = document.getElementById('form-type-product');
-            const btnCat = document.getElementById('form-type-category');
-
-            const activeStyles = 'bg-white text-[#8C6239] shadow-sm'.split(' ');
-            const inactiveStyles = 'text-textMuted hover:text-[#8C6239]'.split(' ');
-
-            if (type === 'product') {
-                btnProd.classList.add(...activeStyles);
-                btnProd.classList.remove(...inactiveStyles);
-                btnCat.classList.add(...inactiveStyles);
-                btnCat.classList.remove(...activeStyles);
-                
-                document.getElementById('form-label-target').innerText = 'Product Selection';
-                document.getElementById('form-target-name').placeholder = 'Enter Product Name (e.g. Silk Midi Dress)';
-                document.getElementById('form-target-icon').setAttribute('data-lucide', 'shopping-bag');
-            } else {
-                btnCat.classList.add(...activeStyles);
-                btnCat.classList.remove(...inactiveStyles);
-                btnProd.classList.add(...inactiveStyles);
-                btnProd.classList.remove(...activeStyles);
-                
-                document.getElementById('form-label-target').innerText = 'Category Selection';
-                document.getElementById('form-target-name').placeholder = 'Enter Category Selection (e.g. Footwear)';
-                document.getElementById('form-target-icon').setAttribute('data-lucide', 'folder');
-            }
-            lucide.createIcons();
-        }
-
-        function adaptDiscountInputPlaceholder() {
-            const type = document.getElementById('form-discount-type').value;
-            const valLabel = document.getElementById('form-label-discount-val');
-            const valInput = document.getElementById('form-discount-val');
-            
-            if (type === 'PERCENTAGE') {
-                valLabel.innerText = 'Discount Percentage (%)';
-                valInput.placeholder = '25';
-                valInput.max = '100';
-            } else {
-                valLabel.innerText = 'Fixed Cash Discount ($)';
-                valInput.placeholder = '50';
-                valInput.removeAttribute('max');
-            }
-        }
-
-        // Open Modal view frame for adding details
-        function openCreateModal() {
-            document.getElementById('offer-form').reset();
-            document.getElementById('form-offer-id').value = '';
-            document.getElementById('modal-title').innerText = 'Create New Offer';
-            document.getElementById('modal-subtitle').innerText = 'Setup customizable discounts for active sales campaigns.';
-            
-            // Default parameters
-            setFormType(currentTab);
-            adaptDiscountInputPlaceholder();
-
-            const modal = document.getElementById('offer-modal');
-            modal.classList.remove('hidden');
-        }
-
-        // Retrieve existing details and map onto target form inputs
-        function editOffer(id) {
-            const item = dataset.find(x => x.id === id);
-            if (!item) return;
-
-            document.getElementById('form-offer-id').value = item.id;
-            document.getElementById('form-offer-name').value = item.offerName;
-            document.getElementById('form-target-name').value = item.productName;
-            document.getElementById('form-discount-type').value = item.discountType;
-            document.getElementById('form-discount-val').value = item.discountValue;
-            document.getElementById('form-end-date').value = item.endDate;
-            document.getElementById('form-status').value = item.status;
-
-            setFormType(item.type);
-            adaptDiscountInputPlaceholder();
-
-            document.getElementById('modal-title').innerText = 'Edit Offer Campaign';
-            document.getElementById('modal-subtitle').innerText = 'Update configuration specifications for this promotion.';
-
-            const modal = document.getElementById('offer-modal');
-            modal.classList.remove('hidden');
-        }
-
-        function closeFormModal() {
-            document.getElementById('offer-modal').classList.add('hidden');
-        }
-
-        // Process submitting campaign forms (Create or Update actions)
-        function saveOffer(event) {
-            event.preventDefault();
-
-            const id = document.getElementById('form-offer-id').value;
-            const offerName = document.getElementById('form-offer-name').value;
-            const targetName = document.getElementById('form-target-name').value;
-            const discountType = document.getElementById('form-discount-type').value;
-            const discountValue = parseFloat(document.getElementById('form-discount-val').value);
-            const endDate = document.getElementById('form-end-date').value;
-            const status = document.getElementById('form-status').value;
-
-            // Generate temporary visual graphic patterns representation
-            let targetImage = '';
-            if (activeFormType === 'product') {
-                targetImage = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=150&auto=format&fit=crop&q=60';
-            } else {
-                targetImage = 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=150&auto=format&fit=crop&q=60';
-            }
-
-            if (id) {
-                // Update Operation Flow
-                const index = dataset.findIndex(x => x.id === parseInt(id));
-                if (index !== -1) {
-                    dataset[index] = {
-                        ...dataset[index],
-                        type: activeFormType,
-                        productName: targetName,
-                        categoryName: activeFormType === 'category' ? targetName : 'Assorted Products',
-                        offerName,
-                        discountType,
-                        discountValue,
-                        endDate,
-                        status
-                    };
-                    showNotification('Offer campaign updated successfully!', 'success');
-                }
-            } else {
-                // Create Operation Flow
-                const newId = dataset.length > 0 ? Math.max(...dataset.map(x => x.id)) + 1 : 1;
-                dataset.push({
-                    id: newId,
-                    type: activeFormType,
-                    productName: targetName,
-                    categoryName: activeFormType === 'category' ? targetName : 'Products Line',
-                    offerName,
-                    discountType,
-                    discountValue,
-                    endDate,
-                    status,
-                    image: targetImage
-                });
-                showNotification('New offer campaign generated successfully!', 'success');
-            }
-
-            closeFormModal();
-            updateStats();
-            renderDashboard();
-        }
-
-
-        // Inspect and review full details inside Modal Popup
-        function previewOffer(id) {
-            const item = dataset.find(x => x.id === id);
-            if (!item) return;
-
-            const isProd = item.type === 'product';
-            
-            // Map text details
-            document.getElementById('preview-badge-type').innerText = isProd ? 'Product Offer' : 'Category Offer';
-            document.getElementById('preview-target-name').innerText = item.productName;
-            document.getElementById('preview-offer-name').innerText = item.offerName;
-            document.getElementById('preview-type').innerText = isProd ? 'Individual Product' : 'Department/Category';
-            
-            const statusNode = document.getElementById('preview-status');
-            statusNode.innerText = item.status;
-            if (item.status === 'ACTIVE') {
-                statusNode.className = 'px-2 py-0.5 rounded-full inline-block text-[10px] font-bold mt-0.5 bg-green-100 text-green-700';
-            } else {
-                statusNode.className = 'px-2 py-0.5 rounded-full inline-block text-[10px] font-bold mt-0.5 bg-gray-100 text-gray-500';
-            }
-
-            const discountText = item.discountType === 'PERCENTAGE' 
-                ? `${item.discountValue}% Off` 
-                : `$${parseFloat(item.discountValue).toFixed(2)} Fixed`;
-            document.getElementById('preview-discount').innerText = discountText;
-
-            // Date Format
-            const formattedDate = new Date(item.endDate).toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-            });
-            document.getElementById('preview-end-date').innerText = formattedDate;
-
-            // Generate Preview Image or Placeholder
-            const avatarWrap = document.getElementById('preview-avatar-wrap');
-            if (item.image) {
-                avatarWrap.innerHTML = `<img src="${item.image}" class="w-full h-full object-cover" />`;
-            } else {
-                avatarWrap.style.backgroundColor = '#8C6239';
-                avatarWrap.innerHTML = `<span>${item.productName.charAt(0)}</span>`;
-            }
-
-            // Set front-store mock text banner
-            document.getElementById('preview-banner-text').innerText = `${discountText} on ${item.productName}!`;
-
-            document.getElementById('preview-modal').classList.remove('hidden');
-        }
-
-        function closePreviewModal() {
-            document.getElementById('preview-modal').classList.add('hidden');
-        }
-
-        // Toggle state of inactive promotions (Set ACTIVE again)
-        function restoreOffer(id) {
-            const index = dataset.findIndex(x => x.id === id);
-            if (index !== -1) {
-                dataset[index].status = 'ACTIVE';
-                showNotification(`Successfully restored campaign "${dataset[index].offerName}"!`, 'success');
-                updateStats();
-                renderDashboard();
-            }
-        }
-
-        // Perform Soft/Hard Campaign removal operation
-        function deleteOffer(id) {
-            const index = dataset.findIndex(x => x.id === id);
-            if (index !== -1) {
-                const targetName = dataset[index].offerName;
-                
-                // If it is active, mark it expired as warning first, otherwise delete permanently
-                if (dataset[index].status === 'ACTIVE') {
-                    dataset[index].status = 'EXPIRED';
-                    showNotification(`"${targetName}" campaign has been set to EXPIRED. Click trash icon again to remove completely.`, 'danger');
-                } else {
-                    dataset.splice(index, 1);
-                    showNotification(`"${targetName}" deleted permanently from registry.`, 'danger');
-                }
-                
-                updateStats();
-                renderDashboard();
-            }
-        }
-
-        // Mock Sign Out alert simulation
-        function handleLogout() {
-            showNotification('Signing out from Velvet Vogue administrative panel...', 'info');
-            setTimeout(() => {
-                showNotification('Session terminated securely.', 'success');
-            }, 1000);
-        }
+    });
+
+    // Auto Search (500ms debounce)
+    searchInput.addEventListener("input", () => {
+
+        clearTimeout(debounce);
+
+        debounce = setTimeout(() => {
+
+            form.submit();
+
+        }, 500);
+
+    });
+
+    // Auto Status Filter
+    statusFilter.addEventListener("change", () => {
+
+        form.submit();
+
+    });
+
+    // Auto Sort
+    sortFilter.addEventListener("change", () => {
+
+        form.submit();
+
+    });
+    function openOfferModal(button) {
+
+    document.getElementById("viewOfferName").textContent =
+        button.dataset.offerName;
+
+    document.getElementById("viewOfferType").textContent =
+        button.dataset.offerType;
+
+    document.getElementById("viewApplyLabel").textContent =
+        button.dataset.offerType === "product"
+            ? "Product"
+            : "Category";
+const container = document.getElementById("viewApplyTo");
+
+container.innerHTML = "";
+
+let items = [];
+
+try {
+
+    items = JSON.parse(button.dataset.apply);
+
+} catch {
+
+    items = [button.dataset.apply];
+
+}
+
+items.forEach(item => {
+
+    const badge = document.createElement("span");
+
+    badge.className =
+        "inline-flex items-center px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-sm font-medium border border-purple-200";
+
+    badge.textContent = item;
+
+    container.appendChild(badge);
+
+});
+
+    document.getElementById("viewDiscount").textContent =
+        button.dataset.discount + "%";
+
+    document.getElementById("viewStartDate").textContent =
+        button.dataset.start;
+
+    document.getElementById("viewExpiryDate").textContent =
+        button.dataset.expiry;
+
+    const badge = document.getElementById("viewStatus");
+
+    badge.textContent = button.dataset.status;
+
+    badge.className =
+        "inline-flex px-3 py-1 rounded-full text-xs font-semibold";
+
+    switch (button.dataset.status) {
+
+        case "Active":
+            badge.classList.add("bg-green-100", "text-green-700");
+            break;
+
+        case "Upcoming":
+            badge.classList.add("bg-blue-100", "text-blue-700");
+            break;
+
+        case "Blocked":
+            badge.classList.add("bg-yellow-100", "text-yellow-700");
+            break;
+
+        case "Expired":
+            badge.classList.add("bg-orange-100", "text-orange-700");
+            break;
+
+        case "Deleted":
+            badge.classList.add("bg-red-100", "text-red-700");
+            break;
+    }
+
+    document.getElementById("editOfferBtn").href =
+        "/couponManagement/offers/edit/" + button.dataset.id;
+
+    document.getElementById("offerModal").classList.remove("hidden");
+    document.getElementById("offerModal").classList.add("flex");
+
+    lucide.createIcons();
+
+}
+
+function closeOfferModal() {
+
+    document.getElementById("offerModal").classList.remove("flex");
+    document.getElementById("offerModal").classList.add("hidden");
+
+}
+
     </script>
 </body>
+
 </html>
