@@ -407,7 +407,7 @@ export const addToCart = async (req, res) => {
             return res.json({
                 success: false,
                 message: "Maximum cart limit reached. (5 items)"
-            });
+            })
         }
 
         const result = await addingToCart({ userId: req.user._id, ...req.body })
@@ -419,14 +419,14 @@ export const addToCart = async (req, res) => {
         })
 
     } catch (error) {
-        console.log("========== ADD TO CART ERROR ==========");
-        console.log(error)
+       
+        console.log("add to cart controller error", error)
 
         if (error instanceof AppError) {
             return res.status(error.statusCode).json({
                 success: false,
                 message: error.message
-            });
+            })
         }
 
 
@@ -676,8 +676,6 @@ export const loadWishlist = async (req, res) => {
         res.render("user/wishlist", {
             wishlistProducts,
             showNavbar: true,
-
-
         })
     } catch (error) {
         console.log("Load wishlist error", error)

@@ -17,6 +17,8 @@ export const loadHome = async (req, res) => {
             showFooter: true,
         })
     }
+
+    
     return res.render("user/home", {
         title: "Home",
         error: null,

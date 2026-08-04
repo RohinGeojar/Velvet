@@ -19,18 +19,18 @@ import { navbarCounts } from "../../middleware/navbarCounts.js";
 const router = express.Router();
 router.use(navbarCounts)
 
-router.get("/",userAuth, loadAddressPage);
-router.post("/",userAuth, addAddress);
+router.get("/",userAuth, loadAddressPage)
+router.post("/",userAuth,validate(addressSchema), addAddress)
 router.get("/addAddress", userAuth,validate(addressSchema), loadAddAddress);
-router.get("/:id/edit",userAuth, loadEditAddress);
-router.post("/:id/edit",userAuth, updateAddress);
+router.get("/:id/edit",userAuth, loadEditAddress)
+router.post("/:id/edit",userAuth, updateAddress)
 
-router.delete("/:id/delete",userAuth,  deleteAddress);
-router.post("/:id/default",userAuth,  setDefaultAddress);
+router.delete("/:id/delete",userAuth,  deleteAddress)
+router.post("/:id/default",userAuth,  setDefaultAddress)
 
 
 // ================CHECKOUT ============================
-router.get("/:id", userAuth, getAddress);
+router.get("/:id", userAuth, getAddress)
 
 router.post("/checkout",userAuth,addcheckoutAddress)
 

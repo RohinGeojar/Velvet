@@ -14,22 +14,22 @@ export const getUserProfile = async (userId) => {
 }
 
 export const updateUserProfile = async (userId, data) => {
-    const { firstName, lastName, email, phone } = data;
+    const { firstName, lastName, email, phone } = data
 
-    const existing = await User.findOne({ email });
+    const existing = await User.findOne({ email })
 
     if (existing && existing._id.toString() !== userId.toString()) {
-        throw new AppError(MESSAGES.EMAIL_IN_USE,STATUS.BAD_REQUEST);
+        throw new AppError(MESSAGES.EMAIL_IN_USE,STATUS.BAD_REQUEST)
     }
 
     const updatedUser = await User.findByIdAndUpdate(
         userId,
         { firstName, lastName, email, phone },
         { new: true }
-    );
+    )
     
 
-    return updatedUser;
+    return updatedUser
 }
 
 //change password

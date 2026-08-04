@@ -112,7 +112,7 @@
 <body class="bg-white text-gray-800 font-sans antialiased flex flex-col min-h-screen overflow-x-hidden">
 
     <!-- Top Banner -->
-   
+
 
     <!-- Mobile Navigation Overlay (Drawer) -->
     <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-[60] hidden transition-opacity duration-300"></div>
@@ -150,83 +150,99 @@
         <div class=" mx-auto h-full flex flex-col md:flex-row w-full">
 
             <!-- Sidebar (Left-placed, separate scroll on desktop) -->
-            
+
 
             <!-- Main Scrollable Body Area -->
             <main class="flex-1 content-scroll  md:p-6 lg:p-8 bg-white mb-11">
                 <nav class="flex items-center gap-2 text-[11px] uppercase tracking-[0.05em] text-gray-400 mb-4">
-        <a href="/" class="hover:text-gray-600">HOME</a>
-        <i data-lucide="chevron-right" class="w-3 h-3"></i>
-        <a href="/profile/overview" class="hover:text-gray-600">OVERVIEW </a>
-        <i data-lucide="chevron-right" class="w-3 h-3"></i>
-        <a href="/address" class="hover:text-gray-600">ADDRESS </a>
-        <i data-lucide="chevron-right" class="w-3 h-3"></i>
-        <span class="text-gray-500 font-semibold">ADD or EDIT ADDRESS </span>
-    </nav>
+                    <a href="/" class="hover:text-gray-600">HOME</a>
+                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    <a href="/profile/overview" class="hover:text-gray-600">OVERVIEW </a>
+                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    <a href="/address" class="hover:text-gray-600">ADDRESS </a>
+                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    <span class="text-gray-500 font-semibold">ADD or EDIT ADDRESS </span>
+                </nav>
                 <h1 class="text-3xl font-bold text-[#1A1A1A] mb-8">ADD OR EDIT ADDRESS</h1>
 
-                <form id="addressForm" action="<%= address ? `/address/${address._id}/edit` : '/address' %>" method="POST" class="max-w-3xl">
+                <form id="addressForm" action="<%= address ? `/address/${address._id}/edit` : '/address' %>"
+                    method="POST" class="max-w-3xl">
                     <div class="grid grid-cols-2 gap-y-4 gap-x-4">
 
-                        
+
                         <div class="col-span-1">
-                            <input type="text" name="firstName"  id="firstName" value="<%= address?.name?.split(' ')[0] || '' %>" placeholder="First Name" required
-                            class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
+                            <input type="text" name="firstName" id="firstName"
+                                value="<%= address?.name?.split(' ')[0] || '' %>" placeholder="First Name"
+                                class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                             <p id="firstNameError" class="text-red-500 text-xs mt-1"></p>
                         </div>
                         <div class="col-span-1">
-                            <input type="text" name="lastName" id="lastName" value="<%= address?.name?.split(' ').slice(1).join(' ') || '' %>" placeholder="Last Name" required
-                            class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
+                            <input type="text" name="lastName" id="lastName"
+                                value="<%= address?.name?.split(' ').slice(1).join(' ') || '' %>"
+                                placeholder="Last Name"
+                                class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                             <p id="lastNameError" class="text-red-500 text-xs mt-1"></p>
                         </div>
-                        
+
                         <div class="col-span-2">
-                            <input type="text" name="addressLine1" value="<%= address?.addressLine1 || '' %>" placeholder="Address Line 1" required
-                            class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
+                            <input type="text" name="addressLine1" value="<%= address?.addressLine1 || '' %>"
+                                placeholder="Address Line 1"
+                                class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
+                            <p id="addressLine1Error" class="text-red-500 text-xs mt-1"></p>
                         </div>
-                        
+
                         <div class="relative col-span-2">
-                            <input type="text" name="addressLine2" value="<%= address?.addressLine2 || '' %>" placeholder="Address Line 2"
-                            class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500 pr-10">
+                            <input type="text" name="addressLine2" value="<%= address?.addressLine2 || '' %>"
+                                placeholder="Address Line 2"
+                                class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500 pr-10">
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                                 <i data-lucide="search" class="w-5 h-5"></i>
                             </div>
                         </div>
-                        
+
                         <div class="col-span-2">
-                            <input type="text" name="landmark" value="<%= address?.landmark || '' %>" placeholder="Landmark (Optional)" 
-                            class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
+                            <input type="text" name="landmark" value="<%= address?.landmark || '' %>"
+                                placeholder="Landmark (Optional)"
+                                class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
                         </div>
-                        
+
                         <div class="relative col-span-2">
-                            <input type="text" name="country" id="country" value="<%= address?.country || '' %>" placeholder="Country/Region"  required
+                            <input type="text" name="country" id="country" value="<%= address?.country || '' %>"
+                                placeholder="Country/Region"
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500 pr-10">
-                                <p id="countryError" class="text-red-500 text-xs mt-1"></p>
+                            <p id="countryError" class="text-red-500 text-xs mt-1"></p>
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                                 <i data-lucide="x" class="w-5 h-5 cursor-pointer"></i>
                             </div>
                         </div>
                         <div class="col-span-1">
-                            <input type="text" id="postalCode" name="postalCode" value="<%= address?.postalCode || '' %>" placeholder="Postal Code"  maxlength="6" inputmode="numeric" required
+                            <input type="text" id="postalCode" name="postalCode"
+                                value="<%= address?.postalCode || '' %>" placeholder="Postal Code" maxlength="6"
+                                inputmode="numeric"
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
-                                <p id="postalCodeError" class="text-red-500 text-xs mt-1"></p>
+                            <p id="postalCodeError" class="text-red-500 text-xs mt-1"></p>
                         </div>
                         <div class="col-span-1">
-                            <input type="text" name="city" id="city" value="<%= address?.city || '' %>" placeholder="City" required
+                            <input type="text" name="city" id="city" value="<%= address?.city || '' %>"
+                                placeholder="City"
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500">
+
+                            <p id="cityError" class="text-red-500 text-xs mt-1"></p>
                         </div>
 
                         <div class="relative col-span-2">
-                            <input type="tel" name="phone" value="<%= address?.phone || '' %>" placeholder="Phone" required
+                            <input type="tel" name="phone" value="<%= address?.phone || '' %>" placeholder="Phone"
                                 class="w-full px-4 py-3 border border-gray-400 rounded-sm outline-none focus:border-black transition-colors placeholder:text-gray-500 pr-10">
                             <div class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                                 <i data-lucide="smartphone" class="w-5 h-5"></i>
                             </div>
+
+                            <p id="phoneError" class="text-red-500 text-xs mt-1"></p>
                         </div>
 
                         <div class="col-span-2 flex items-center gap-3 pt-2">
-                            <input  type="checkbox" name="isDefault" <%= address?.isDefault ? "checked" : "" %> 
-                                class="w-4 h-4 border-gray-400 rounded accent-[#7A8B6E] cursor-pointer">
+                            <input type="checkbox" name="isDefault" <%=address?.isDefault ? "checked" : "" %>
+                            class="w-4 h-4 border-gray-400 rounded accent-[#7A8B6E] cursor-pointer">
                             <label for="defaultAddress" class="text-sm text-gray-700 cursor-pointer">
                                 Set This As Default Address
                             </label>
@@ -313,218 +329,396 @@
     </div>
     </div>
     <div id="toast"
-  class="fixed top-6 right-6 bg-red-500 text-white px-4 py-3 rounded-md shadow-lg opacity-0 -translate-y-2 transition-all duration-300 z-50">
-</div>
+        class="fixed top-6 right-6 bg-red-500 text-white px-4 py-3 rounded-md shadow-lg opacity-0 -translate-y-2 transition-all duration-300 z-50">
+    </div>
 
     <!-- Floating Chat Button -->
     <button
         class="fixed bottom-6 right-6 w-14 h-14 bg-white border border-gray-200 text-gray-800 rounded-full shadow-2xl flex items-center justify-center hover:bg-gray-50 transition-all active:scale-90 z-30">
         <i class="ph ph-chat-centered-text text-2xl"></i>
     </button>
-<script src="https://unpkg.com/lucide@latest">
-   
-</script>
-   <script>
-document.addEventListener("DOMContentLoaded", () => {
-     lucide.createIcons();
+    <script src="https://unpkg.com/lucide@latest">
 
-  const form = document.getElementById("addressForm");
-  const saveBtn = document.getElementById("saveBtn");
-  const cancelBtn = document.getElementById("cancelBtn");
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
 
-  // ===============================
-  // INITIAL STATE (IMPORTANT)
-  // ===============================
-  saveBtn.disabled = true;
-  saveBtn.classList.add("opacity-50", "cursor-not-allowed");
-  cancelBtn.classList.add("hidden");
+            const form = document.getElementById("addressForm");
+            const saveBtn = document.getElementById("saveBtn");
+            const cancelBtn = document.getElementById("cancelBtn");
 
-  // ===============================
-  // STORE INITIAL FORM STATE
-  // ===============================
-  let initialData = new FormData(form);
-  let initialValues = Object.fromEntries(initialData.entries());
+            // ===============================
+            // INITIAL STATE (IMPORTANT)
+            // ===============================
+            saveBtn.disabled = false;
 
-  function isFormChanged() {
-    const currentData = new FormData(form);
-    const currentValues = Object.fromEntries(currentData.entries());
+            cancelBtn.classList.add("hidden");
 
-    return Object.keys(initialValues).some(key => {
-      return initialValues[key] !== currentValues[key];
-    });
-  }
+            // ===============================
+            // STORE INITIAL FORM STATE
+            // ===============================
+            let initialData = new FormData(form);
+            let initialValues = Object.fromEntries(initialData.entries());
 
-  // ===============================
-  // INPUT HANDLING
-  // ===============================
-  document.querySelectorAll("input").forEach(input => {
-    input.addEventListener("input", () => {
+            function isFormChanged() {
+                const currentData = new FormData(form);
+                const currentValues = Object.fromEntries(currentData.entries());
 
-      // clear error
-      const errorEl = document.getElementById(input.name + "Error");
-      if (errorEl) errorEl.innerText = "";
+                return Object.keys(initialValues).some(key => {
+                    return initialValues[key] !== currentValues[key];
+                });
+            }
 
-      input.classList.remove("border-red-500", "focus:border-red-500");
-      input.classList.add("border-gray-400", "focus:border-black");
 
-      if (isFormChanged()) {
-        saveBtn.disabled = false;
-        saveBtn.classList.remove("opacity-50", "cursor-not-allowed");
-        cancelBtn.classList.remove("hidden");
-      } else {
-        saveBtn.disabled = true;
-        saveBtn.classList.add("opacity-50", "cursor-not-allowed");
-        cancelBtn.classList.add("hidden");
-      }
-    });
-  });
+            const nameRegex = /^[A-Za-z]+(?:\s[A-Za-z]+)*$/;
+            const phoneRegex = /^[6-9]\d{9}$/;
+            const postalRegex = /^\d{6}$/;
 
-  // ===============================
-  // CANCEL BUTTON
-  // ===============================
-  cancelBtn.addEventListener("click", () => {
-    window.location.reload();
-  });
+            function showError(field, message) {
+                const input = document.querySelector(`[name="${field}"]`);
+                const error = document.getElementById(field + "Error");
 
-  // ===============================
-  // SUBMIT
-  // ===============================
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+                if (input) {
+                    input.classList.add("border-red-500");
+                    input.classList.remove("border-gray-400");
+                }
 
-    saveBtn.disabled = true;
+                if (error) {
+                    error.textContent = message;
+                }
+            }
 
-    document.querySelectorAll("[id$='Error']").forEach(el => el.innerText = "");
+            function clearError(field) {
+                const input = document.querySelector(`[name="${field}"]`);
+                const error = document.getElementById(field + "Error");
 
-    const formData = new FormData(form);
-    const body = Object.fromEntries(formData.entries());
+                if (input) {
+                    input.classList.remove("border-red-500");
+                    input.classList.add("border-gray-400");
+                }
 
-    try {
-      const res = await fetch(form.action, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      });
+                if (error) {
+                    error.textContent = "";
+                }
+            }
 
-      const data = await res.json();
+            function validateForm() {
 
-      if (!res.ok) {
-  saveBtn.disabled = false;
+                let valid = true;
 
-  if (data.errors && data.errors.length > 0) {
+                const firstName = form.firstName.value.trim();
+                const lastName = form.lastName.value.trim();
+                const addressLine1 = form.addressLine1.value.trim();
+                const country = form.country.value.trim();
+                const city = form.city.value.trim();
+                const postalCode = form.postalCode.value.trim();
+                const phone = form.phone.value.trim();
 
-    showToast("Please fix the highlighted fields");
+                document.querySelectorAll("[id$='Error']").forEach(el => el.textContent = "");
 
-    data.errors.forEach(err => {
-      const input = document.querySelector(`[name="${err.field}"]`);
-      const errorEl = document.getElementById(err.field + "Error");
+                if (!firstName) {
+                    showError("firstName", "First name is required");
+                    valid = false;
+                } else if (firstName.length < 3) {
+                    showError("firstName", "Minimum 3 characters");
+                    valid = false;
+                } else if (!nameRegex.test(firstName)) {
+                    showError("firstName", "Only letters are allowed");
+                    valid = false;
+                }
 
-      if (errorEl) errorEl.innerText = err.message;
+                if (!lastName) {
+                    showError("lastName", "Last name is required");
+                    valid = false;
+                } else if (!nameRegex.test(lastName)) {
+                    showError("lastName", "Only letters are allowed");
+                    valid = false;
+                }
 
-      if (input) {
-        input.classList.remove("border-gray-400", "focus:border-black");
-        input.classList.add("border-red-500", "focus:border-red-500");
-      }
-    });
-   
-  } else if (data.message) {
-  
-    showToast(data.message);
+                if (!addressLine1) {
+                    showError("addressLine1", "Address Line 1 is required");
+                    valid = false;
+                }
 
-    
-  }
+                if (!country) {
+                    showError("country", "Country is required");
+                    valid = false;
+                }
 
-  return;
-}
+                if (!city) {
+                    showError("city", "City is required");
+                    valid = false;
+                }
 
-      // ✅ SUCCESS
-      showToast("Address saved successfully", "success");
-       location.href = "/address";
+                if (!postalCode) {
+                    showError("postalCode", "Postal Code is required");
+                    valid = false;
+                } else if (!postalRegex.test(postalCode)) {
+                    showError("postalCode", "Postal Code must be 6 digits");
+                    valid = false;
+                }
 
-      // 🔥 reset state
-      initialData = new FormData(form);
-      initialValues = Object.fromEntries(initialData.entries());
+                if (!phone) {
+                    showError("phone", "Phone number is required");
+                    valid = false;
+                } else if (!phoneRegex.test(phone)) {
+                    showError("phone", "Enter a valid phone number");
+                    valid = false;
+                }
 
-      saveBtn.disabled = true;
-      saveBtn.classList.add("opacity-50", "cursor-not-allowed");
+                return valid;
+            }
 
-      cancelBtn.classList.add("hidden");
+            form.firstName.addEventListener("input", () => {
+                clearError("firstName");
 
-    } catch (err) {
-      console.log(err);
-      saveBtn.disabled = false;
-      showToast("Something went wrong");
-    }
-  });
+                const value = form.firstName.value.trim();
 
-  // ===============================
-  // PINCODE AUTO FILL (FIXED POSITION)
-  // ===============================
-  const postalInput = document.getElementById("postalCode");
+                if (!value) return;
 
-  if (postalInput) {
-    let timeout;
+                if (value.length < 3) {
+                    showError("firstName", "Minimum 3 characters");
+                } else if (!nameRegex.test(value)) {
+                    showError("firstName", "Only letters are allowed");
+                }
+            });
 
-    postalInput.addEventListener("input", function () {
+            form.lastName.addEventListener("input", () => {
+                clearError("lastName");
 
-      this.value = this.value.replace(/\D/g, '').slice(0, 6);
-      const pincode = this.value;
+                const value = form.lastName.value.trim();
 
-      if (pincode.length < 6) {
-  document.getElementById("city").value = "";
-  document.getElementById("country").value = "";
+                if (!value) return;
 
-  document.getElementById("city").readOnly = false;
-  document.getElementById("country").readOnly = false;
+                if (!nameRegex.test(value)) {
+                    showError("lastName", "Only letters are allowed");
+                }
+            });
 
-  return;
-}
+            form.addressLine1.addEventListener("input", () => {
+                clearError("addressLine1");
 
-      clearTimeout(timeout);
+                if (!form.addressLine1.value.trim()) {
+                    showError("addressLine1", "Address Line 1 is required");
+                }
+            });
 
-      timeout = setTimeout(async () => {
-        try {
-          const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
-          const data = await res.json();
+            form.country.addEventListener("input", () => {
+                clearError("country");
 
-          if (data[0].Status === "Success") {
-            const postOffice = data[0].PostOffice[0];
+                if (!form.country.value.trim()) {
+                    showError("country", "Country is required");
+                }
+            });
 
-            document.getElementById("city").value = postOffice.District;
-            document.getElementById("country").value = "India";
+            form.city.addEventListener("input", () => {
+                clearError("city");
 
-            document.getElementById("city").readOnly = true;
-            document.getElementById("country").readOnly = true;
-          }
+                if (!form.city.value.trim()) {
+                    showError("city", "City is required");
+                }
+            });
 
-        } catch (err) {
-          console.log(err);
+            form.postalCode.addEventListener("input", () => {
+                clearError("postalCode");
+
+                form.postalCode.value = form.postalCode.value.replace(/\D/g, "").slice(0, 6);
+
+                if (!form.postalCode.value) return;
+
+                if (!postalRegex.test(form.postalCode.value)) {
+                    showError("postalCode", "Postal Code must be 6 digits");
+                }
+            });
+
+            form.phone.addEventListener("input", () => {
+                clearError("phone");
+
+                form.phone.value = form.phone.value.replace(/\D/g, "").slice(0, 10);
+
+                if (!form.phone.value) return;
+
+                if (!phoneRegex.test(form.phone.value)) {
+                    showError("phone", "Enter a valid phone number");
+                }
+            });
+
+            // ===============================
+            // INPUT HANDLING
+            // ===============================
+            document.querySelectorAll("input").forEach(input => {
+                input.addEventListener("input", () => {
+
+                    // clear error
+                    const errorEl = document.getElementById(input.name + "Error");
+                    if (errorEl) errorEl.innerText = "";
+
+                    input.classList.remove("border-red-500", "focus:border-red-500");
+                    input.classList.add("border-gray-400", "focus:border-black");
+
+                    if (isFormChanged()) {
+                        saveBtn.disabled = false;
+                        saveBtn.classList.remove("opacity-50", "cursor-not-allowed");
+                        cancelBtn.classList.remove("hidden");
+                    } else {
+                        saveBtn.disabled = true;
+                        saveBtn.classList.add("opacity-50", "cursor-not-allowed");
+                        cancelBtn.classList.add("hidden");
+                    }
+                });
+            });
+
+            // ===============================
+            // CANCEL BUTTON
+            // ===============================
+            cancelBtn.addEventListener("click", () => {
+                window.location.reload();
+            });
+
+            // ===============================
+            // SUBMIT
+            // ===============================
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                if (!validateForm()) {
+                    return;
+                }
+                saveBtn.disabled = true;
+
+                document.querySelectorAll("[id$='Error']").forEach(el => el.innerText = "");
+
+                const formData = new FormData(form);
+                const body = Object.fromEntries(formData.entries());
+
+                try {
+                    const res = await fetch(form.action, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body)
+                    });
+
+                    const data = await res.json();
+                    console.log("Status:", res.status);
+                    console.log("Response:", data);
+                    if (!res.ok) {
+
+                        saveBtn.disabled = false;
+
+                        if (data.errors) {
+
+                            showToast("Please fix the highlighted fields");
+
+                            data.errors.forEach(err => {
+
+                                const input = document.querySelector(`[name="${err.field}"]`);
+                                const errorEl = document.getElementById(`${err.field}Error`);
+
+                                if (errorEl) {
+                                    errorEl.textContent = err.message.replace(/"/g, "");
+                                }
+
+                                if (input) {
+                                    input.classList.remove("border-gray-400", "focus:border-black");
+                                    input.classList.add("border-red-500", "focus:border-red-500");
+                                }
+                            });
+
+                            return;
+                        }
+
+                        showToast(data.message || "Something went wrong");
+                        return;
+                    }
+
+                    // ✅ SUCCESS
+                    showToast("Address saved successfully", "success");
+                    location.href = "/address";
+
+                    // 🔥 reset state
+                    initialData = new FormData(form);
+                    initialValues = Object.fromEntries(initialData.entries());
+
+                    saveBtn.disabled = true;
+                    saveBtn.classList.add("opacity-50", "cursor-not-allowed");
+
+                    cancelBtn.classList.add("hidden");
+
+                } catch (err) {
+                    console.log(err);
+                    saveBtn.disabled = false;
+                    showToast("Something went wrong");
+                }
+            });
+
+            // ===============================
+            // PINCODE AUTO FILL (FIXED POSITION)
+            // ===============================
+            const postalInput = document.getElementById("postalCode");
+
+            if (postalInput) {
+                let timeout;
+
+                postalInput.addEventListener("input", function () {
+
+                    this.value = this.value.replace(/\D/g, '').slice(0, 6);
+                    const pincode = this.value;
+
+                    if (pincode.length < 6) {
+                        document.getElementById("city").value = "";
+                        document.getElementById("country").value = "";
+
+                        document.getElementById("city").readOnly = false;
+                        document.getElementById("country").readOnly = false;
+
+                        return;
+                    }
+
+                    clearTimeout(timeout);
+
+                    timeout = setTimeout(async () => {
+                        try {
+                            const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+                            const data = await res.json();
+
+                            if (data[0].Status === "Success") {
+                                const postOffice = data[0].PostOffice[0];
+
+                                document.getElementById("city").value = postOffice.District;
+                                document.getElementById("country").value = "India";
+
+                                document.getElementById("city").readOnly = true;
+                                document.getElementById("country").readOnly = true;
+                            }
+
+                        } catch (err) {
+                            console.log(err);
+                        }
+                    }, 300);
+                });
+            }
+
+        });
+
+        function showToast(message, type = "error") {
+            const toast = document.getElementById("toast");
+            if (!toast) return;
+
+            toast.innerText = message;
+
+            toast.className =
+                "fixed top-6 right-6 px-4 py-3 rounded-md shadow-lg z-50 transition-all duration-300 " +
+                (type === "error" ? "bg-red-500 text-white" : "bg-green-500 text-white");
+
+            toast.classList.remove("opacity-0", "-translate-y-2");
+            toast.classList.add("opacity-100", "translate-y-0");
+
+            setTimeout(() => {
+                toast.classList.remove("opacity-100");
+                toast.classList.add("opacity-0", "-translate-y-2");
+            }, 3000);
         }
-      }, 300);
-    });
-  }
-
-});
-
-function showToast(message, type = "error") {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-
-  toast.innerText = message;
-
-  toast.className =
-    "fixed top-6 right-6 px-4 py-3 rounded-md shadow-lg z-50 transition-all duration-300 " +
-    (type === "error" ? "bg-red-500 text-white" : "bg-green-500 text-white");
-
-  toast.classList.remove("opacity-0", "-translate-y-2");
-  toast.classList.add("opacity-100", "translate-y-0");
-
-  setTimeout(() => {
-    toast.classList.remove("opacity-100");
-    toast.classList.add("opacity-0", "-translate-y-2");
-  }, 3000);
-}
-</script>
+    </script>
 </body>
 
 </html>
