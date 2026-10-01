@@ -160,13 +160,18 @@ export const productSchema = Joi.object({
         }),
 
     variants: Joi.array()
-        .items(variantSchema)
-        .min(1)
-        .required()
-        .messages({
-            "array.min": "At least one variant is required",
-            "any.required": "Variants are required"
-        }),
+    .items(variantSchema)
+    .min(1)
+    .required()
+    .unique((a, b) => {
+        return a.color.trim().toLowerCase() ===
+               b.color.trim().toLowerCase();
+    })
+    .messages({
+        "array.min": "At least one variant is required",
+        "any.required": "Variants are required",
+        "array.unique": "Each variant must have a unique color"
+    }),
     isActive: Joi.boolean()
         .default(true),
     isDeleted: Joi.boolean()

@@ -25,7 +25,7 @@
         </div>
 
         <nav class="flex-1 px-4 space-y-1">
-            <a href="/adminAuth/dashboard" class="<%= activeNavLink === 'Dashboard' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50 '%> flex items-center gap-3 px-4 py-3  rounded-xl  transition-colors">
+            <a href="/dashboard" class="<%= activeNavLink === 'Dashboard' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50 '%> flex items-center gap-3 px-4 py-3  rounded-xl  transition-colors">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
             </a>
             <a href="/products" class="<%= activeNavLink === 'Products' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50'%> flex items-center gap-3 px-4 py-3 rounded-xl  transition-colors">
@@ -43,10 +43,8 @@
             <a href="/couponManagement" class=" <%= activeNavLink === 'Coupon' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50'%> flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl  transition-colors">
                 <i data-lucide="ticket" class="w-5 h-5"></i> Coupons
             </a>
-            <a href="#" class=" <%= activeNavLink === 'Banners' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50 '%> flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl  transition-colors">
-                <i data-lucide="image" class="w-5 h-5"></i> Banners
-            </a>
-            <a href="#" class=" <%= activeNavLink === 'Sales Report' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50'%> flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl  transition-colors">
+            
+            <a href="/salesReport" class=" <%= activeNavLink === 'Sales Report' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50'%> flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl  transition-colors">
                 <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Sales Report
             </a>
             <a href="/couponManagement/offers" class=" <%= activeNavLink === 'Offers' ? 'active-nav shadow-sm' : 'no-active-nav text-gray-600 hover:bg-white/50'%> flex items-center gap-3 px-4 py-3 text-gray-600 rounded-xl  transition-colors">

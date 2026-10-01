@@ -1,8 +1,6 @@
 import { createCategory, getCategories, updateCategory } from "../../services/admin/categoryService.js";
 import Category from "../../models/categoryModel.js"
 import { categorySchema } from "../../validators/categoryValidation.js"
-import { AppError } from "../../utils/AppError.js";
-import { STATUS } from "../../utils/statusCodes.js";
 
 
 export const loadCategory = async (req, res) => {
@@ -41,7 +39,7 @@ export const loadAddCategory = async (req, res) => {
 }
 
 export const addCategory = async (req, res) => {
-
+console.log ("add category hit")
   try {
 
     const { error } =
@@ -134,19 +132,20 @@ export const deleteCategory = async (req, res) => {
         isDeleted: true,
         isActive: false
       }
-    );
-
+    )
     res.json({
       success: true
-    });
+    })
 
   } catch (error) {
-
+    console.log(error)
     res.status(500).json({
       success: false
-    });
+    })
   }
 }
+
+
 
 export const restoreCategory = async (req, res) => {
   try {
@@ -259,13 +258,11 @@ export const loadEditCategory = async (req, res) => {
 
   const category = await Category.findById(req.params.id);
 
-
-
   res.render("admin/editCategory", {
     category,
 
     activeNavLink: "Category"
-  });
+  })
 }
 
 export const editCategory = async (req, res) => {
@@ -318,3 +315,8 @@ export const editCategory = async (req, res) => {
 
 
 }
+
+
+
+
+

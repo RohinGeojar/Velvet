@@ -1,9 +1,9 @@
 import express from 'express';
 import {  loadForgotPassword, loadHome, loadLogin, loadRegister, loadResetPassword, login, logout, resendSignupOtp, resetPassword, sendForgotOtp, signup, verifyForgotOtp, verifyOtp } from '../../controllers/user/authController.js';
-import { googleAuth, googleAuthCallback, isLogged, userAuth } from '../../middleware/auth.js';
+import { googleAuth, googleAuthCallback, isLogged } from '../../middleware/auth.js';
 import { loginSchema, signupSchema } from '../../validators/authValidator.js';
 import { validate } from "../../middleware/validate.js";
-import { loadOverview } from '../../controllers/user/profileController.js';
+
 import { navbarCounts } from '../../middleware/navbarCounts.js';
 
 

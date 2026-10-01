@@ -78,35 +78,43 @@ export const updateProductService = async (id, body, files, value) => {
     }
     let productName = capitalizeName(value.productName)
     let productTitle = normalizeText(value.productTitle)
+    
 
     body.variants.forEach((variant, index) => {
 
         let existingImages = variant.existingImages || []
 
         if (!Array.isArray(existingImages)) {
-            existingImages = [existingImages]
+            existingImages = existingImages ? [existingImages] : []
         }
 
+        const oldImages = existingImages.map(url => ({
+            public_id: "",
+            url
+        }))
 
-        const oldImages =
-            existingImages.map(url => ({
-                public_id:"",
-                url
-            }))
-
-
-        const variantFiles = files.filter(file => file.fieldname === `variantImages_${index}`)
+        const variantFiles = files.filter(
+            file => file.fieldname === `variantImages_${index}`
+        )
 
         const newImages = variantFiles.map(file => ({
             public_id: file.filename,
             url: file.path
         }))
+
+        if ((oldImages.length + newImages.length) < 3) {
+            throw new AppError(
+                `Variant ${index + 1} must contain at least 3 images`,
+                400
+            )
+        }
+
         variant.images = [
             ...oldImages,
             ...newImages
         ]
 
-        delete variant.existingImages;
+        delete variant.existingImages
     })
 
 
@@ -116,7 +124,7 @@ export const updateProductService = async (id, body, files, value) => {
             ...value, productName, productTitle,
             variants: body.variants, slug
         },
-        { new: true }
+        { returnDocument:"after" }
     )
 
     return updatedProduct;

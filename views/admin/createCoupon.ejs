@@ -492,6 +492,25 @@
       discardBtn.addEventListener('click', openModal);
       cancelDiscardBtn.addEventListener('click', closeModal);
 
+      confirmDiscardBtn.addEventListener("click", () => {
+
+    couponForm.reset();
+
+    // Restore discount UI
+    toggleMaxDiscount();
+
+    // Clear validation messages
+    clearErrors();
+
+    closeModal();
+
+    showToast(
+        "<%= isEdit ? 'Changes discarded.' : 'Form reset successfully.' %>",
+        "discard"
+    );
+
+});
+
 
 
       // Make sidebar links interactively selectable for premium feel

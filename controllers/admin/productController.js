@@ -1,8 +1,7 @@
 import Category from "../../models/categoryModel.js"
 import Product from "../../models/productModel.js"
 import { createProduct, updateProductService } from "../../services/admin/productService.js"
-import { AppError } from "../../utils/AppError.js"
-import { STATUS } from "../../utils/statusCodes.js"
+
 import { productSchema } from "../../validators/productValidator.js"
 
 
@@ -27,12 +26,22 @@ export const loadProducts = async (req, res) => {
 
         if (search) {
 
-            query.productName = {
-                $regex: search,
-                $options: "i"
-            }
+            query.$or = [
+                {
+                    productName: {
+                        $regex: search,
+                        $options: "i"
+                    }
+                },
+                {
+                    slug: {
+                        $regex: search,
+                        $options: "i"
+                    }
+                }
+            ]
         }
-   
+
 
 
 
@@ -84,29 +93,23 @@ export const loadProducts = async (req, res) => {
             })
                 .populate("category")
                 .sort(sortOption)
-                .lean();
+                .lean()
 
             const outOfStockProducts = allProducts.filter(product => {
-
                 const totalStock = product.variants.reduce((total, variant) => {
-
                     return total + variant.sizes.reduce((sum, size) => {
+                        return sum + size.stock
+                    }, 0)
+                }, 0)
+                return totalStock === 0
+            })
 
-                        return sum + size.stock;
-
-                    }, 0);
-
-                }, 0);
-
-                return totalStock === 0;
-            });
-
-            totalFilteredProducts = outOfStockProducts.length;
+            totalFilteredProducts = outOfStockProducts.length
 
             products = outOfStockProducts.slice(
                 skip,
                 skip + limit
-            );
+            )
 
         } else {
 
@@ -115,12 +118,12 @@ export const loadProducts = async (req, res) => {
                 .sort(sortOption)
                 .skip(skip)
                 .limit(limit)
-                .lean();
+                .lean()
 
-            totalFilteredProducts = await Product.countDocuments(query);
+            totalFilteredProducts = await Product.countDocuments(query)
         }
 
-        const totalPages = Math.ceil(totalFilteredProducts / limit) || 1;
+        const totalPages = Math.ceil(totalFilteredProducts / limit) || 1
 
 
 
@@ -143,11 +146,11 @@ export const loadProducts = async (req, res) => {
                 isDeleted: false
             })
 
-        ]);
+        ])
 
         const allProducts = await Product.find({
             isDeleted: false
-        });
+        })
 
         const outOfStockCount = allProducts.filter(product => {
 
@@ -155,7 +158,7 @@ export const loadProducts = async (req, res) => {
 
                 return total + variant.sizes.reduce((sum, size) => {
 
-                    return sum + size.stock;
+                    return sum + size.stock
 
                 }, 0)
 
@@ -164,9 +167,6 @@ export const loadProducts = async (req, res) => {
             return totalStock === 0
 
         }).length
-
-
-
 
         res.render("admin/productManagement", {
 
@@ -235,10 +235,7 @@ export const addProduct = async (req, res) => {
             })
         }
 
-        const product = await createProduct(
-            value,
-            req.files
-        )
+         await createProduct( value, req.files )
 
         return res.status(201).json({
             success: true,
@@ -248,7 +245,7 @@ export const addProduct = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error)
+        console.log("add product error",error)
     }
 }
 
@@ -406,6 +403,7 @@ export const searchProducts = async (req, res) => {
 
     try {
 
+
         const page = parseInt(req.query.page) || 1
 
         const limit = parseInt(req.query.limit) || 5
@@ -427,44 +425,56 @@ export const searchProducts = async (req, res) => {
         if (sort === "z-a") {
             sortOption = { productName: -1 }
         }
+       
+
 
         let query = {}
 
         if (search) {
 
-            query.productName = {
-                $regex: search,
-                $options: "i"
-            };
+            query.$or = [
+                {
+                    productName: {
+                        $regex: search,
+                        $options: "i"
+                    }
+                },
+                {
+                    slug: {
+                        $regex: search,
+                        $options: "i"
+                    }
+                }
+            ]
         }
 
 
 
         if (filter === "Active") {
 
-            query.isActive = true;
-            query.isDeleted = false;
+            query.isActive = true
+            query.isDeleted = false
         }
 
         else if (filter === "Blocked") {
 
-            query.isActive = false;
-            query.isDeleted = false;
+            query.isActive = false
+            query.isDeleted = false
         }
 
         else if (filter === "OutOfStock") {
 
-            query.isDeleted = false;
+            query.isDeleted = false
         }
 
         else if (filter === "Deleted") {
 
-            query.isDeleted = true;
+            query.isDeleted = true
         }
 
         else {
 
-            query.isDeleted = false;
+            query.isDeleted = false
         }
 
 
@@ -472,19 +482,11 @@ export const searchProducts = async (req, res) => {
 
         let products =
             await Product.find(query)
-
                 .populate("category")
-
                 .sort(sortOption)
-
                 .skip(skip)
-
                 .limit(limit)
-
-                .lean();
-
-
-
+                .lean()
 
         if (filter === "OutOfStock") {
 
@@ -496,20 +498,17 @@ export const searchProducts = async (req, res) => {
 
                             return total + variant.sizes.reduce((sum, size) => {
 
-                                return sum + size.stock;
+                                return sum + size.stock
 
-                            }, 0);
+                            }, 0)
 
-                        }, 0);
+                        }, 0)
 
-                    return totalStock === 0;
-                });
+                    return totalStock === 0
+                })
         }
 
-
-
-
-        let totalFilteredProducts = await Product.countDocuments(query);
+        let totalFilteredProducts = await Product.countDocuments(query)
 
 
         if (filter === "OutOfStock") {
@@ -524,13 +523,13 @@ export const searchProducts = async (req, res) => {
 
                     return total + variant.sizes.reduce((sum, size) => {
 
-                        return sum + size.stock;
+                        return sum + size.stock
 
                     }, 0)
 
                 }, 0)
 
-                return totalStock === 0;
+                return totalStock === 0
 
             }).length
         }

@@ -79,11 +79,9 @@ export const getOfferService = async ({
     try {
         const skip = (page - 1) * limit
 
-        let query = {}
+        let query = { isDeleted: false }
 
-        if (offerType) {
-            query.offerType = offerType
-        }
+        query.offerType = offerType || "product"
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -146,6 +144,7 @@ export const getOfferService = async ({
                 break
 
             case "deleted":
+                delete query.isDeleted
                 query.isDeleted = true
                 break
         }
@@ -267,3 +266,94 @@ export const getOfferService = async ({
         console.log("get offer service error", error)
     }
 }
+
+
+
+export const updateOfferService = async (id, offerData, offerName) => {
+
+    return await Offer.findByIdAndUpdate(id, {
+        offerName,
+        description: offerData.description,
+        offerType: offerData.offerType,
+
+        products: offerData.offerType === "product" ? (offerData.products || []) : [],
+
+        categories: offerData.offerType === "category" ? (offerData.categories || []) : [],
+
+        discountType: offerData.discountType,
+        discountValue: offerData.discountValue,
+
+        maxDiscountAmount: offerData.discountType === "percentage" ? offerData.maxDiscountAmount : null,
+
+        startDate: offerData.startDate,
+        expiryDate: offerData.expiryDate,
+
+        isActive: offerData.isActive === true || offerData.isActive === "on"
+    },
+        {
+            new: true,
+            runValidators: true
+        }
+    )
+
+}
+
+
+
+
+
+
+
+export const toggleOfferservice = async (id) => {
+    try {
+
+        const offer = await Offer.findById(id)
+
+        if (!offer) return null
+
+        offer.isActive = !offer.isActive
+
+        await offer.save()
+
+        return offer
+
+    } catch (error) {
+        console.log("Toggle offer service error", error)
+    }
+}
+
+
+export const deleteOfferservice = async (id) => {
+    try {
+        const offer = await Offer.findByIdAndUpdate(id,
+            {
+                isDeleted: true
+            },
+            {
+                new: true
+            }
+        )
+
+
+    } catch (error) {
+        console.log("delete offer service error", error)
+    }
+}
+
+export const restoreOfferservice = async (id) => {
+    try {
+        const offer = await Offer.findByIdAndUpdate(id,
+            {
+                isDeleted: false
+            },
+            {
+                new: true
+            }
+        )
+    } catch (error) {
+        console.log("restore offer service error", error)
+    }
+}
+
+
+

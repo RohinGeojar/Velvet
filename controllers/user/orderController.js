@@ -32,7 +32,7 @@ export const searchOrders = async (req, res) => {
     try {
         const userId = req.session.user
 
-        const user = await User.findById(userId).lean()
+
         const data = await getOrders(userId, req.query)
 
         res.json({
@@ -55,6 +55,7 @@ export const orderDetails = async (req, res) => {
         const user = await User.findById(userId).lean()
 
         const order = await Order.findOne({ _id: orderId, userId }).lean()
+      
 
         if (!order) {
             return
@@ -75,6 +76,7 @@ export const orderDetails = async (req, res) => {
 
 export const cancelOrderItem = async (req, res) => {
     try {
+        
         const { orderId, itemId } = req.params
 
         const { reason } = req.body
@@ -124,13 +126,10 @@ export const cancelOrder = async (req, res) => {
         })
 
     } catch (error) {
-        console.log("Cancel order error")
+        console.log("Cancel order error", error)
         return res.status(500).json({
-
             success: false,
-
             message: "Something went wrong"
-
         })
     }
 }
@@ -146,7 +145,7 @@ export const requestReturn = async (req, res) => {
 
         if (!result.success) {
             return res.status(400).json(result)
-            console.log("Failed")
+
         }
 
         return res.json({
@@ -169,9 +168,6 @@ export const loadInvoice = async (req, res) => {
         })
         const invoiceOrder = order.toObject();
 
-        invoiceOrder.items = invoiceOrder.items.filter(
-            item => item.status !== "Cancelled"
-        )
 
         if (!order) {
             return res.status(404).render("404");
@@ -183,15 +179,9 @@ export const loadInvoice = async (req, res) => {
             showFooter: false
         })
     } catch (error) {
-        console.log("Return request error", error)
+        console.log("load invoce error", error)
     }
 }
-
-
-
-
-
-
 
 
 
@@ -204,7 +194,7 @@ export const downloadInvoice = async (req, res) => {
         const invoiceOrder = order.toObject();
 
         invoiceOrder.items = invoiceOrder.items.filter(
-            item => item.status !== "Cancelled"
+            item => !["Cancelled", "Returned"].includes(item.status)
         )
         const user = await User.findById(req.user._id)
 
@@ -257,3 +247,6 @@ export const downloadInvoice = async (req, res) => {
         res.status(500).send("Error generating invoice")
     }
 }
+
+
+

@@ -446,7 +446,7 @@
 
         <input
             type="text"
-            oninput="updateVariantTitle(this, '${variantId}')"
+            oninput="updateVariantTitle(this, '${variantId}'); validateVariantColors()"
             placeholder="e.g. Olive Green"
             name="variants[${currentIndex}][color]"
             class="form-input accent-ring"
@@ -493,7 +493,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Regular Price</label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">$</span>
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">₹</span>
                                 <input type="number" name="variants[${currentIndex}][regularPrice]" step="0.01" placeholder="0.00" class="form-input pl-8 accent-ring">
                             </div>
                                 <p class="text-red-500 text-sm mt-1 error-text" data-error="variants.${currentIndex}.regularPrice"></p>
@@ -501,7 +501,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Sale Price (Optional)</label>
                             <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">$</span>
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">₹</span>
                                 <input type="number" name="variants[${currentIndex}][salePrice]" step="0.01" placeholder="0.00" class="form-input pl-8 accent-ring">
                                 </div>
                                 <p class="text-red-500 text-sm mt-1 error-text" data-error="variants.${currentIndex}.salePrice"></p>
@@ -597,6 +597,53 @@
             function updateVariantTitle(input, id) {
                 const title = document.querySelector(`#${id} .variant-title`);
                 title.textContent = input.value ? `Variant: ${input.value}` : 'Variant: New Variant';
+            }
+            function validateVariantColors() {
+                const variantCards = document.querySelectorAll(
+                    "#variantsContainer > div"
+                );
+
+                const colorMap = new Map();
+                let isValid = true;
+
+                // Clear previous duplicate errors
+                document.querySelectorAll(".duplicate-color-error")
+                    .forEach(el => el.remove());
+
+                variantCards.forEach(card => {
+                    const input = card.querySelector(
+                        'input[name*="[color]"]'
+                    );
+
+                    if (!input) return;
+
+                    const color = input.value.trim().toLowerCase()
+                        .replace(/\s+/g, " ");
+
+                    if (!color) return;
+
+                    if (colorMap.has(color)) {
+                        isValid = false;
+
+                        input.classList.add("border-red-500");
+
+                        const error = document.createElement("p");
+                        error.className =
+                            "text-red-500 text-sm mt-1 duplicate-color-error";
+
+                        error.textContent = "This color variant already exists.";
+
+                        input.parentElement.appendChild(error);
+
+                        const firstInput = colorMap.get(color);
+                        firstInput.classList.add("border-red-500");
+                    } else {
+                        colorMap.set(color, input);
+                        input.classList.remove("border-red-500");
+                    }
+                });
+
+                return isValid;
             }
 
             function addSizeRow(variantId, variantIndex) {
@@ -742,123 +789,128 @@
                     }
                 });
             }
-              // ==================================
-    // LIVE ERROR CLEARING
-    // ==================================
+            // ==================================
+            // LIVE ERROR CLEARING
+            // ==================================
 
-    document.addEventListener("input", function (e) {
+            document.addEventListener("input", function (e) {
 
-        const name = e.target.name;
+                const name = e.target.name;
 
-        if (!name) return;
+                if (!name) return;
 
-        const path = name
-            .replace(/\[/g, ".")
-            .replace(/\]/g, "")
-            .replace(/\.\./g, ".");
+                const path = name
+                    .replace(/\[/g, ".")
+                    .replace(/\]/g, "")
+                    .replace(/\.\./g, ".");
 
-        const errorElement =
-            document.querySelector(
-                `[data-error="${path}"]`
-            );
+                const errorElement =
+                    document.querySelector(
+                        `[data-error="${path}"]`
+                    );
 
-        if (errorElement) {
+                if (errorElement) {
 
-            errorElement.textContent = "";
+                    errorElement.textContent = "";
 
-        }
+                }
 
-    });
+            });
 
-    document.addEventListener("change", function (e) {
+            document.addEventListener("change", function (e) {
 
-        const name = e.target.name;
+                const name = e.target.name;
 
-        if (!name) return;
+                if (!name) return;
 
-        const path = name
-            .replace(/\[/g, ".")
-            .replace(/\]/g, "")
-            .replace(/\.\./g, ".");
+                const path = name
+                    .replace(/\[/g, ".")
+                    .replace(/\]/g, "")
+                    .replace(/\.\./g, ".");
 
-        const errorElement =
-            document.querySelector(
-                `[data-error="${path}"]`
-            );
+                const errorElement =
+                    document.querySelector(
+                        `[data-error="${path}"]`
+                    );
 
-        if (errorElement) {
+                if (errorElement) {
 
-            errorElement.textContent = "";
+                    errorElement.textContent = "";
 
-        }
+                }
 
-    });
+            });
 
             // ================================= 
 
-            const productForm =
-                document.getElementById("productForm");
+            const productForm = document.getElementById("productForm");
 
-            productForm.addEventListener(
-                "submit",
-                async function (e) {
+            productForm.addEventListener("submit", async function (e) {
 
-                    e.preventDefault();
+                e.preventDefault();
+                if (!validateVariantColors()) {
+                    showToast(
+                        "Each variant must have a unique color",
+                        "error"
+                    );
 
-                    // clear old errors
-                    document
-                        .querySelectorAll(".error-text")
-                        .forEach(el => el.textContent = "");
+                    return;
+                }
 
-                    // image validation
-                    const imageInputs =
-                        document.querySelectorAll(
-                            ".variant-image-input"
+                // clear old errors
+                document
+                    .querySelectorAll(".error-text")
+                    .forEach(el => el.textContent = "");
+
+                // image validation
+                const imageInputs =
+                    document.querySelectorAll(
+                        ".variant-image-input"
+                    );
+
+
+
+                try {
+
+                    const formData =
+                        new FormData(productForm);
+
+                    const response = await fetch(
+
+                        "/products/add",
+
+                        {
+                            method: "POST",
+
+                            body: formData
+                        }
+                    );
+
+                    const data = await response.json();
+
+                    // ================= SUCCESS =================
+
+                    if (data.success) {
+
+                        showToast(
+                            data.message,
+                            "success"
                         );
 
-                    
+                        productForm.reset();
+                        window.location.href =
+                            data.redirect;
 
-                    try {
+                        return;
+                    }
 
-                        const formData =
-                            new FormData(productForm);
+                    // ================= VALIDATION =================
 
-                        const response = await fetch(
+                    if (data.errors) {
 
-                            "/products/add",
-
-                            {
-                                method: "POST",
-
-                                body: formData
-                            }
-                        );
-
-                        const data = await response.json();
-
-                        // ================= SUCCESS =================
-
-                        if (data.success) {
-
-                            showToast(
-                                data.message,
-                                "success"
-                            );
-
-                            productForm.reset();
-                            window.location.href =
-                                data.redirect;
-
-                            return;
-                        }
-
-                        // ================= VALIDATION =================
-
-                        if (data.errors) {
-
-                            showErrors(data.errors);
-                        }
-                        for (const input of imageInputs) {
+                        showErrors(data.errors);
+                    }
+                    for (const input of imageInputs) {
 
                         if (input.files.length < 3) {
 
@@ -871,16 +923,16 @@
                         }
                     }
 
-                    } catch (error) {
+                } catch (error) {
 
-                        console.log(error);
+                    console.log(error);
 
-                        showToast(
-                            "Something went wrong",
-                            "error"
-                        );
-                    }
+                    showToast(
+                        "Something went wrong",
+                        "error"
+                    );
                 }
+            }
             );
             function showToast(message, type = "success") {
 

@@ -892,3 +892,15 @@
     </script>
 </body>
 </html>
+
+
+ <!-- Search & Filter Controls -->
+                            <div class="flex items-center space-x-3">
+
+                                <select id="type-filter"
+                                    class="px-2.5 py-1.5 text-xs border border-gray-200 rounded-md focus:outline-none focus:border-sage-500 bg-white text-gray-600">
+                                    <option value="all">All Types</option>
+                                    <option value="withdrawal">Withdrawals</option>
+                                    <option value="deposit">Deposits</option>
+                                </select>
+                            </div>

@@ -314,177 +314,134 @@
 
                         <!-- Table Action Tabs and Control Filters Bar -->
                         <!-- Filter Bar -->
-<!-- ===================== OFFER TOOLBAR ===================== -->
+                        <!-- ===================== OFFER TOOLBAR ===================== -->
 
-<form
-    id="filterForm"
-    action="/couponManagement/offers"
-    method="GET"
-    class="bg-white border rounded-xl px-5 py-4 flex items-center gap-4">
+                        <form id="filterForm" action="/couponManagement/offers" method="GET"
+                            class="bg-white border rounded-xl px-5 py-4 flex items-center gap-4">
 
-    <!-- Preserve Selected Offer Type -->
-    <input
-        type="hidden"
-        id="offerTypeInput"
-        name="offerType"
-        value="<%= offerType || 'product' %>">
+                            <!-- Preserve Selected Offer Type -->
+                            <input type="hidden" id="offerTypeInput" name="offerType"
+                                value="<%= offerType || 'product' %>">
 
-    <!-- Product / Category Toggle -->
-    <div class="flex rounded-lg overflow-hidden border shrink-0">
+                            <!-- Product / Category Toggle -->
+                            <div class="flex rounded-lg overflow-hidden border shrink-0">
 
-        <button
-            type="button"
-            data-type="product"
-            class="offerTab px-5 py-2 text-sm font-medium transition
+                                <button type="button" data-type="product" class="offerTab px-5 py-2 text-sm font-medium transition
             <%= offerType !== 'category'
                 ? 'bg-[#8C6239] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-100' %>">
 
-            Product
+                                    Product
 
-        </button>
+                                </button>
 
-        <button
-            type="button"
-            data-type="category"
-            class="offerTab px-5 py-2 text-sm font-medium border-l transition
+                                <button type="button" data-type="category" class="offerTab px-5 py-2 text-sm font-medium border-l transition
             <%= offerType === 'category'
                 ? 'bg-[#8C6239] text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-100' %>">
 
-            Category
+                                    Category
 
-        </button>
+                                </button>
 
-    </div>
+                            </div>
 
-    <!-- Search -->
-    <div class="relative flex-1">
+                            <!-- Search -->
+                            <div class="relative flex-1">
 
-        <i
-            data-lucide="search"
-            class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400">
-        </i>
+                                <i data-lucide="search"
+                                    class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400">
+                                </i>
 
-        <input
-            id="searchInput"
-            type="text"
-            name="search"
-            value="<%= search %>"
-            placeholder="Search offer..."
-            class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6239]">
+                                <input id="searchInput" type="text" name="search" value="<%= search %>"
+                                    placeholder="Search offer..."
+                                    class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8C6239]">
 
-    </div>
+                            </div>
 
-    <!-- Status -->
-    <select
-        id="statusFilter"
-        name="status"
-        class="w-40 px-3 py-2 border rounded-lg">
+                            <!-- Status -->
+                            <select id="statusFilter" name="status" class="w-40 px-3 py-2 border rounded-lg">
 
-        <option value="">All Status</option>
+                                <option value="">All Status</option>
 
-        <option value="active"
-            <%= status==="active" ? "selected" : "" %>>
-            Active
-        </option>
+                                <option value="active" <%=status==="active" ? "selected" : "" %>>
+                                    Active
+                                </option>
 
-        <option value="upcoming"
-            <%= status==="upcoming" ? "selected" : "" %>>
-            Upcoming
-        </option>
+                                <option value="upcoming" <%=status==="upcoming" ? "selected" : "" %>>
+                                    Upcoming
+                                </option>
 
-        <option value="blocked"
-            <%= status==="blocked" ? "selected" : "" %>>
-            Blocked
-        </option>
+                                <option value="blocked" <%=status==="blocked" ? "selected" : "" %>>
+                                    Blocked
+                                </option>
 
-        <option value="expired"
-            <%= status==="expired" ? "selected" : "" %>>
-            Expired
-        </option>
+                                <option value="expired" <%=status==="expired" ? "selected" : "" %>>
+                                    Expired
+                                </option>
 
-        <option value="deleted"
-            <%= status==="deleted" ? "selected" : "" %>>
-            Deleted
-        </option>
+                                <option value="deleted" <%=status==="deleted" ? "selected" : "" %>>
+                                    Deleted
+                                </option>
 
-    </select>
+                            </select>
 
-    <!-- Sort -->
-    <select
-        id="sortFilter"
-        name="sort"
-        class="w-44 px-3 py-2 border rounded-lg">
+                            <!-- Sort -->
+                            <select id="sortFilter" name="sort" class="w-44 px-3 py-2 border rounded-lg">
 
-        <option
-            value="latest"
-            <%= !sort || sort==="latest" ? "selected" : "" %>>
+                                <option value="latest" <%=!sort || sort==="latest" ? "selected" : "" %>>
 
-            Latest
+                                    Latest
 
-        </option>
+                                </option>
 
-        <option
-            value="a-z"
-            <%= sort==="a-z" ? "selected" : "" %>>
+                                <option value="a-z" <%=sort==="a-z" ? "selected" : "" %>>
 
-            A-Z
+                                    A-Z
 
-        </option>
+                                </option>
 
-        <option
-            value="z-a"
-            <%= sort==="z-a" ? "selected" : "" %>>
+                                <option value="z-a" <%=sort==="z-a" ? "selected" : "" %>>
 
-            Z-A
+                                    Z-A
 
-        </option>
+                                </option>
 
-        <option
-            value="highest"
-            <%= sort==="highest" ? "selected" : "" %>>
+                                <option value="highest" <%=sort==="highest" ? "selected" : "" %>>
 
-            Highest Discount
+                                    Highest Discount
 
-        </option>
+                                </option>
 
-        <option
-            value="lowest"
-            <%= sort==="lowest" ? "selected" : "" %>>
+                                <option value="lowest" <%=sort==="lowest" ? "selected" : "" %>>
 
-            Lowest Discount
+                                    Lowest Discount
 
-        </option>
+                                </option>
 
-        <option
-            value="start"
-            <%= sort==="start" ? "selected" : "" %>>
+                                <option value="start" <%=sort==="start" ? "selected" : "" %>>
 
-            Start Date
+                                    Start Date
 
-        </option>
+                                </option>
 
-        <option
-            value="expiry"
-            <%= sort==="expiry" ? "selected" : "" %>>
+                                <option value="expiry" <%=sort==="expiry" ? "selected" : "" %>>
 
-            Expiry Date
+                                    Expiry Date
 
-        </option>
+                                </option>
 
-    </select>
+                            </select>
 
-    <!-- Clear -->
-    <a
-        href="/couponManagement/offers?offerType=<%= offerType || 'product' %>"
-        class="px-5 py-2 border rounded-lg hover:bg-gray-100 transition">
+                            <!-- Clear -->
+                            <a href="/couponManagement/offers?offerType=<%= offerType || 'product' %>"
+                                class="px-5 py-2 border rounded-lg hover:bg-gray-100 transition">
 
-        Clear
+                                Clear
 
-    </a>
+                            </a>
 
-</form>
+                        </form>
 
 
 
@@ -494,7 +451,9 @@
                                 <thead>
                                     <tr
                                         class="bg-gray-50 border-b border-gray-200 text-[11px] font-bold tracking-wider text-textMuted select-none">
-                                        <th class="px-6 py-4" id="col-target-type"> <%= offerType === "category" ? "CATEGORY" : "PRODUCT" %></th>
+                                        <th class="px-6 py-4" id="col-target-type">
+                                            <%= offerType==="category" ? "CATEGORY" : "PRODUCT" %>
+                                        </th>
                                         <th class="px-6 py-4">OFFER NAME</th>
                                         <th class="px-6 py-4">DISCOUNT</th>
                                         <th class="px-6 py-4">EXPIERY</th>
@@ -551,15 +510,17 @@
 
                                                 </td>
 
+                                               
                                                 <!-- Discount -->
                                                 <td class="py-4 px-6">
-
                                                     <span class="font-semibold text-green-700">
-
-                                                        <%= offer.discountValue %>% OFF
-
+                                                        <% if (String(offer.discountType).toLowerCase()==="fixed" ) { %>
+                                                            ₹<%= Number(offer.discountValue).toLocaleString("en-IN") %>
+                                                                OFF
+                                                                <% } else { %>
+                                                                    <%= offer.discountValue %>% OFF
+                                                                        <% } %>
                                                     </span>
-
                                                 </td>
 
                                                 <!-- End Date -->
@@ -615,77 +576,92 @@
                                                 <!-- Actions -->
                                                 <td class="px-6 py-4">
 
-    <div class="flex items-center justify-center gap-2">
+                                                    <div class="flex items-center justify-center gap-2">
 
-        <!-- View -->
-       <button
-    onclick="openOfferModal(this)"
-    data-id="<%= offer._id %>"
-    data-offer-name="<%= offer.offerName %>"
-    data-offer-type="<%= offer.offerType %>"
-    data-apply='<%= JSON.stringify(
-    offer.offerType === "product"
-        ? offer.products.map(product => product.productName)
-        : offer.categories.map(category => category.name)
-) %>'
-    data-discount="<%= offer.discountValue %>"
-    data-start="<%= new Date(offer.startDate).toLocaleDateString('en-IN') %>"
-    data-expiry="<%= new Date(offer.expiryDate).toLocaleDateString('en-IN') %>"
-    data-status="<%= offer.status %>"
-    class="w-9 h-9 rounded-lg border flex items-center justify-center text-blue-600 hover:bg-blue-50">
+                                                        <!-- View -->
+                                                        <button onclick="openOfferModal(this)"
+                                                            data-id="<%= offer._id %>"
+                                                            data-offer-name="<%= offer.offerName %>"
+                                                            data-offer-type="<%= offer.offerType %>" data-apply='<%= JSON.stringify(
+        offer.offerType === "product"
+            ? offer.products.map(product => product.productName)
+            : offer.categories.map(category => category.name)
+    ) %>' data-discount="<%= offer.discountValue %>" data-discount-type="<%= offer.discountType %>"
+                                                            data-start="<%= new Date(offer.startDate).toLocaleDateString('en-IN') %>"
+                                                            data-expiry="<%= new Date(offer.expiryDate).toLocaleDateString('en-IN') %>"
+                                                            data-status="<%= offer.status %>"
+                                                            class="w-9 h-9 rounded-lg border flex items-center justify-center text-blue-600 hover:bg-blue-50">
 
-    <i data-lucide="eye" class="w-4 h-4"></i>
+                                                            <i data-lucide="eye" class="w-4 h-4"></i>
 
-</button>
+                                                        </button>
 
-        <!-- Edit -->
-        <a
-            href="/couponManagement/offers/edit/<%= offer._id %>"
-            class="w-9 h-9 rounded-lg border flex items-center justify-center text-amber-600 hover:bg-amber-50 transition"
-            title="Edit">
+                                                        <!-- Edit -->
+                                                        <a href="/couponManagement/offers/edit/<%= offer._id %>"
+                                                            class="w-9 h-9 rounded-lg border flex items-center justify-center text-amber-600 hover:bg-amber-50 transition"
+                                                            title="Edit">
 
-            <i data-lucide="square-pen" class="w-4 h-4"></i>
+                                                            <i data-lucide="square-pen" class="w-4 h-4"></i>
 
-        </a>
+                                                        </a>
 
-        <!-- Block / Unblock -->
-        <% if(offer.isActive){ %>
+                                                        <!-- Block / Unblock -->
+                                                        <% if(!offer.isDeleted){ %>
 
-            <button
-                class="w-9 h-9 rounded-lg border flex items-center justify-center text-orange-600 hover:bg-orange-50 transition"
-                title="Block"
-                onclick="blockOffer('<%= offer._id %>')">
+                                                            <% if(offer.isActive){ %>
 
-                <i data-lucide="ban" class="w-4 h-4"></i>
+                                                                <button onclick="blockOffer('<%= offer._id %>')"
+                                                                    class="w-9 h-9 rounded-lg border flex items-center justify-center text-orange-600 hover:bg-orange-50 transition"
+                                                                    title="Block">
 
-            </button>
+                                                                    <i data-lucide="ban" class="w-4 h-4"></i>
 
-        <% } else { %>
+                                                                </button>
 
-            <button
-                class="w-9 h-9 rounded-lg border flex items-center justify-center text-green-600 hover:bg-green-50 transition"
-                title="Unblock"
-                onclick="unblockOffer('<%= offer._id %>')">
+                                                                <% } else { %>
 
-                <i data-lucide="check" class="w-4 h-4"></i>
+                                                                    <button onclick="unblockOffer('<%= offer._id %>')"
+                                                                        class="w-9 h-9 rounded-lg border flex items-center justify-center text-green-600 hover:bg-green-50 transition"
+                                                                        title="Unblock">
 
-            </button>
+                                                                        <i data-lucide="circle-check-big"
+                                                                            class="w-4 h-4"></i>
 
-        <% } %>
+                                                                    </button>
 
-        <!-- Delete -->
-        <button
-            class="w-9 h-9 rounded-lg border flex items-center justify-center text-red-600 hover:bg-red-50 transition"
-            title="Delete"
-            onclick="deleteOffer('<%= offer._id %>')">
+                                                                    <% } %>
 
-            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                                        <% } %>
 
-        </button>
+                                                                            <!-- Delete / Restore -->
+                                                                            <% if(offer.isDeleted){ %>
 
-    </div>
+                                                                                <button
+                                                                                    onclick="restoreOffer('<%= offer._id %>')"
+                                                                                    class="w-9 h-9 rounded-lg border flex items-center justify-center text-blue-600 hover:bg-blue-50 transition"
+                                                                                    title="Restore">
 
-</td>
+                                                                                    <i data-lucide="rotate-ccw"
+                                                                                        class="w-4 h-4"></i>
+
+                                                                                </button>
+
+                                                                                <% } else { %>
+
+                                                                                    <button
+                                                                                        onclick="deleteOffer('<%= offer._id %>')"
+                                                                                        class="w-9 h-9 rounded-lg border flex items-center justify-center text-red-600 hover:bg-red-50 transition"
+                                                                                        title="Delete">
+
+                                                                                        <i data-lucide="trash-2"
+                                                                                            class="w-4 h-4"></i>
+
+                                                                                    </button>
+
+                                                                                    <% } %>
+                                                    </div>
+
+                                                </td>
 
                                             </tr>
 
@@ -731,75 +707,79 @@
 
 
                         <!-- Footer Pagination Row -->
-<% if (totalPages > 1) { %>
+                        <% if (totalPages> 1) { %>
 
-<div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
+                            <div
+                                class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-between">
 
-    <p class="text-sm text-gray-600">
+                                <p class="text-sm text-gray-600">
 
-        Showing
+                                    Showing
 
-        <strong><%= (currentPage - 1) * limit + 1 %></strong>
+                                    <strong>
+                                        <%= (currentPage - 1) * limit + 1 %>
+                                    </strong>
 
-        -
+                                    -
 
-        <strong><%= Math.min(currentPage * limit, totalOffers) %></strong>
+                                    <strong>
+                                        <%= Math.min(currentPage * limit, totalOffers) %>
+                                    </strong>
 
-        of
+                                    of
 
-        <strong><%= totalOffers %></strong>
+                                    <strong>
+                                        <%= totalOffers %>
+                                    </strong>
 
-        offers
+                                    offers
 
-    </p>
-    
+                                </p>
 
-    <div class="flex items-center gap-2">
 
-        <% if(currentPage > 1){ %>
+                                <div class="flex items-center gap-2">
 
-            <a
-                href="?page=<%= currentPage-1 %>&offerType=<%= offerType %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
-                class="w-10 h-10 rounded-lg border flex items-center justify-center hover:bg-gray-100">
+                                    <% if(currentPage> 1){ %>
 
-                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                                        <a href="?page=<%= currentPage-1 %>&offerType=<%= offerType %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                                            class="w-10 h-10 rounded-lg border flex items-center justify-center hover:bg-gray-100">
 
-            </a>
+                                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
 
-        <% } %>
+                                        </a>
 
-        <% for(let i=1;i<=totalPages;i++){ %>
+                                        <% } %>
 
-            <a
-                href="?page=<%= i %>&offerType=<%= offerType %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
-                class="w-10 h-10 rounded-lg border flex items-center justify-center transition
+                                            <% for(let i=1;i<=totalPages;i++){ %>
+
+                                                <a href="?page=<%= i %>&offerType=<%= offerType %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                                                    class="w-10 h-10 rounded-lg border flex items-center justify-center transition
                 <%= currentPage === i
                     ? 'bg-[#8C6239] text-white border-[#8C6239]'
                     : 'hover:bg-gray-100' %>">
 
-                <%= i %>
+                                                    <%= i %>
 
-            </a>
+                                                </a>
 
-        <% } %>
+                                                <% } %>
 
-        <% if(currentPage < totalPages){ %>
+                                                    <% if(currentPage < totalPages){ %>
 
-            <a
-                href="?page=<%= currentPage+1 %>&offerType=<%= offerType %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
-                class="w-10 h-10 rounded-lg border flex items-center justify-center hover:bg-gray-100">
+                                                        <a href="?page=<%= currentPage+1 %>&offerType=<%= offerType %>&search=<%= search %>&status=<%= status %>&sort=<%= sort %>"
+                                                            class="w-10 h-10 rounded-lg border flex items-center justify-center hover:bg-gray-100">
 
-                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
 
-            </a>
+                                                        </a>
 
-        <% } %>
+                                                        <% } %>
 
-    </div>
+                                </div>
 
-</div>
+                            </div>
 
-<% } %>
+                            <% } %>
 
                     </div>
                 </div>
@@ -936,117 +916,106 @@
 
 
     <!-- Preview Modal (Inspect Detailed Offer Content) -->
-   
 
-<!-- ================= VIEW OFFER MODAL ================= -->
 
-<div
-    id="offerModal"
-    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+    <!-- ================= VIEW OFFER MODAL ================= -->
 
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 overflow-hidden">
+    <div id="offerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
 
-        <!-- Header -->
-        <div class="flex items-center justify-between px-6 py-5 border-b">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-4 overflow-hidden">
 
-            <h2 class="text-xl font-semibold text-gray-800">
-                Offer Details
-            </h2>
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 py-5 border-b">
 
-            <button
-                onclick="closeOfferModal()"
-                class="p-2 rounded-lg hover:bg-gray-100 transition">
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Offer Details
+                </h2>
 
-                <i data-lucide="x" class="w-5 h-5"></i>
+                <button onclick="closeOfferModal()" class="p-2 rounded-lg hover:bg-gray-100 transition">
 
-            </button>
+                    <i data-lucide="x" class="w-5 h-5"></i>
 
-        </div>
+                </button>
 
-        <!-- Body -->
-        <div class="p-6 max-h-[65vh] overflow-y-auto">
+            </div>
 
-            <div class="grid grid-cols-2 gap-x-10 gap-y-5">
+            <!-- Body -->
+            <div class="p-6 max-h-[65vh] overflow-y-auto">
 
-                <div>
-                    <p class="text-sm text-gray-500">Offer Name</p>
-                    <p id="viewOfferName" class="font-semibold text-gray-800"></p>
+                <div class="grid grid-cols-2 gap-x-10 gap-y-5">
+
+                    <div>
+                        <p class="text-sm text-gray-500">Offer Name</p>
+                        <p id="viewOfferName" class="font-semibold text-gray-800"></p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Offer Type</p>
+                        <p id="viewOfferType" class="font-semibold text-gray-800"></p>
+                    </div>
+
+                    <div class="col-span-2">
+
+                        <p class="text-sm text-gray-500 mb-2">
+                            <span id="viewApplyLabel">Products</span>
+                        </p>
+
+                        <div id="viewApplyTo" class="flex flex-wrap gap-2">
+
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Discount</p>
+                        <p id="viewDiscount" class="font-semibold text-green-600"></p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Start Date</p>
+                        <p id="viewStartDate" class="font-semibold text-gray-800"></p>
+                    </div>
+
+                    <div>
+                        <p class="text-sm text-gray-500">Expiry Date</p>
+                        <p id="viewExpiryDate" class="font-semibold text-gray-800"></p>
+                    </div>
+
+                    <div c>
+                        <p class="text-sm text-gray-500 mb-1">Status</p>
+
+                        <span id="viewStatus" class="inline-flex px-3 py-1 rounded-full text-xs font-semibold">
+                        </span>
+                    </div>
+
                 </div>
 
-                <div>
-                    <p class="text-sm text-gray-500">Offer Type</p>
-                    <p id="viewOfferType" class="font-semibold text-gray-800"></p>
-                </div>
+            </div>
 
-                <div class="col-span-2">
+            <!-- Footer -->
+            <div class="px-6 py-4 border-t flex justify-end gap-3">
 
-    <p class="text-sm text-gray-500 mb-2">
-        <span id="viewApplyLabel">Products</span>
-    </p>
+                <button onclick="closeOfferModal()" class="px-5 py-2 border rounded-lg hover:bg-gray-100">
 
-    <div
-        id="viewApplyTo"
-        class="flex flex-wrap gap-2">
+                    Close
 
-    </div>
+                </button>
 
-</div>
+                <a id="editOfferBtn" href="#"
+                    class="px-5 py-2 rounded-lg bg-[#8C6239] text-white hover:bg-[#704221] transition">
 
-                <div>
-                    <p class="text-sm text-gray-500">Discount</p>
-                    <p id="viewDiscount" class="font-semibold text-green-600"></p>
-                </div>
+                    Edit Offer
 
-                <div>
-                    <p class="text-sm text-gray-500">Start Date</p>
-                    <p id="viewStartDate" class="font-semibold text-gray-800"></p>
-                </div>
-
-                <div>
-                    <p class="text-sm text-gray-500">Expiry Date</p>
-                    <p id="viewExpiryDate" class="font-semibold text-gray-800"></p>
-                </div>
-
-                <div c>
-                    <p class="text-sm text-gray-500 mb-1">Status</p>
-
-                    <span
-                        id="viewStatus"
-                        class="inline-flex px-3 py-1 rounded-full text-xs font-semibold">
-                    </span>
-                </div>
+                </a>
 
             </div>
 
         </div>
 
-        <!-- Footer -->
-        <div class="px-6 py-4 border-t flex justify-end gap-3">
-
-            <button
-                onclick="closeOfferModal()"
-                class="px-5 py-2 border rounded-lg hover:bg-gray-100">
-
-                Close
-
-            </button>
-
-            <a
-                id="editOfferBtn"
-                href="#"
-                class="px-5 py-2 rounded-lg bg-[#8C6239] text-white hover:bg-[#704221] transition">
-
-                Edit Offer
-
-            </a>
-
-        </div>
+    </div>>
 
     </div>
-
-</div>>
-
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
 
         const offerItems = {
@@ -1140,155 +1109,360 @@
 
         lucide.createIcons();
 
-    const form = document.getElementById("filterForm");
+        const form = document.getElementById("filterForm");
 
-    const offerTypeInput = document.getElementById("offerTypeInput");
+        const offerTypeInput = document.getElementById("offerTypeInput");
 
-    const searchInput = document.getElementById("searchInput");
+        const searchInput = document.getElementById("searchInput");
 
-    const statusFilter = document.getElementById("statusFilter");
+        const statusFilter = document.getElementById("statusFilter");
 
-    const sortFilter = document.getElementById("sortFilter");
+        const sortFilter = document.getElementById("sortFilter");
 
-    const offerTabs = document.querySelectorAll(".offerTab");
+        const offerTabs = document.querySelectorAll(".offerTab");
 
-    let debounce;
+        let debounce;
 
-    // Product / Category Toggle
-    offerTabs.forEach(tab => {
+        // Product / Category Toggle
+        offerTabs.forEach(tab => {
 
-        tab.addEventListener("click", () => {
+            tab.addEventListener("click", () => {
 
-            offerTypeInput.value = tab.dataset.type;
+                offerTypeInput.value = tab.dataset.type;
+
+                form.submit();
+
+            });
+
+        });
+
+        // Auto Search (500ms debounce)
+        searchInput.addEventListener("input", () => {
+
+            clearTimeout(debounce);
+
+            debounce = setTimeout(() => {
+
+                form.submit();
+
+            }, 500);
+
+        });
+
+        // Auto Status Filter
+        statusFilter.addEventListener("change", () => {
 
             form.submit();
 
         });
 
-    });
-
-    // Auto Search (500ms debounce)
-    searchInput.addEventListener("input", () => {
-
-        clearTimeout(debounce);
-
-        debounce = setTimeout(() => {
+        // Auto Sort
+        sortFilter.addEventListener("change", () => {
 
             form.submit();
 
-        }, 500);
+        });
+        function openOfferModal(button) {
 
-    });
+            document.getElementById("viewOfferName").textContent =
+                button.dataset.offerName;
 
-    // Auto Status Filter
-    statusFilter.addEventListener("change", () => {
+            document.getElementById("viewOfferType").textContent =
+                button.dataset.offerType;
 
-        form.submit();
+            document.getElementById("viewApplyLabel").textContent =
+                button.dataset.offerType === "product"
+                    ? "Product"
+                    : "Category";
+            const container = document.getElementById("viewApplyTo");
 
-    });
+            container.innerHTML = "";
 
-    // Auto Sort
-    sortFilter.addEventListener("change", () => {
+            let items = [];
 
-        form.submit();
+            try {
 
-    });
-    function openOfferModal(button) {
+                items = JSON.parse(button.dataset.apply);
 
-    document.getElementById("viewOfferName").textContent =
-        button.dataset.offerName;
+            } catch {
 
-    document.getElementById("viewOfferType").textContent =
-        button.dataset.offerType;
+                items = [button.dataset.apply];
 
-    document.getElementById("viewApplyLabel").textContent =
-        button.dataset.offerType === "product"
-            ? "Product"
-            : "Category";
-const container = document.getElementById("viewApplyTo");
+            }
 
-container.innerHTML = "";
+            items.forEach(item => {
 
-let items = [];
+                const badge = document.createElement("span");
 
-try {
+                badge.className =
+                    "inline-flex items-center px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-sm font-medium border border-purple-200";
 
-    items = JSON.parse(button.dataset.apply);
+                badge.textContent = item;
 
-} catch {
+                container.appendChild(badge);
 
-    items = [button.dataset.apply];
+            });
 
-}
+            document.getElementById("viewDiscount").textContent =
+                button.dataset.discount + "%";
 
-items.forEach(item => {
+            document.getElementById("viewStartDate").textContent =
+                button.dataset.start;
 
-    const badge = document.createElement("span");
+            document.getElementById("viewExpiryDate").textContent =
+                button.dataset.expiry;
 
-    badge.className =
-        "inline-flex items-center px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-sm font-medium border border-purple-200";
+            const badge = document.getElementById("viewStatus");
 
-    badge.textContent = item;
+            badge.textContent = button.dataset.status;
 
-    container.appendChild(badge);
+            badge.className =
+                "inline-flex px-3 py-1 rounded-full text-xs font-semibold";
 
-});
+            switch (button.dataset.status) {
 
-    document.getElementById("viewDiscount").textContent =
-        button.dataset.discount + "%";
+                case "Active":
+                    badge.classList.add("bg-green-100", "text-green-700");
+                    break;
 
-    document.getElementById("viewStartDate").textContent =
-        button.dataset.start;
+                case "Upcoming":
+                    badge.classList.add("bg-blue-100", "text-blue-700");
+                    break;
 
-    document.getElementById("viewExpiryDate").textContent =
-        button.dataset.expiry;
+                case "Blocked":
+                    badge.classList.add("bg-yellow-100", "text-yellow-700");
+                    break;
 
-    const badge = document.getElementById("viewStatus");
+                case "Expired":
+                    badge.classList.add("bg-orange-100", "text-orange-700");
+                    break;
 
-    badge.textContent = button.dataset.status;
+                case "Deleted":
+                    badge.classList.add("bg-red-100", "text-red-700");
+                    break;
+            }
 
-    badge.className =
-        "inline-flex px-3 py-1 rounded-full text-xs font-semibold";
+            document.getElementById("editOfferBtn").href =
+                "/couponManagement/offers/edit/" + button.dataset.id;
 
-    switch (button.dataset.status) {
+            document.getElementById("offerModal").classList.remove("hidden");
+            document.getElementById("offerModal").classList.add("flex");
 
-        case "Active":
-            badge.classList.add("bg-green-100", "text-green-700");
-            break;
+            lucide.createIcons();
 
-        case "Upcoming":
-            badge.classList.add("bg-blue-100", "text-blue-700");
-            break;
+        }
 
-        case "Blocked":
-            badge.classList.add("bg-yellow-100", "text-yellow-700");
-            break;
+        function closeOfferModal() {
 
-        case "Expired":
-            badge.classList.add("bg-orange-100", "text-orange-700");
-            break;
+            document.getElementById("offerModal").classList.remove("flex");
+            document.getElementById("offerModal").classList.add("hidden");
 
-        case "Deleted":
-            badge.classList.add("bg-red-100", "text-red-700");
-            break;
-    }
+        }
+        async function blockOffer(id) {
 
-    document.getElementById("editOfferBtn").href =
-        "/couponManagement/offers/edit/" + button.dataset.id;
+            const result = await Swal.fire({
+                title: "Block Offer?",
+                text: "Users will not receive this offer until it is activated again.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#f59e0b",
+                cancelButtonColor: "#6b7280",
+                confirmButtonText: "Yes, Block"
+            });
 
-    document.getElementById("offerModal").classList.remove("hidden");
-    document.getElementById("offerModal").classList.add("flex");
+            if (!result.isConfirmed) return;
 
-    lucide.createIcons();
+            try {
 
-}
+                const response = await fetch(`/couponManagement/offers/toggle/${id}`, {
+                    method: "PATCH"
+                });
 
-function closeOfferModal() {
+                const data = await response.json();
 
-    document.getElementById("offerModal").classList.remove("flex");
-    document.getElementById("offerModal").classList.add("hidden");
+                if (data.success) {
 
-}
+                    await Swal.fire({
+                        icon: "success",
+                        title: "Blocked!",
+                        text: "Offer blocked successfully.",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    location.reload();
+
+                } else {
+
+                    Swal.fire(
+                        "Error",
+                        "Failed to block offer.",
+                        "error"
+                    );
+
+                }
+
+            } catch (err) {
+
+                Swal.fire(
+                    "Error",
+                    "Something went wrong.",
+                    "error"
+                );
+
+            }
+
+        }
+
+        async function unblockOffer(id) {
+
+            const result = await Swal.fire({
+                title: "Activate Offer?",
+                text: "Users can use this offer again.",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#16a34a",
+                cancelButtonColor: "#6b7280",
+                confirmButtonText: "Activate"
+            });
+
+            if (!result.isConfirmed) return;
+
+            try {
+
+                const response = await fetch(`/couponManagement/offers/toggle/${id}`, {
+                    method: "PATCH"
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+
+                    await Swal.fire({
+                        icon: "success",
+                        title: "Activated!",
+                        text: "Offer activated successfully.",
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                    location.reload();
+
+                } else {
+
+                    Swal.fire(
+                        "Error",
+                        "Failed to activate offer.",
+                        "error"
+                    );
+
+                }
+
+            } catch (err) {
+
+                Swal.fire(
+                    "Error",
+                    "Something went wrong.",
+                    "error"
+                );
+
+            }
+
+        }
+
+        async function deleteOffer(id) {
+
+            const result = await Swal.fire({
+                title: "Delete Offer?",
+                text: "This offer will be moved to Deleted offers.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#dc2626",
+                cancelButtonColor: "#6b7280",
+                confirmButtonText: "Delete"
+            });
+
+            if (!result.isConfirmed) return;
+
+            try {
+
+                const response = await fetch(`/couponManagement/offers/delete/${id}`, {
+                    method: "DELETE"
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+
+                    await Swal.fire({
+                        icon: "success",
+                        title: "Deleted",
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+
+                    location.reload();
+
+                } else {
+
+                    Swal.fire("Error", "Unable to delete offer.", "error");
+
+                }
+
+            } catch (err) {
+
+                Swal.fire("Error", "Something went wrong.", "error");
+
+            }
+
+        }
+
+        async function restoreOffer(id) {
+
+            const result = await Swal.fire({
+                title: "Restore Offer?",
+                text: "This offer will become available again.",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#16a34a",
+                cancelButtonColor: "#6b7280",
+                confirmButtonText: "Restore"
+            });
+
+            if (!result.isConfirmed) return;
+
+            try {
+
+                const response = await fetch(`/couponManagement/offers/restore/${id}`, {
+                    method: "PATCH"
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+
+                    await Swal.fire({
+                        icon: "success",
+                        title: "Restored",
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+
+                    location.reload();
+
+                } else {
+
+                    Swal.fire("Error", "Unable to restore offer.", "error");
+
+                }
+
+            } catch (err) {
+
+                Swal.fire("Error", "Something went wrong.", "error");
+
+            }
+
+        }
 
     </script>
 </body>

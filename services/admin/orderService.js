@@ -1,8 +1,11 @@
 
-
 import Order from "../../models/order.js"
 import User from "../../models/user.js"
 import Product from "../../models/productModel.js"
+import { creditWalletService } from "../user/walletService.js"
+import { processReferralReward } from "../user/referralService.js"
+import { calculateOrderTotals } from "../user/pricingService.js"
+import { cancelWholeOrder } from "../user/orderService.js"
 
 export const getOrders = async ({ page, limit, search, status, sort }) => {
     try {
@@ -36,11 +39,17 @@ export const getOrders = async ({ page, limit, search, status, sort }) => {
             ]
         }
 
-
         if (status && status !== "All") {
-            query.orderStatus = status
+            if (status === "Return Requested") {
+                query.items = {
+                    $elemMatch: {
+                        status: "Return Requested"
+                    }
+                }
+            } else {
+                query.orderStatus = status
+            }
         }
-
         const skip = (page - 1) * limit
 
         let sortOption = { createdAt: -1 }
@@ -105,6 +114,7 @@ export const getOrders = async ({ page, limit, search, status, sort }) => {
             }
         })
 
+
         return {
             orders,
             totalOrders,
@@ -157,13 +167,10 @@ export const updateOrderStatus = async (orderId, status) => {
         if (currentStatus === status) {
 
             return {
-
                 success: false,
-
                 message: "Order is already in this status"
 
             }
-
         }
 
         if (!allowedTransitions[currentStatus].includes(status)) {
@@ -172,11 +179,21 @@ export const updateOrderStatus = async (orderId, status) => {
                 message: "invalid status transition"
             }
         }
+
+
+        if (status === "Cancelled") {
+
+            return await cancelWholeOrder(
+                orderId,
+                order.userId,
+                "Order cancelled by admin"
+            )
+
+        }
         order.orderStatus = status
         order.items.forEach(item => {
-            if(["Cancelled","Returned","Return Requested"].includes(item.status)) return
+            if (["Cancelled", "Returned", "Return Requested"].includes(item.status)) return
             item.status = status
-
         })
 
         switch (status) {
@@ -202,25 +219,25 @@ export const updateOrderStatus = async (orderId, status) => {
                 })
                 break
 
-            case "Cancelled": order.cancelledAt = new Date()
-                order.timeline.push({
-                    status: "Cancelled",
-                    message: "Order cancelled"
-                })
-                for (const item of order.items) {
-                    const product = await Product.findById(item.productId)
-                    if (!product) continue
+            // case "Cancelled": order.cancelledAt = new Date()
+            //     // order.timeline.push({
+            //     //     status: "Cancelled",
+            //     //     message: "Order cancelled"
+            //     // })
+            //     // for (const item of order.items) {
+            //     //     const product = await Product.findById(item.productId)
+            //     //     if (!product) continue
 
-                    const variant = product.variants.id(item.variantId)
-                    if (!variant) continue
+            //     //     const variant = product.variants.id(item.variantId)
+            //     //     if (!variant) continue
 
-                    const size = variant.sizes.find(s => s.size === item.size)
-                    if (!size) continue
-                    if (item.status === "Cancelled") continue
-                    size.stock += item.quantity
-                    await product.save()
-                }
-                break
+            //     //     const size = variant.sizes.find(s => s.size === item.size)
+            //     //     if (!size) continue
+            //     //     if (item.status === "Cancelled") continue
+            //     //     size.stock += item.quantity
+            //     //     await product.save()
+            //     // }
+            //     break
 
             case "Returned": order.returnedAt = new Date()
                 order.refundStatus = "Pending"
@@ -235,6 +252,15 @@ export const updateOrderStatus = async (orderId, status) => {
 
         await order.save()
 
+        if (status === "Delivered") {
+            try {
+                await processReferralReward(order._id)
+            } catch (error) {
+                console.error("Referral reward processing failed:", error)
+            }
+        }
+
+
         return {
             success: true,
             message: "Order status updated successfully"
@@ -248,6 +274,81 @@ export const updateOrderStatus = async (orderId, status) => {
         }
     }
 
+}
+
+export const updateItemStatusService = async (orderId, itemId, status) => {
+    try {
+        const order = await Order.findById(orderId)
+        if (!order) {
+            return {
+                success: false,
+                message: "Order not found"
+            }
+        }
+
+        const item = order.items.id(itemId)
+
+        if (!item) {
+            return {
+                success: false,
+                message: "Item not found"
+            }
+        }
+
+        const allowedTransitions = {
+            Pending: ["Confirmed", "Cancelled"],
+            Confirmed: ["Shipped", "Cancelled"],
+            Shipped: ["Delivered"],
+            Delivered: ["Returned"],
+            Cancelled: [],
+            Returned: []
+        }
+
+        const currentStatus = item.status
+
+        if (currentStatus === status) {
+            return {
+                success: false,
+                message: "Item already in the status"
+            }
+        }
+
+        if (!allowedTransitions[currentStatus]?.includes(status)) {
+            return {
+                success: false,
+                message: "Invalid item status transition"
+            }
+        }
+        item.status = status
+        order.timeline.push({
+            status,
+            message: `${item.productName || "product"} status updated to ${status}`
+        })
+        const itemstatuses = order.items.map(item => item.status)
+        if (itemstatuses.every(s => s === "Cancelled")) {
+            order.orderStatus = "Cancelled"
+        }
+        if (itemstatuses.every(s => s === "Returned")) {
+            order.orderStatus = "Returned"
+        }
+        if (itemstatuses.every(s => s === "Delivered")) {
+            order.orderStatus = "Delivered"
+        }
+
+        await order.save()
+
+        return {
+            success: true,
+            message: "Order item status updated successfully"
+        }
+
+    } catch (error) {
+        console.log("update item status service error", error)
+        return {
+            success: false,
+            message: "Something went wrong"
+        }
+    }
 }
 
 
@@ -282,80 +383,101 @@ export const approveReturnService = async (orderId, itemId) => {
             }
         }
 
+        const refundAmount = Number(item.finalTotal)
+
+        if (refundAmount <= 0) {
+            return {
+                success: false,
+                message: "Invalid refund amount"
+            }
+        }
+
         item.status = "Returned"
         item.returnApprovedAt = new Date()
+        const totals = calculateOrderTotals(order.items, {
+            productDiscount: order.productDiscount,
+            couponDiscount: order.couponDiscount
+        })
+
+        // order.subtotal = totals.subtotal
+        order.shippingCharge = totals.shippingCharge
+        // order.grandTotal = totals.grandTotal
 
         const product = await Product.findById(item.productId)
 
         if (product) {
 
             const variant = product.variants.id(item.variantId)
+
             if (variant) {
 
                 const size = variant.sizes.find(
                     s => s.size === item.size
                 )
-                if (size) {
 
+                if (size) {
                     size.stock += item.quantity
                 }
             }
+
             await product.save()
         }
 
-        order.refundStatus = "Pending"
+        await creditWalletService(
+            order.userId,
+            refundAmount,
+            `Refund for returned product - ${item.productName}`,
+            "order_return",
+            order._id
+        )
+
+        const hasPendingReturns = order.items.some(item => item.status === "Return Requested" )
+
+        const allItemsClosed = order.items.every( item => ["Returned", "Cancelled"].includes(item.status))
+
+        const hasRefundedItems = order.items.some(   item => item.status === "Returned" )
+
+        if (allItemsClosed && hasRefundedItems && !hasPendingReturns) {
+            order.paymentStatus = "Refunded"
+        } else if (hasRefundedItems) {
+            order.paymentStatus = "Partially Refunded"
+        }
+
+        if (!hasPendingReturns && hasRefundedItems) {
+            order.refundStatus = "Completed"
+        }
 
         order.timeline.push({
             status: "Returned",
-            message: `${item.productName} return approved.`
+            message: `${item.productName} return approved and ₹${refundAmount.toFixed(2)} refunded to wallet.`
         })
 
-       
-         const hasPendingReturns = order.items.some(
-            item => item.status === "Return Requested"
-        )
-
         if (!hasPendingReturns) {
-
-            const allReturned = order.items.every(
-                item => item.status === "Returned"
-            );
-
-            if (allReturned) {
-                order.orderStatus = "Returned";
-                order.returnedAt = new Date();
+            if (allItemsClosed) {
+                order.orderStatus = "Returned"
+                order.returnedAt = new Date()
             } else {
-                order.orderStatus = "Delivered";
+                order.orderStatus = "Delivered"
             }
-        
-
-        if (allReturned) {
-            order.orderStatus = "Returned"
-            order.returnedAt = new Date()
         }
-    }
 
         await order.save()
 
         return {
             success: true,
-            message: "Return approved successfully"
+            message: `Return approved and ₹${refundAmount.toFixed(2)} refunded to wallet`
         }
 
     } catch (error) {
-        console.log("approve return service error", error)
+        console.log("Approve return service error", error)
         return {
-
             success: false,
             message: "Something went wrong"
-
         }
-
     }
-
 }
 
-export const rejectReturnService = async ( orderId, itemId, reason) => {
+export const rejectReturnService = async (orderId, itemId, reason) => {
 
     try {
 

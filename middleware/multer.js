@@ -18,17 +18,22 @@ export const createUploader = (folderName, fileSize = 2) => {
       fileSize: fileSize * 1024 * 1024
     },
      fileFilter: (req, file, cb) => {
+   
+
         const allowedTypes = [
             "image/jpeg",
             "image/png",
-            "image/webp"
+             "image/jpg",
+            "image/webp",
+            "image/avif"
         ]
+        console.log(file.mimetype)
 
         if (allowedTypes.includes(file.mimetype)) {
             cb(null, true)
         } else {
-            cb(new Error("Only jpg, png, and webp images are allowed"), false)
+            cb(new Error("Only JPG, PNG,AVIF and WEBP  images are allowed"), false)
         }
     }
-  });
-};
+  })
+}

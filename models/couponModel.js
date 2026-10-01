@@ -5,7 +5,7 @@ export const couponSchema = new mongoose.Schema(
         couponCode: {
             type: String,
             unique: true,
-            upperCase: true,
+            uppercase: true,
             trim: true,
             required: true
         },
@@ -20,7 +20,7 @@ export const couponSchema = new mongoose.Schema(
             required: true
         },
         discountValue: {
-            type: String,
+            type: Number,
             required: true,
             min: 1
         },

@@ -1,15 +1,27 @@
 
 import Order from "../../models/order.js"
 import Product from "../../models/productModel.js"
+// import { calculateOrderTotals } from "./pricingService.js"
+import { creditWalletService } from "./walletService.js"
 
 
-export const createOrder = async (userId, cart, orderItems, subtotal, grandTotal, shipping, paymentMethod, address) => {
+export const createOrder = async (
+    userId,
+    cart,
+    orderItems,
+    subtotal,
+    offerDiscount,
+    couponDiscount,
+    grandTotal,
+    shipping,
+    paymentMethod,
+    address,
+    couponCode = null) => {
 
     const order = await Order.create({
-        userId: userId,
+        userId,
         orderId: `#VVORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
         items: orderItems,
-
         shippingAddress: {
             name: address.name,
             phone: address.phone,
@@ -19,18 +31,16 @@ export const createOrder = async (userId, cart, orderItems, subtotal, grandTotal
             city: address.city,
             country: address.country,
             postalCode: address.postalCode
-
         },
-
         paymentMethod,
-        paymentStatus: "Pending",
+        paymentStatus: paymentMethod === "COD" ? "Pending" : "Paid",
         orderStatus: "Pending",
         subtotal,
         shippingCharge: shipping,
-        ProductDiscount: 0,
-        couponDiscount: 0,
+        productDiscount: offerDiscount,
+        couponDiscount,
         grandTotal: Math.round(grandTotal),
-        couponCode: null
+        couponCode: couponDiscount > 0 ? couponCode : null
     })
 
 
@@ -39,19 +49,14 @@ export const createOrder = async (userId, cart, orderItems, subtotal, grandTotal
 
         const product = await Product.findById(item.productId._id)
 
-
         const variant = product.variants[item.variantIndex]
 
         const sizeData = variant.sizes.find(
             s => s.size === item.size
         )
-
         sizeData.stock -= item.quantity
         await product.save()
-
     }
-
-
 
     cart.items = []
     await cart.save()
@@ -117,6 +122,7 @@ export const cancelProduct = async (orderId, itemId, userId, reason) => {
 
         const order = await Order.findOne({ _id: orderId, userId })
 
+
         if (!order) {
             return {
                 success: false,
@@ -140,70 +146,107 @@ export const cancelProduct = async (orderId, itemId, userId, reason) => {
             }
         }
 
+
         item.status = "Cancelled"
 
         item.cancelReason = reason
 
+
+
+        const refundAmount = order.items
+            .filter(item => item.status === "Cancelled")
+            .reduce((total, item) => total + item.finalTotal, 0)
+
         const product = await Product.findById(item.productId)
 
-        if (product) {
-            const variant = product.variants.id(item.variantId)
-
-            if (variant) {
-                const size = variant.sizes.find(s => s.size === item.size)
-
-                if (size) {
-                    size.stock += item.quantity
-                }
+        if (!product) {
+            return {
+                success: false,
+                message: "Product not found"
             }
-            await product.save()
         }
 
-        const activeitems = order.items.filter(item => item.status !== "Cancelled")
+        const variant = product.variants.find(
+    variant => variant.color.toLowerCase() === item.color.toLowerCase()
+)
+
+        if (!variant) {
+            console.log("Variant not found")
+            console.log("Order variantId:", item.variantId)
+            console.log( "Product variants:",  product.variants.map(v => ({ id: v._id, color: v.color })) )
+
+            return {
+                success: false,
+                message: "Variant not found"
+            }
+        }
+
+        const size = variant.sizes.find( size => size.size === item.size )
+
+        if (!size) {
+            console.log("Size not found:", item.size)
+
+            return {
+                success: false,
+                message: "Size not found"
+            }
+        }
+
+        size.stock += item.quantity
+
+        await product.save()
+
+        // const activeitems = order.items.filter(item => item.status !== "Cancelled")
         order.timeline.push({
             status: "Cancelled",
             message: `${item.productName} cancelled. Reason ${reason}.`
         })
-        if (activeitems.length === 0) {
+
+
+        // const totals = calculateOrderTotals(order.items, {
+        //     productDiscount: order.productDiscount,
+        //     couponDiscount: order.couponDiscount
+        // })
+
+        // order.subtotal = totals.subtotal
+        // order.shippingCharge = totals.shippingCharge
+        // order.grandTotal = totals.grandTotal
+
+        const activeItems = order.items.filter(
+            item => item.status !== "Cancelled"
+        )
+
+        if (activeItems.length === 0) {
+
             order.orderStatus = "Cancelled"
-
             order.cancelledAt = new Date()
+
             order.timeline.push({
-
                 status: "Order Cancelled",
-
                 message: "All products in the order were cancelled."
-
             })
-            order.subtotal = 0
-            order.productDiscount = 0
-            order.couponDiscount = 0
-            order.grandTotal = 0
-            order.shippingCharge = 0
-        } else {
 
-            order.subtotal = activeitems.reduce((total, item) => {
-                return total + item.total
-            }, 0)
-            const FREE_SHIPPING_LIMIT = 999
+            if (["Razorpay", "Wallet"].includes(order.paymentMethod)) {
 
-            if (order.subtotal >= FREE_SHIPPING_LIMIT) {
+                order.paymentStatus = "Refunded"
 
-                order.shippingCharge = 0
+            } else if (order.paymentMethod === "COD") {
 
-            } else {
+                order.paymentStatus = "Cancelled"
 
-                order.shippingCharge = 99
-
-            }
-
-            order.grandTotal = order.subtotal - order.productDiscount - order.couponDiscount + order.shippingCharge
-
-            if (order.grandTotal < 0) {
-                order.grandTotal = 0
             }
         }
 
+
+        if (refundAmount > 0 && ["Razorpay", "Wallet"].includes(order.paymentMethod)) {
+            await creditWalletService(
+                order.userId,
+                refundAmount,
+                `Refund for cancelled product (${item.productName})`,
+                "order_cancelled",
+                order._id
+            )
+        }
 
 
         await order.save()
@@ -243,15 +286,25 @@ export const cancelWholeOrder = async (orderId, userId, reason) => {
                 message: "This order cannot be canelled"
             }
         }
+        const itemsToCancel = order.items.filter(item => item.status !== "Cancelled")
 
-        for (const item of order.items) {
-            if (item.status === 'Cancelled') {
-                continue
+        if (itemsToCancel.length === 0) {
+            return {
+                success: false,
+                message: "All products in this order are already cancelled"
             }
+        }
+        const refundAmount = itemsToCancel.reduce(
+            (total, item) => total + item.finalTotal,
+            0
+        )
+
+        for (const item of itemsToCancel) {
+
             item.status = "Cancelled"
             item.cancelReason = reason
-            order.timeline.push({
 
+            order.timeline.push({
                 status: "Cancelled",
                 message: `${item.productName} cancelled. Reason: ${reason}`
 
@@ -273,14 +326,29 @@ export const cancelWholeOrder = async (orderId, userId, reason) => {
             }
         }
 
-        order.orderStatus = "Cancelled"
 
+        if (refundAmount > 0 && ["Razorpay", "Wallet"].includes(order.paymentMethod) && order.paymentStatus === "Paid") {
+
+
+            await creditWalletService(
+                order.userId,
+                refundAmount,
+                `Refund for cancelled order ${order.orderId}`,
+                "order_cancelled",
+                order._id
+            )
+
+            order.paymentStatus = "Refunded"
+        }
+
+        order.orderStatus = "Cancelled"
         order.cancelledAt = new Date()
-        order.subtotal = 0
-        order.productDiscount = 0
-        order.couponDiscount = 0
-        order.shippingCharge = 0
-        order.grandTotal = 0
+
+        // order.subtotal = 0
+        // order.productDiscount = 0
+        // order.couponDiscount = 0
+        // order.shippingCharge = 0
+        // order.grandTotal = 0
 
         order.timeline.push({
             status: "Order Cancelled",
@@ -290,79 +358,75 @@ export const cancelWholeOrder = async (orderId, userId, reason) => {
         await order.save()
         return {
             success: true,
-            message: "Order cancelled successfully"
+            message: "Order cancelled successfully",
+            refundAmount
         }
 
     } catch (error) {
         console.log("cancel whole order service error", error)
         return {
-
             success: false,
-
             message: "Something went wrong"
-
         }
     }
 }
 
 
-export const requestReturnService = async (orderId,itemId,userId,reason) => {
+export const requestReturnService = async (orderId, itemId, userId, reason) => {
     try {
-        
+
         const order = await Order.findOne({
-            _id:orderId,userId
+            _id: orderId, userId
         })
 
-        if(!order){
-            return{
-                success:false,
-                message:"Order not Found"
+        if (!order) {
+            return {
+                success: false,
+                message: "Order not Found"
             }
         }
 
 
         const item = order.items.id(itemId)
 
-        if(!item){
+        if (!item) {
             return {
-                success:false,
-                message:"Product not found"
+                success: false,
+                message: "Product not found"
             }
         }
 
-        if(item.status !== "Delivered"){
-            return{
-                success:false,
-                message:"Only delivered products can be returned"
+        if (item.status !== "Delivered") {
+            return {
+                success: false,
+                message: "Only delivered products can be returned"
             }
         }
-        
+
         item.status = "Return Requested"
         item.returnReason = reason
-        item.returnRequestedAt = new Date() 
+        item.returnRequestedAt = new Date()
 
         order.timeline.push({
-            status:"Return Requested",
-            message:`return requested for ${item.ProductName}. Reason : ${reason}`
+            status: "Return Requested",
+            message: `Return requested for ${item.ProductName}. Reason : ${reason}`
         })
-        if(order.items.some(i=>i.status === "Return Requested")){
+        if (order.items.some(i => i.status === "Return Requested")) {
             order.orderStatus = "Return Requested"
         }
 
         await order.save()
 
-        return{
-            success:true,
-            message:"Return request submitted"
+        return {
+            success: true,
+            message: "Return request submitted"
         }
 
 
     } catch (error) {
         console.log("return request service error", error)
         return {
-
             success: false,
-
             message: "Something went wrong"
 
         }

@@ -22,13 +22,13 @@ const userSchema = new mongoose.Schema({
     match: [/^\S+@\S+\.\S+$/, "Please use a valid email"]
   },
   googleEmail: {
-  type: String,
-  default: null
-},
+    type: String,
+    default: null
+  },
 
   phone: {
     type: String,
-    required:false
+    required: false
   },
 
   password: {
@@ -44,13 +44,26 @@ const userSchema = new mongoose.Schema({
   },
 
   profileImage: {
-  url: String,
-  public_id: String
-},
+    url: String,
+    public_id: String
+  },
   tempEmail: {
-  type: String,
-  default: null
-},
+    type: String,
+    default: null
+  },
+  referralCode: {
+    type: String,
+    unique: true,
+    sparse: true,
+    uppercase: true,
+    trim: true,
+  },
+
+  referredBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
   role: {
     type: String,
     enum: ["user", "admin"],

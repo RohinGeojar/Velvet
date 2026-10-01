@@ -60,11 +60,7 @@ export const loadDashBoard = async (req, res) => {
 }
 
 export const logout = (req, res) => {
-    if (req.session.user) {
-        req.session.admin = null
-        return res.redirect("/adminAuth/login")
-    }
-    req.session.destroy()
+      req.session.admin = null
     return res.redirect("/adminAuth/login")
 }
 
@@ -97,8 +93,7 @@ export const sendAdminOtp = async (req, res) => {
     } catch (error) {
         console.log(error)
         return res.status(400).json({
-            message: error.message || "Something went wrong"
-        });
+            message: error.message || "Something went wrong"})
     }
 }
 
@@ -166,6 +161,7 @@ export const resetAdminPassword = async (req, res) => {
     return res.json({ success: true });
 
   } catch (err) {
+    console.log("password reset admin error",err)
     return res.status(500).json({ message: "Failed to reset password" });
   }
-};
+}

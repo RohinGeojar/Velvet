@@ -96,6 +96,6 @@ export const offerSchema = Joi.object({
             "date.greater": "Expiry date must be after start date"
         }),
 
-    isActive: Joi.boolean()
+    isActive: Joi.boolean().truthy("on")
 
 })

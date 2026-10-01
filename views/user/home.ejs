@@ -1,305 +1,462 @@
 <!DOCTYPE html>
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "secondary-container": "#f1ddc6",
-              "on-tertiary-fixed-variant": "#474836",
-              "tertiary": "#535542",
-              "on-error-container": "#93000a",
-              "surface-container-highest": "#e2e2e2",
-              "on-tertiary": "#ffffff",
-              "error-container": "#ffdad6",
-              "on-primary-container": "#e0f3da",
-              "inverse-surface": "#2f3131",
-              "surface-container-lowest": "#ffffff",
-              "surface-container-high": "#e8e8e8",
-              "surface-container": "#eeeeee",
-              "error": "#ba1a1a",
-              "outline": "#747871",
-              "tertiary-fixed": "#e4e4cc",
-              "on-secondary-container": "#6f604e",
-              "secondary": "#6a5c4a",
-              "on-tertiary-fixed": "#1b1d0e",
-              "on-secondary": "#ffffff",
-              "secondary-fixed-dim": "#d7c3ae",
-              "surface-dim": "#dadada",
-              "on-error": "#ffffff",
-              "on-background": "#1a1c1c",
-              "primary-container": "#5f705c",
-              "surface-container-low": "#f3f3f3",
-              "tertiary-fixed-dim": "#c8c8b0",
-              "primary-fixed": "#d5e8cf",
-              "surface-bright": "#f9f9f9",
-              "on-primary-fixed": "#101f10",
-              "inverse-primary": "#b9ccb4",
-              "secondary-fixed": "#f4dfc9",
-              "primary": "#475845",
-              "on-secondary-fixed": "#241a0c",
-              "primary-fixed-dim": "#b9ccb4",
-              "on-tertiary-container": "#efefd7",
-              "on-surface-variant": "#444842",
-              "on-surface": "#1a1c1c",
-              "background": "#f9f9f9",
-              "surface-tint": "#52634f",
-              "on-secondary-fixed-variant": "#524534",
-              "on-primary": "#ffffff",
-              "inverse-on-surface": "#f1f1f1",
-              "on-primary-fixed-variant": "#3b4b39",
-              "surface": "#f9f9f9",
-              "tertiary-container": "#6c6d59",
-              "surface-variant": "#e2e2e2",
-              "outline-variant": "#c4c8bf"
-            },
-            fontFamily: {
-              "headline": ["Noto Serif"],
-              "body": ["Manrope"],
-              "label": ["Manrope"]
-            },
-            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary-container": "#f1ddc6",
+            "on-tertiary-fixed-variant": "#474836",
+            "tertiary": "#535542",
+            "on-error-container": "#93000a",
+            "surface-container-highest": "#e2e2e2",
+            "on-tertiary": "#ffffff",
+            "error-container": "#ffdad6",
+            "on-primary-container": "#e0f3da",
+            "inverse-surface": "#2f3131",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e8e8e8",
+            "surface-container": "#eeeeee",
+            "error": "#ba1a1a",
+            "outline": "#747871",
+            "tertiary-fixed": "#e4e4cc",
+            "on-secondary-container": "#6f604e",
+            "secondary": "#6a5c4a",
+            "on-tertiary-fixed": "#1b1d0e",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#d7c3ae",
+            "surface-dim": "#dadada",
+            "on-error": "#ffffff",
+            "on-background": "#1a1c1c",
+            "primary-container": "#5f705c",
+            "surface-container-low": "#f3f3f3",
+            "tertiary-fixed-dim": "#c8c8b0",
+            "primary-fixed": "#d5e8cf",
+            "surface-bright": "#f9f9f9",
+            "on-primary-fixed": "#101f10",
+            "inverse-primary": "#b9ccb4",
+            "secondary-fixed": "#f4dfc9",
+            "primary": "#475845",
+            "on-secondary-fixed": "#241a0c",
+            "primary-fixed-dim": "#b9ccb4",
+            "on-tertiary-container": "#efefd7",
+            "on-surface-variant": "#444842",
+            "on-surface": "#1a1c1c",
+            "background": "#f9f9f9",
+            "surface-tint": "#52634f",
+            "on-secondary-fixed-variant": "#524534",
+            "on-primary": "#ffffff",
+            "inverse-on-surface": "#f1f1f1",
+            "on-primary-fixed-variant": "#3b4b39",
+            "surface": "#f9f9f9",
+            "tertiary-container": "#6c6d59",
+            "surface-variant": "#e2e2e2",
+            "outline-variant": "#c4c8bf"
           },
+          fontFamily: {
+            "headline": ["Noto Serif"],
+            "body": ["Manrope"],
+            "label": ["Manrope"]
+          },
+          borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" },
         },
-      }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-        }
-        body { font-family: 'Manrope', sans-serif; }
-        .font-serif { font-family: 'Noto Serif', serif; }
-    </style>
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+    }
+
+    .font-serif {
+      font-family: 'Noto Serif', serif;
+    }
+  </style>
 </head>
-<body class="bg-surface w-full text-on-surface selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
 
-<main>
-<!-- Hero Section -->
-<section class="relative w-full h-[870px] overflow-hidden">
-<img alt="" class="w-full h-full object-cover" data-alt="Cinematic wide shot of a woman in a flowing silk olive dress standing in a sun-drenched minimalist stone courtyard with soft architectural shadows" src="/images/banner.png"/>
-<div class="absolute inset-0 bg-black/5"></div>
-<div class="absolute inset-0 flex items-center px-20">
-<div class="max-w-xl">
-<span class="block text-secondary font-label uppercase tracking-[0.5em] text-s mb-4">Earth’s Harmony</span>
-<h2 class="text-6xl text-primary md:text-7xl font-serif text-on-surface mb-8 leading-tight">Elegance In Simplicity</h2>
-<a href="/shop"><button class="bg-primary text-on-primary px-10 py-4 font-label uppercase tracking-widest text-xs hover:bg-primary/90 transition-all active:scale-95">
-                        New In
-                    </button></a>
-</div>
-</div>
-</section>
-<!-- Best Sellers -->
-<section class="py-24 px-20 bg-surface">
-<div class="flex justify-between items-end mb-16">
-<div>
-<h3 class="text-4xl font-serif text-primary">Best Sellers</h3>
-</div>
-<a class="text-sm font-label uppercase tracking-widest text-secondary border-b border-secondary pb-1 hover:opacity-70 transition-opacity" href="#">View All</a>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-<!-- Product Card 1 -->
-<div class="group cursor-pointer">
-<div class="relative overflow-hidden aspect-[3/4] mb-6 bg-surface-container-low">
-<img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Studio portrait of an elegant linen blazer in muted sage green draped on a minimalist wooden mannequin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmWLXM1gr0CYI1JyHfE0flOQLCKDcOnHDxjaGEKyoZyuKPfRYvbjvupdOb_6j-uHuH7brKJdREttBCJTcDshQ1mZbYvFXIe_lrPzy_wD_FFSucbV1zvRQUEt1tcEbToj5jQxc02N7HP4YIEM7O5b_sFPW3yqRF-xYCLRKRixId_cjpSGHQu1n8tQoQt4tzgZ3kgq0guye-x0UgpLwKBs4QQeDSkR3wWdOWdjhPHMoy_jSl-KxOinMW5znhmMCSUJVsq_z5fYmHhMHZ"/>
-<button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
-</button>
-</div>
-<div class="flex justify-between items-start">
-<div>
-<h4 class="font-serif text-xl text-on-surface">Structured Linen Blazer</h4>
-<p class="text-sm text-secondary font-light mt-1">Sage Green / Tailored Fit</p>
-<div class="flex gap-2 mt-4">
-<span class="w-3 h-3 rounded-full bg-primary"></span>
-<span class="w-3 h-3 rounded-full bg-secondary-fixed border border-outline/10"></span>
-<span class="w-3 h-3 rounded-full bg-stone-200"></span>
-</div>
-</div>
-<span class="text-lg font-medium text-primary">$240</span>
-</div>
-</div>
-<!-- Product Card 2 -->
-<div class="group cursor-pointer">
-<div class="relative overflow-hidden aspect-[3/4] mb-6 bg-surface-container-low">
-<img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A woman in a flowing cream silk slip dress walking through a minimalist gallery with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeMEJ4WoffWLH7NBm4fVhmI_hbOrSiIMToVeH8jxxjWHLkWons1IwZGkf1X9TjGB0rhD9DqQWTDbXGT4af__xEPwu7jp4OKpIbH1kNBn-MyutrHZwDvz-IOfIlrdG-OIIVkbF0NRC-IOr-9v8TnKHv1tB2WYETBEltdjbhxHY7Hj0WQ8FnMRloLbSIS4TnG_XSE3TTYPAZ1owtCNwBHsMI0eFFl7TI_ckSNMiBWz_waPYGTW8Xi4mT4FWUCXzblFdjoMlyVNyI0GxY"/>
-<button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
-</button>
-</div>
-<div class="flex justify-between items-start">
-<div>
-<h4 class="font-serif text-xl text-on-surface">Silk Satin Midi Dress</h4>
-<p class="text-sm text-secondary font-light mt-1">Champagne / Bias Cut</p>
-<div class="flex gap-2 mt-4">
-<span class="w-3 h-3 rounded-full bg-secondary-fixed"></span>
-<span class="w-3 h-3 rounded-full bg-on-surface"></span>
-</div>
-</div>
-<span class="text-lg font-medium text-primary">$310</span>
-</div>
-</div>
-<!-- Product Card 3 -->
-<div class="group cursor-pointer">
-<div class="relative overflow-hidden aspect-[3/4] mb-6 bg-surface-container-low">
-<img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Close up of a premium wool cashmere knit sweater in oatmeal color with delicate weave texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnd11C6udkDrkxTNFRp24O1P84r4hyQHvhd9mdyQmLu6j8tnmZif3nMmUV_xN1cPxzazHd0EjdoPWvSVOSzszuWPUrzjN43xkC1MkaHh1Lk6WhaFZR6CZXb7K6aiPeQJQyezQHK1Mz5IsTsYSNEm2dAA2BTIvBCa7hgabIw_Ty5n5LUH7InQHNylgzfHFFHLilAAn49o3bwOGsBbLpeFMTwcgM7j5xP9R2W3k5oI5ajGm9DqCp2dCYG0zl9m-LWjjz2jpm72M9vFh0"/>
-<button class="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
-</button>
-</div>
-<div class="flex justify-between items-start">
-<div>
-<h4 class="font-serif text-xl text-on-surface">Cashmere Blend Knit</h4>
-<p class="text-sm text-secondary font-light mt-1">Oatmeal / Oversized</p>
-<div class="flex gap-2 mt-4">
-<span class="w-3 h-3 rounded-full bg-surface-container-high"></span>
-<span class="w-3 h-3 rounded-full bg-primary-container"></span>
-</div>
-</div>
-<span class="text-lg font-medium text-primary">$185</span>
-</div>
-</div>
-</div>
-</section>
-<!-- Collection Section (Asymmetrical Grid) -->
-<section class="py-24 px-20 bg-surface-container-low">
-<div class="grid grid-cols-12 gap-6 h-[1000px]">
-<!-- Large Left Item -->
-<div class="col-span-8 relative overflow-hidden group">
-<img alt="" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" data-alt="A curated arrangement of silk blouses in earthy tones hanging on a brass rail in a brightly lit studio" src="/images/09d5cc53-badf-4f65-9090-671819560529.jpeg"/>
-<div class="absolute inset-0 bg-black/10"></div>
-<div class="absolute bottom-12 left-12">
-<h5 class="text-4xl font-serif text-white mb-4"> Luxuary Ethnic Wear</h5>
-<a href="/shop?category=ethnic-wear"><button class="text-white font-label tracking-widest uppercase text-xs border-b border-white pb-1">Explore</button></a>
-</div>
-</div>
-<!-- Stacked Right Items -->
-<div class="col-span-4 flex flex-col gap-6">
-<div class="h-1/2 relative overflow-hidden group">
-<img alt="" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" data-alt="Wide leg tailored trousers in dark olive charcoal color styled with minimalist leather sandals" src="https://assets.ajio.com/medias/sys_master/root1/20250716/GjM0/6877b2505d4cb4138018c678/-473Wx593H-701962401-rust-MODEL.jpg"/>
+<body
+  class="bg-surface w-full text-on-surface selection:bg-secondary-container selection:text-on-secondary-container overflow-x-hidden">
 
-<a href="/shop?category=tops"><div class="absolute inset-0 bg-black/10"></div><div class="absolute bottom-8 left-8">
-<h5 class="text-2xl font-serif text-white mb-2">Tops</h5>
-<a href="/shop?category=tops"><button class="text-white font-label tracking-widest uppercase text-[10px] border-b border-white pb-1">Shop Now</button></a>
-</div></a>
-</div>
-<div class="h-1/2 relative overflow-hidden group">
-<img alt="" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" data-alt="Details of an evening gown with intricate pleats and delicate lace inserts in a creamy white tone" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW85xAWvxSOEKIzyoszTVNeHtYR0S0gOCZnStABjaVVKntIFFbzgqdy1KwYoFrWJFe4-Bit_8njdPSxrse-Q9jK7SJ9J8hITZGUVqWhggERe50D9LOX_64PJrseScSVrk51MmbX-W5-ZvJLr69FT5q37Pjfi3Jy1jmHigD9NsDla93ksCPNnVAPuHggmt9pJSBNWbIyuilkv_LzCt-yoY0nL-KRwaO91Sn5ARV501bAP7fzQt4DJ8Efq5R52PrMB8RJ6xU6YQFxaz9"/>
-<div class="absolute inset-0 bg-black/10"></div>
-<div class="absolute bottom-8 left-8">
-<h5 class="text-2xl font-serif text-white mb-2">Dresses</h5>
-<a href="/shop?category=dresses"><button class="text-white font-label tracking-widest uppercase text-[10px] border-b border-white pb-1">Shop Now</button></a>
-</div>
-</div>
-</div>
-</div>
-<!-- Row below -->
-<div class="grid grid-cols-12 gap-6 mt-6 h-[400px]">
-<div class="col-span-12 relative overflow-hidden group">
-<img alt="" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110" data-alt="Elegant oversized wool coat in a warm taupe color worn by a model walking through an autumnal park" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4rF7Hq08l4UhqcHOZo5N8nRd-CgL1eCjh3aga7u60ilCkbzafl-L9IVi9pu1nVKi51ByRAnPGeUu7dHE-mXkdAsVIvIWsIrkD7j9oVB8ODJp3XMAUWsIdpd9doycVHSK56NzyldIpRfxoxL5zQHgqUZ0diWpKd938qoueEaPSzV2_BMqd-EykJmCOdWhTT8XY8dRbXS0vPvIegN4m2C9h8SJ2Cfd56orh8kIaqoX94JX_58A-9k8XFnUBnexuNlX6l_dzYuPpz9Kr"/>
-<div class="absolute inset-0 bg-black/10"></div>
-<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
-<h5 class="text-5xl font-serif text-white mb-4">Premium Outerwear</h5>
-<p class="text-white/80 font-label tracking-widest uppercase text-xs mb-6">Winter Curated Collection</p>
-<a href="/shop?category=outerwear"><button class="bg-white text-primary px-8 py-3 font-label uppercase tracking-widest text-xs hover:bg-primary hover:text-white transition-colors">Discover More</button></a>
-</div>
-</div>
-</div>
-</section>
-<!-- Wedding Collections (Horizontal) -->
-<section class="py-24 overflow-hidden bg-surface">
-<div class="px-20 mb-12 flex items-baseline gap-6">
-<h3 class="text-4xl font-serif text-primary">The Wedding Guest</h3>
-<p class="text-secondary font-label uppercase tracking-widest text-[10px]">A Guest For Every Occasion</p>
-</div>
-<div class="flex gap-8 overflow-x-auto px-20 pb-12 snap-x scrollbar-hide no-scrollbar" style="scrollbar-width: none;">
-<!-- Cards for each day -->
-<div class="min-w-[320px] snap-start group">
-<div class="relative aspect-[3/4] mb-4 bg-stone-100 overflow-hidden">
-<img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Model in a pastel floral chiffon dress standing in a lush garden setting for a Sunday brunch wedding" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWkZa0CGZKKDNFwT3cS4aOOklZFFETpaRNzy5qdXl62dXLcN_uwwS2VRxNNOaIvSEtZ-hzVQE_7EX4aTo1ainHYIqBurGrUvuzWlxwcsl0ZsjIXv-8Q0cTaN80lclwENrpAuA7XgQNMhZeuvSmP3XD_462vTysYvHx8mzk0X85k0Sy_IXq_p9dbMHiv0WkXUNmHAlAJfqGsKQPwviZMGsxoWnbUNt8Lh0Eb2_JFLKhcCcf4VpG5vt84V25HAQI_JcH2nQ70XERXh5-"/>
-<span class="absolute top-4 left-4 bg-white/90 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-primary">Sunday</span>
-<button class="absolute top-4 right-4 text-primary bg-white/80 p-2 rounded-full">
-<span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
-</button>
-</div>
-<p class="font-serif text-lg">Garden Soirée</p>
-<p class="text-xs text-secondary tracking-widest uppercase mt-1">Soft Florals</p>
-</div>
-<div class="min-w-[320px] snap-start group">
-<div class="relative aspect-[3/4] mb-4 bg-stone-100 overflow-hidden">
-<img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Modern woman in a sleek champagne silk pantsuit for a sophisticated Monday civil ceremony" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy-NfJXjvHHEZyUVUS_rdUnH804X2nbXP07Yxlnxhj9VtwnL7BVSUBOF9I-HYHVmhKPbkrvZk3WBLr7XEIgAaV_GhULd_ovv_E-NXiJLQH63OYAZlD7HcmZ5Hn3_zqNp5Dfw8Od0-NaqS2v_9OsubwyceyORU_bWgO6it4uDmrtOLohJIoaGNY9vONETqdb3tu2x7b05XdNiwa1PxYF7hcuAFAksx4450uA6eI7-r8txzcZ5XgXhnTAsatdmWZaoAMc4cxVPeVy10d"/>
-<span class="absolute top-4 left-4 bg-white/90 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-primary">Monday</span>
-<button class="absolute top-4 right-4 text-primary bg-white/80 p-2 rounded-full">
-<span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
-</button>
-</div>
-<p class="font-serif text-lg">City Hall Chic</p>
-<p class="text-xs text-secondary tracking-widest uppercase mt-1">Tailored Silk</p>
-</div>
-<div class="min-w-[320px] snap-start group">
-<div class="relative aspect-[3/4] mb-4 bg-stone-100 overflow-hidden">
-<img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Cocktail dress in deep emerald satin for an elegant Tuesday evening wedding reception" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCE58CgjZW4voYNJgs3cbRFn0kCwaWDpPlGBQmpzSMCzJtGMd4f_hla021Qv3zg3qc3LTMdEmLGgUwifWlxAMHhFCh48VowifBKLeO81y59-mD7lv_VTlc9OuAKhmo8JVQJ0HJ2fEKbZ-HhGbE_6erWk2oT11NLw5RbwuCXrWJZW2E5XbGo9vl9QS9KpyTeMHwsd1ZXhKQabdjl2AGjYFSxB2Btr5ZalhCNW4f6ITG4Oma772IBQxszseTX3IxtcSTGgeP8TEov1pFV"/>
-<span class="absolute top-4 left-4 bg-white/90 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-primary">Tuesday</span>
-<button class="absolute top-4 right-4 text-primary bg-white/80 p-2 rounded-full">
-<span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
-</button>
-</div>
-<p class="font-serif text-lg">Midnight Gala</p>
-<p class="text-xs text-secondary tracking-widest uppercase mt-1">Velvet &amp; Lace</p>
-</div>
-<div class="min-w-[320px] snap-start group">
-<div class="relative aspect-[3/4] mb-4 bg-stone-100 overflow-hidden">
-<img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="Model in an airy cream midi dress for a Wednesday seaside destination wedding" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUScyKPaaEd6CTHUqs3ksi3F6-Itp2fJ4CnwomTsRc5UshohdgpqymKjgP-9EtPYbarPn0UwTXAoCuInop1778PwTX9mJb6yEDt-8Z7AtZe3ynJUxgQqpttq3A604H_9zzwDJbZbnEGZQE2njQL49XYThBxqQIVrk603S1QmbRXR_dJS1hbxMXh6nBkjUgFjFo3_t67rkZIFyMYTX8Yhh7gvrEs281HvPwZeeKU0NBmz4c1w7Wx4axOJNSyNLVqDxGNTk6tQZ1pHVi"/>
-<span class="absolute top-4 left-4 bg-white/90 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-primary">Wednesday</span>
-<button class="absolute top-4 right-4 text-primary bg-white/80 p-2 rounded-full">
-<span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
-</button>
-</div>
-<p class="font-serif text-lg">Seaside Bliss</p>
-<p class="text-xs text-secondary tracking-widest uppercase mt-1">Linen Luxe</p>
-</div>
-</div>
-</section>
-<!-- Social Section (Masonry) -->
-<section class="py-24 px-20 bg-surface-container-low">
-<div class="text-center mb-16">
-<h3 class="text-3xl font-serif text-primary">Follow Us @ Velvet Vogue</h3>
-<p class="text-secondary font-label uppercase tracking-[0.2em] text-[10px] mt-4">Join our digital atelier</p>
-</div>
-<div class="columns-1 md:columns-2 lg:columns-4 gap-6 space-y-6">
-<div class="break-inside-avoid">
-<img alt="" class="w-full object-cover hover:opacity-90 transition-opacity" data-alt="Instagram style shot of a coffee cup, a leather journal, and a sage green scarf on a marble table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7s3qnCfSEWCzwxc0a7kv2LssmjHNUcLENvClqn1vDrL2b6pqBI6JuVT5zJMUEFkj70UooPJbUuQlafUdIKNLU-IWeK1EZXMmLcj0v-eiRuv3POXbPgcUJe3K9G8qoZpPmn-xVuG4ysP9Vq7rxByIAT0CyQ59qJR2lVKGsqZhlv4rMPYdCFG6YFFl1kBDk4OOZA_1Fb708nrwJ7GaQl-9_wUKJBXXB4tCftDyxEsSEd5FKHi1_Uo2l51xnjslW3vdtE-qRpXGws59n"/>
-</div>
-<div class="break-inside-avoid">
-<img alt="" class="w-full object-cover hover:opacity-90 transition-opacity" data-alt="Candid street style photo of a woman in an oversized beige trench coat walking in Paris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4zFvGgZXoyHJF61ngJDswohkffFqtP3YVqhW5XtN1LApbJMBucZrZ0lHeVtswCU9kodpJA-3Uv8EXdqWx5aTdxRdEuzXta9aiF5LXE6rMee1ROKOW4LLiqFO468XhL9TI8vLu-BT8h3RslFWQlaMhL_gCSTIbopn2qlLvrlW9brCKFfqg_h1t0wfCMbrJhPM0FxLPRQbnCipu6cH7XA6l_8r_TJErUEFqjUEduF2Gq8msVyJb5ILonz5NTQpzqouQLyUZG0CpvFNp"/>
-</div>
-<div class="break-inside-avoid">
-<img alt="" class="w-full object-cover hover:opacity-90 transition-opacity" data-alt="Aesthetic detail shot of gold jewelry against a dark green silk fabric" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoo4KOU2eT9HkJvIZdCVtwJR7cquLwnvOe0iwwfX5lgON9har7V-lFCluuV5uzSmhpsIX7Jp4-ZhwHb2tQ8Spa9iBeQuFxsB06rOk-ZHtVq7gEUmU65V49uN1tI_4mW58TsUDmE-yR4AdpIxVjPbFFXDfM_SstdfAJCRzQRqak-OcOIIInJVEeuZUcrOvjAzpy8snTtgyC_F23G-I4B6AZ-bDf3cK9EVK4IUXG3PlWuHMkRO21LzBDGhtuAbz6Pj-Qy47xmfqkyziv"/>
-</div>
-<div class="break-inside-avoid">
-<img alt="" class="w-full object-cover hover:opacity-90 transition-opacity" data-alt="Architectural photo of a minimalist stone staircase with sharp geometric shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1J1tw_YMa4PRQiETFyPiWtTq9GNWDKZaUY6CpDTY_eAf8T_2NTPDppfhhTb9jZ5zMfyvXDvWb4gsgEeZKkZSpmaqrq6fYumB3Rf-mnd8mrYoSrq_tKHZu30yrplQsj7sKLWwLMudRguG4s4l1WPizWz1G2FnYuKSkgHqUdwN--aniD-XUgKVBz15DYIkWmtDGTJpr_8m56ZKNAex4ZjXxUyHcG_-UuMNW9ZWhGwaMeAjBiUStwcbbvR3YUY7B864oti-j8UG6Ar9e"/>
-</div>
-<div class="break-inside-avoid">
-<img alt="" class="w-full object-cover hover:opacity-90 transition-opacity" data-alt="Close-up of a bouquet of dried wildflowers in a ceramic vase in soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJXN6h0G7sFBbO_77k-EH58wKtAkcN66p4-POLRqNhylSyb6NeN-vMpGo_zUca47TY6aWQn-vfOoHq2g95aeUMyrCTiTmdch1DWpiu7BGe6XOgKCFoFHDaVzziBa_cuTa6FSnRpl9b3NdoMe-7XinJ2Cj_nLSxZ5Dn4aKKXKOqaGKSN0Yx3DIwwB7Srh3U6YmDtIkBgNYmQhhVb-JPae92HYCHIMldLpDWT6JafevwjBtN6mBWVbgc0VwLBADOHEHyhMm_xZQhSQ1x"/>
-</div>
-<div class="break-inside-avoid">
-<img alt="" class="w-full object-cover hover:opacity-90 transition-opacity" data-alt="Model laughing while wearing a premium white wool sweater in a minimalist interior" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr8OSkH0r-vy8wYsMTrM0S4Fris32bbWu5phq4GithTJZx6wuTn2Js3Se1SyIEQ50jHC2sv5YfKFwwNjpKcvli6nmhSYryZ1ATywhN16GjTyOALVfn-PPIb3v2r13FTc5TP1U9tUk7rTOknhkqaXmt2jVYSLaoMrz29-U626uIVU2Aqrh-SVO_Uxp0RQc1t8xwAWqkqAxvWncB2xRhtvaJyOslZZKVpnkq4GnxY6v1s-J9F27SJmnnybEXYYntSrixPPVKhmKr2ojV"/>
-</div>
-<div class="break-inside-avoid">
-<img alt="" class="w-full object-cover hover:opacity-90 transition-opacity" data-alt="Abstract detail of a linen fabric texture showing the organic weave patterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOnKsP88Z0fBI7wXDuR_hIJY7WBInOvVPEkdbAZSVtFePRMh4CTgvaM65cE2n71VxdV0u5ZD5sjAFqb9RGBjdtQ4V2LtiomXvC2dfYcVlDTZoRoA_CwvTuQ1JtUcmE_xs0dgyavXM1AgX2Aw6ap85EgSSCyiBV9azrgBtv8ZBeGSVpQhsbGFRwaGtB04R3y1IeF_r01x73fU5fWJJV-1krFDA7dbeUmnXkXu4qEfb_7004vxbrK94ijEdDrf3q3_suMdG_W16Bbae_"/>
-</div>
-<div class="break-inside-avoid">
-<img alt="" class="w-full object-cover hover:opacity-90 transition-opacity" data-alt="Atmospheric shot of a sun-drenched dressing room with a velvet chair and floor-length mirror" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASwAPHjcOOZ4QJPDxuug33ZCBZ5_tHrUQB0SaRR6NpezD7Y6TUIwTrs5qIGy4KDfsBGvtdgJwPdOAXlsq7t13GpMEekRukAM5IFex6iguW7t4g4oINILYni2CT68kim7OGo5lC9dC5orfNjbDwLYdVBVGwj-hlEeI1F-Yi-lJ-NPofqS358QFFc9fWB1WQOjbB8LWUv6AhzmluAN1sWD3fo6WhACIE4dfoUSHa2C1CFTyOoCdZmmKqPDD1l-_UWl3C5xy1r-VvK0qH"/>
-</div>
-</div>
-</section>
-</main>
+  <main>
+    <!-- Hero Section -->
+    <section class="relative w-full h-[870px] overflow-hidden">
+      <img alt="" class="w-full h-full object-cover"
+        data-alt="Cinematic wide shot of a woman in a flowing silk olive dress standing in a sun-drenched minimalist stone courtyard with soft architectural shadows"
+        src="/images/banner.png" />
+      <div class="absolute inset-0 bg-black/5"></div>
+      <div class="absolute inset-0 flex items-center px-20">
+        <div class="max-w-xl">
+          <span class="block text-secondary font-label uppercase tracking-[0.5em] text-s mb-4">Earth’s Harmony</span>
+          <h2 class="text-6xl text-primary md:text-7xl font-serif text-on-surface mb-8 leading-tight">Elegance In
+            Simplicity</h2>
+          <a href="/shop"><button
+              class="bg-primary text-on-primary px-10 py-4 font-label uppercase tracking-widest text-xs hover:bg-primary/90 transition-all active:scale-95">
+              New In
+            </button></a>
+        </div>
+      </div>
+    </section>
+    <!-- Best Sellers -->
+  <section class="py-24 px-6 md:px-12 lg:px-20 bg-surface">
 
-</body></html>
+    <div class="flex justify-between items-end mb-16">
+        <div>
+            <h3 class="text-4xl font-serif text-primary">Best Sellers</h3>
+        </div>
+
+        <a class="text-sm font-label uppercase tracking-widest text-secondary border-b border-secondary pb-1 hover:opacity-70 transition-opacity" href="/shop">View All</a>
+    </div>
+
+    <% if (bestSellers && bestSellers.length > 0) { %>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+
+            <% bestSellers.slice(0, 3).forEach(product => { %>
+
+                <%
+                    const variant = product.variants?.[0]
+                    const image = variant?.images?.[0]?.url || "/images/placeholder.png"
+                    const originalPrice = variant?.salePrice || 0
+                    const finalPrice = product.finalPrice || originalPrice
+                    const hasOffer = product.hasOffer || false
+                    const discountPercentage = product.discountPercentage || 0
+                %>
+
+                <div class="group cursor-pointer" onclick="window.location.href='/shop/product/<%= product.slug %>'">
+
+                    <div class="relative overflow-hidden aspect-[3/4] mb-6 bg-surface-container-low">
+
+                        <img src="<%= image %>" alt="<%= product.productName %>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+
+                        <% if (hasOffer) { %>
+                            <div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 text-xs uppercase tracking-wider"><%= discountPercentage %>% OFF</div>
+                        <% } %>
+                        
+
+                        <button type="button" onclick="event.stopPropagation(); toggleWishlist('<%= product._id %>', this)" class="wishlist-btn absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110">
+                            <span class="material-symbols-outlined">favorite</span>
+                        </button>
+
+                    </div>
+
+                    <div class="flex justify-between items-start gap-4">
+
+                        <div class="min-w-0">
+
+                            <h4 class="font-serif text-xl text-on-surface truncate"><%= product.productName %></h4>
+
+                            <p class="text-sm text-secondary font-light mt-1"><%= variant?.color || "Premium Collection" %></p>
+
+                            <% if (product.variants?.length > 0) { %>
+
+                                <div class="flex gap-2 mt-4">
+
+                                    <% product.variants.slice(0, 4).forEach(item => { %>
+
+                                        <span class="w-3 h-3 rounded-full border border-gray-300" style="background-color: <%= item.color %>" title="<%= item.color %>"></span>
+
+                                    <% }) %>
+
+                                </div>
+
+                            <% } %>
+
+                        </div>
+
+                        <div class="flex flex-col items-end whitespace-nowrap">
+
+                            <span class="text-lg font-semibold text-primary">₹<%= finalPrice.toLocaleString("en-IN") %></span>
+
+                            <% if (hasOffer) { %>
+                                <span class="text-sm text-gray-400 line-through mt-1">₹<%= originalPrice.toLocaleString("en-IN") %></span>
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            <% }) %>
+
+        </div>
+
+    <% } else { %>
+
+        <div class="text-center py-10">
+            <p class="text-gray-500">No best selling products available</p>
+        </div>
+
+    <% } %>
+
+</section>
+    <!-- Collection Section (Asymmetrical Grid) -->
+    <section class="py-24 px-20 bg-surface-container-low">
+      <div class="grid grid-cols-12 gap-6 h-[1000px]">
+        <!-- Large Left Item -->
+        <div class="col-span-8 relative overflow-hidden group">
+          <img alt="" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
+            data-alt="A curated arrangement of silk blouses in earthy tones hanging on a brass rail in a brightly lit studio"
+            src="/images/09d5cc53-badf-4f65-9090-671819560529.jpeg" />
+          <div class="absolute inset-0 bg-black/10"></div>
+          <div class="absolute bottom-12 left-12">
+            <h5 class="text-4xl font-serif text-white mb-4"> Luxuary Ethnic Wear</h5>
+            <a href="/shop?category=ethnic-wear"><button
+                class="text-white font-label tracking-widest uppercase text-xs border-b border-white pb-1">Explore</button></a>
+          </div>
+        </div>
+        <!-- Stacked Right Items -->
+        <div class="col-span-4 flex flex-col gap-6">
+          <div class="h-1/2 relative overflow-hidden group">
+            <img alt="" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
+              data-alt="Wide leg tailored trousers in dark olive charcoal color styled with minimalist leather sandals"
+              src="https://assets.ajio.com/medias/sys_master/root1/20250716/GjM0/6877b2505d4cb4138018c678/-473Wx593H-701962401-rust-MODEL.jpg" />
+
+            <a href="/shop?category=tops">
+              <div class="absolute inset-0 bg-black/10"></div>
+              <div class="absolute bottom-8 left-8">
+                <h5 class="text-2xl font-serif text-white mb-2">Tops</h5>
+                <a href="/shop?category=tops"><button
+                    class="text-white font-label tracking-widest uppercase text-[10px] border-b border-white pb-1">Shop
+                    Now</button></a>
+              </div>
+            </a>
+          </div>
+          <div class="h-1/2 relative overflow-hidden group">
+            <img alt="" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
+              data-alt="Details of an evening gown with intricate pleats and delicate lace inserts in a creamy white tone"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAW85xAWvxSOEKIzyoszTVNeHtYR0S0gOCZnStABjaVVKntIFFbzgqdy1KwYoFrWJFe4-Bit_8njdPSxrse-Q9jK7SJ9J8hITZGUVqWhggERe50D9LOX_64PJrseScSVrk51MmbX-W5-ZvJLr69FT5q37Pjfi3Jy1jmHigD9NsDla93ksCPNnVAPuHggmt9pJSBNWbIyuilkv_LzCt-yoY0nL-KRwaO91Sn5ARV501bAP7fzQt4DJ8Efq5R52PrMB8RJ6xU6YQFxaz9" />
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute bottom-8 left-8">
+              <h5 class="text-2xl font-serif text-white mb-2">Dresses</h5>
+              <a href="/shop?category=dresses"><button
+                  class="text-white font-label tracking-widest uppercase text-[10px] border-b border-white pb-1">Shop
+                  Now</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Row below -->
+      <div class="grid grid-cols-12 gap-6 mt-6 h-[400px]">
+        <div class="col-span-12 relative overflow-hidden group">
+          <img alt="" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-110"
+            data-alt="Elegant oversized wool coat in a warm taupe color worn by a model walking through an autumnal park"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4rF7Hq08l4UhqcHOZo5N8nRd-CgL1eCjh3aga7u60ilCkbzafl-L9IVi9pu1nVKi51ByRAnPGeUu7dHE-mXkdAsVIvIWsIrkD7j9oVB8ODJp3XMAUWsIdpd9doycVHSK56NzyldIpRfxoxL5zQHgqUZ0diWpKd938qoueEaPSzV2_BMqd-EykJmCOdWhTT8XY8dRbXS0vPvIegN4m2C9h8SJ2Cfd56orh8kIaqoX94JX_58A-9k8XFnUBnexuNlX6l_dzYuPpz9Kr" />
+          <div class="absolute inset-0 bg-black/10"></div>
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <h5 class="text-5xl font-serif text-white mb-4">Premium Outerwear</h5>
+            <p class="text-white/80 font-label tracking-widest uppercase text-xs mb-6">Winter Curated Collection</p>
+            <a href="/shop?category=outerwear"><button
+                class="bg-white text-primary px-8 py-3 font-label uppercase tracking-widest text-xs hover:bg-primary hover:text-white transition-colors">Discover
+                More</button></a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Wedding Collections (Horizontal) -->
+    <section class="py-24 overflow-hidden bg-surface">
+      <div class="px-20 mb-12 flex items-baseline gap-6">
+        <h3 class="text-4xl font-serif text-primary">The Wedding Guest</h3>
+        <p class="text-secondary font-label uppercase tracking-widest text-[10px]">A Guest For Every Occasion</p>
+      </div>
+      <div class="flex gap-8 overflow-x-auto px-20 pb-12 snap-x scrollbar-hide no-scrollbar"
+        style="scrollbar-width: none;">
+        <!-- Cards for each day -->
+        <div class="min-w-[320px] snap-start group">
+          <div class="relative aspect-[3/4] mb-4 bg-stone-100 overflow-hidden">
+            <img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              data-alt="Model in a pastel floral chiffon dress standing in a lush garden setting for a Sunday brunch wedding"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWkZa0CGZKKDNFwT3cS4aOOklZFFETpaRNzy5qdXl62dXLcN_uwwS2VRxNNOaIvSEtZ-hzVQE_7EX4aTo1ainHYIqBurGrUvuzWlxwcsl0ZsjIXv-8Q0cTaN80lclwENrpAuA7XgQNMhZeuvSmP3XD_462vTysYvHx8mzk0X85k0Sy_IXq_p9dbMHiv0WkXUNmHAlAJfqGsKQPwviZMGsxoWnbUNt8Lh0Eb2_JFLKhcCcf4VpG5vt84V25HAQI_JcH2nQ70XERXh5-" />
+            <span
+              class="absolute top-4 left-4 bg-white/90 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-primary">Sunday</span>
+            <button class="absolute top-4 right-4 text-primary bg-white/80 p-2 rounded-full">
+              <span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
+            </button>
+          </div>
+          <p class="font-serif text-lg">Garden Soirée</p>
+          <p class="text-xs text-secondary tracking-widest uppercase mt-1">Soft Florals</p>
+        </div>
+        <div class="min-w-[320px] snap-start group">
+          <div class="relative aspect-[3/4] mb-4 bg-stone-100 overflow-hidden">
+            <img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              data-alt="Modern woman in a sleek champagne silk pantsuit for a sophisticated Monday civil ceremony"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy-NfJXjvHHEZyUVUS_rdUnH804X2nbXP07Yxlnxhj9VtwnL7BVSUBOF9I-HYHVmhKPbkrvZk3WBLr7XEIgAaV_GhULd_ovv_E-NXiJLQH63OYAZlD7HcmZ5Hn3_zqNp5Dfw8Od0-NaqS2v_9OsubwyceyORU_bWgO6it4uDmrtOLohJIoaGNY9vONETqdb3tu2x7b05XdNiwa1PxYF7hcuAFAksx4450uA6eI7-r8txzcZ5XgXhnTAsatdmWZaoAMc4cxVPeVy10d" />
+            <span
+              class="absolute top-4 left-4 bg-white/90 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-primary">Monday</span>
+            <button class="absolute top-4 right-4 text-primary bg-white/80 p-2 rounded-full">
+              <span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
+            </button>
+          </div>
+          <p class="font-serif text-lg">City Hall Chic</p>
+          <p class="text-xs text-secondary tracking-widest uppercase mt-1">Tailored Silk</p>
+        </div>
+        <div class="min-w-[320px] snap-start group">
+          <div class="relative aspect-[3/4] mb-4 bg-stone-100 overflow-hidden">
+            <img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              data-alt="Cocktail dress in deep emerald satin for an elegant Tuesday evening wedding reception"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCE58CgjZW4voYNJgs3cbRFn0kCwaWDpPlGBQmpzSMCzJtGMd4f_hla021Qv3zg3qc3LTMdEmLGgUwifWlxAMHhFCh48VowifBKLeO81y59-mD7lv_VTlc9OuAKhmo8JVQJ0HJ2fEKbZ-HhGbE_6erWk2oT11NLw5RbwuCXrWJZW2E5XbGo9vl9QS9KpyTeMHwsd1ZXhKQabdjl2AGjYFSxB2Btr5ZalhCNW4f6ITG4Oma772IBQxszseTX3IxtcSTGgeP8TEov1pFV" />
+            <span
+              class="absolute top-4 left-4 bg-white/90 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-primary">Tuesday</span>
+            <button class="absolute top-4 right-4 text-primary bg-white/80 p-2 rounded-full">
+              <span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
+            </button>
+          </div>
+          <p class="font-serif text-lg">Midnight Gala</p>
+          <p class="text-xs text-secondary tracking-widest uppercase mt-1">Velvet &amp; Lace</p>
+        </div>
+        <div class="min-w-[320px] snap-start group">
+          <div class="relative aspect-[3/4] mb-4 bg-stone-100 overflow-hidden">
+            <img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              data-alt="Model in an airy cream midi dress for a Wednesday seaside destination wedding"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUScyKPaaEd6CTHUqs3ksi3F6-Itp2fJ4CnwomTsRc5UshohdgpqymKjgP-9EtPYbarPn0UwTXAoCuInop1778PwTX9mJb6yEDt-8Z7AtZe3ynJUxgQqpttq3A604H_9zzwDJbZbnEGZQE2njQL49XYThBxqQIVrk603S1QmbRXR_dJS1hbxMXh6nBkjUgFjFo3_t67rkZIFyMYTX8Yhh7gvrEs281HvPwZeeKU0NBmz4c1w7Wx4axOJNSyNLVqDxGNTk6tQZ1pHVi" />
+            <span
+              class="absolute top-4 left-4 bg-white/90 px-3 py-1 text-[10px] font-label uppercase tracking-widest text-primary">Wednesday</span>
+            <button class="absolute top-4 right-4 text-primary bg-white/80 p-2 rounded-full">
+              <span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
+            </button>
+          </div>
+          <p class="font-serif text-lg">Seaside Bliss</p>
+          <p class="text-xs text-secondary tracking-widest uppercase mt-1">Linen Luxe</p>
+        </div>
+      </div>
+    </section>
+    <!-- Social Section (Masonry) -->
+    <section class="py-24 px-20 bg-surface-container-low">
+      <div class="text-center mb-16">
+        <h3 class="text-3xl font-serif text-primary">Follow Us @ Velvet Vogue</h3>
+        <p class="text-secondary font-label uppercase tracking-[0.2em] text-[10px] mt-4">Join our digital atelier</p>
+      </div>
+      <div class="columns-1 md:columns-2 lg:columns-4 gap-6 space-y-6">
+        <div class="break-inside-avoid">
+          <img alt="" class="w-full object-cover hover:opacity-90 transition-opacity"
+            data-alt="Instagram style shot of a coffee cup, a leather journal, and a sage green scarf on a marble table"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7s3qnCfSEWCzwxc0a7kv2LssmjHNUcLENvClqn1vDrL2b6pqBI6JuVT5zJMUEFkj70UooPJbUuQlafUdIKNLU-IWeK1EZXMmLcj0v-eiRuv3POXbPgcUJe3K9G8qoZpPmn-xVuG4ysP9Vq7rxByIAT0CyQ59qJR2lVKGsqZhlv4rMPYdCFG6YFFl1kBDk4OOZA_1Fb708nrwJ7GaQl-9_wUKJBXXB4tCftDyxEsSEd5FKHi1_Uo2l51xnjslW3vdtE-qRpXGws59n" />
+        </div>
+        <div class="break-inside-avoid">
+          <img alt="" class="w-full object-cover hover:opacity-90 transition-opacity"
+            data-alt="Candid street style photo of a woman in an oversized beige trench coat walking in Paris"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4zFvGgZXoyHJF61ngJDswohkffFqtP3YVqhW5XtN1LApbJMBucZrZ0lHeVtswCU9kodpJA-3Uv8EXdqWx5aTdxRdEuzXta9aiF5LXE6rMee1ROKOW4LLiqFO468XhL9TI8vLu-BT8h3RslFWQlaMhL_gCSTIbopn2qlLvrlW9brCKFfqg_h1t0wfCMbrJhPM0FxLPRQbnCipu6cH7XA6l_8r_TJErUEFqjUEduF2Gq8msVyJb5ILonz5NTQpzqouQLyUZG0CpvFNp" />
+        </div>
+        <div class="break-inside-avoid">
+          <img alt="" class="w-full object-cover hover:opacity-90 transition-opacity"
+            data-alt="Aesthetic detail shot of gold jewelry against a dark green silk fabric"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoo4KOU2eT9HkJvIZdCVtwJR7cquLwnvOe0iwwfX5lgON9har7V-lFCluuV5uzSmhpsIX7Jp4-ZhwHb2tQ8Spa9iBeQuFxsB06rOk-ZHtVq7gEUmU65V49uN1tI_4mW58TsUDmE-yR4AdpIxVjPbFFXDfM_SstdfAJCRzQRqak-OcOIIInJVEeuZUcrOvjAzpy8snTtgyC_F23G-I4B6AZ-bDf3cK9EVK4IUXG3PlWuHMkRO21LzBDGhtuAbz6Pj-Qy47xmfqkyziv" />
+        </div>
+        <div class="break-inside-avoid">
+          <img alt="" class="w-full object-cover hover:opacity-90 transition-opacity"
+            data-alt="Architectural photo of a minimalist stone staircase with sharp geometric shadows"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1J1tw_YMa4PRQiETFyPiWtTq9GNWDKZaUY6CpDTY_eAf8T_2NTPDppfhhTb9jZ5zMfyvXDvWb4gsgEeZKkZSpmaqrq6fYumB3Rf-mnd8mrYoSrq_tKHZu30yrplQsj7sKLWwLMudRguG4s4l1WPizWz1G2FnYuKSkgHqUdwN--aniD-XUgKVBz15DYIkWmtDGTJpr_8m56ZKNAex4ZjXxUyHcG_-UuMNW9ZWhGwaMeAjBiUStwcbbvR3YUY7B864oti-j8UG6Ar9e" />
+        </div>
+        <div class="break-inside-avoid">
+          <img alt="" class="w-full object-cover hover:opacity-90 transition-opacity"
+            data-alt="Close-up of a bouquet of dried wildflowers in a ceramic vase in soft morning light"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJXN6h0G7sFBbO_77k-EH58wKtAkcN66p4-POLRqNhylSyb6NeN-vMpGo_zUca47TY6aWQn-vfOoHq2g95aeUMyrCTiTmdch1DWpiu7BGe6XOgKCFoFHDaVzziBa_cuTa6FSnRpl9b3NdoMe-7XinJ2Cj_nLSxZ5Dn4aKKXKOqaGKSN0Yx3DIwwB7Srh3U6YmDtIkBgNYmQhhVb-JPae92HYCHIMldLpDWT6JafevwjBtN6mBWVbgc0VwLBADOHEHyhMm_xZQhSQ1x" />
+        </div>
+        <div class="break-inside-avoid">
+          <img alt="" class="w-full object-cover hover:opacity-90 transition-opacity"
+            data-alt="Model laughing while wearing a premium white wool sweater in a minimalist interior"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr8OSkH0r-vy8wYsMTrM0S4Fris32bbWu5phq4GithTJZx6wuTn2Js3Se1SyIEQ50jHC2sv5YfKFwwNjpKcvli6nmhSYryZ1ATywhN16GjTyOALVfn-PPIb3v2r13FTc5TP1U9tUk7rTOknhkqaXmt2jVYSLaoMrz29-U626uIVU2Aqrh-SVO_Uxp0RQc1t8xwAWqkqAxvWncB2xRhtvaJyOslZZKVpnkq4GnxY6v1s-J9F27SJmnnybEXYYntSrixPPVKhmKr2ojV" />
+        </div>
+        <div class="break-inside-avoid">
+          <img alt="" class="w-full object-cover hover:opacity-90 transition-opacity"
+            data-alt="Abstract detail of a linen fabric texture showing the organic weave patterns"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOnKsP88Z0fBI7wXDuR_hIJY7WBInOvVPEkdbAZSVtFePRMh4CTgvaM65cE2n71VxdV0u5ZD5sjAFqb9RGBjdtQ4V2LtiomXvC2dfYcVlDTZoRoA_CwvTuQ1JtUcmE_xs0dgyavXM1AgX2Aw6ap85EgSSCyiBV9azrgBtv8ZBeGSVpQhsbGFRwaGtB04R3y1IeF_r01x73fU5fWJJV-1krFDA7dbeUmnXkXu4qEfb_7004vxbrK94ijEdDrf3q3_suMdG_W16Bbae_" />
+        </div>
+        <div class="break-inside-avoid">
+          <img alt="" class="w-full object-cover hover:opacity-90 transition-opacity"
+            data-alt="Atmospheric shot of a sun-drenched dressing room with a velvet chair and floor-length mirror"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuASwAPHjcOOZ4QJPDxuug33ZCBZ5_tHrUQB0SaRR6NpezD7Y6TUIwTrs5qIGy4KDfsBGvtdgJwPdOAXlsq7t13GpMEekRukAM5IFex6iguW7t4g4oINILYni2CT68kim7OGo5lC9dC5orfNjbDwLYdVBVGwj-hlEeI1F-Yi-lJ-NPofqS358QFFc9fWB1WQOjbB8LWUv6AhzmluAN1sWD3fo6WhACIE4dfoUSHa2C1CFTyOoCdZmmKqPDD1l-_UWl3C5xy1r-VvK0qH" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+
+   <script>
+
+    async function toggleWishlist(productId, variantId, button) {
+
+        try {
+
+            const response = await fetch("/shop/wishlist/toggle", {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    productId,
+                    variantId
+                })
+            })
+
+            const data = await response.json()
+
+            if (data.success) {
+
+                const icon = button.querySelector(
+                    ".material-symbols-outlined"
+                )
+
+                if (data.added) {
+
+                    button.classList.add("text-red-500")
+
+                    icon.style.fontVariationSettings =
+                        "'FILL' 1"
+
+                } else {
+
+                    button.classList.remove("text-red-500")
+
+                    icon.style.fontVariationSettings =
+                        "'FILL' 0"
+
+                }
+
+                console.log(data.message)
+
+            } else {
+
+                console.log(data.message)
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Wishlist error:",
+                error
+            )
+
+        }
+
+    }
+
+</script>
+
+</body>
+
+</html>

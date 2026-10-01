@@ -1,37 +1,25 @@
 import User from "../../models/user.js";
-import {
-    changePasswordService,
-    getUserProfile,
-    updateUserProfile
-} from "../../services/user/profileService.js";
-import fs from "fs";
-import path from "path";
-import { fileTypeFromBuffer } from "file-type";
+import { changePasswordService, getUserProfile, updateUserProfile } from "../../services/user/profileService.js";
+
+
 import { sendOtpService } from "../../services/user/otpService.js"
 import Otp from "../../models/otp.js";
 import bcrypt from "bcryptjs";
 import Address from "../../models/address.js";
 import { capitalizeName } from "../../utils/capitalizer.js";
 import { deleteFromCloudinary } from "../../utils/cloudinaryDelete.js";
-import { uploadToCloudinary } from "../../utils/cloudinaryUpload.js";
+
 
 export const loadOverview = async (req, res) => {
     try {
-        
-        
+
         const userId = req.session.user;
-
-
-      
         const user = await User.findById(userId).lean()
-  
-     
-       
         const defaultAddress = await Address.findOne({
             user: userId,
             isDefault: true
-        }).lean();
-        
+        }).lean()
+
 
         return res.render("user/overview", {
             user,
@@ -39,7 +27,7 @@ export const loadOverview = async (req, res) => {
             currentPage: "overview",
             showNavbar: true,
             showSidebar: true,
-            
+
         });
 
     } catch (err) {
@@ -72,12 +60,11 @@ export const loadProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         console.log("profile update hit")
-        let   { firstName, lastName } = req.body
+        let { firstName, lastName } = req.body
 
-        firstName= capitalizeName(firstName)
-        lastName= capitalizeName(lastName)
+        firstName = capitalizeName(firstName)
+        lastName = capitalizeName(lastName)
 
-        const data = {firstName , lastName ,...req.body}
 
         const user = await User.findById(req.session.user)
 
@@ -85,29 +72,56 @@ export const updateProfile = async (req, res) => {
             return res.status(404).json({
                 message: "User not found"
             })
-        }   
+        }
+        const isGoogleUser = !!user.googleId
 
-       
-        if (req.body.email && req.body.email !== user.email) {
+        if (isGoogleUser && req.body.email !== undefined && req.body.email.trim().toLowerCase() !== user.email) {
+            return res.status(403).json({
+                success: false,
+                message: "Email cannot be changed for google accounts"
+            })
+        }
 
-            user.tempEmail = req.body.email
+
+
+        if (!isGoogleUser && req.body.email !== undefined && req.body.email.trim().toLowerCase() !== user.email) {
+
+            const newEmail = req.body.email.trim().toLowerCase()
+
+            const existingEmailUser = await User.findOne({
+                email: newEmail,
+                _id: { $ne: user._id }
+            })
+
+            if (existingEmailUser) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Email is already in use"
+                })
+            }
+
+            user.tempEmail = newEmail
             await user.save()
 
-
-          const otpResult=  await sendOtpService(user.tempEmail)
-
+            const otpResult = await sendOtpService(newEmail)
             return res.json({
+                success: true,
                 requireOtp: true,
                 reused: otpResult?.reused || false
             })
         }
+        const data = { firstName, lastName }
 
-        
-        await updateUserProfile(user._id,data)
+        if (req.body.phone !== undefined) {
+            data.phone = req.body.phone
+        }
 
-        res.json({ 
+
+        await updateUserProfile(user._id, data)
+
+        res.json({
             success: true,
-            message: "Profile updated"
+            message: "Profile updated successfully"
         })
 
     } catch (err) {
@@ -178,8 +192,25 @@ export const resendEmailOtp = async (req, res) => {
     try {
         const user = await User.findById(req.session.user)
 
-        if (!user || !user.tempEmail) {
-            return res.status(400).json({ message: "Invalid request" })
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        if (user.googleId) {
+            return res.status(403).json({
+                success: false,
+                message: "Email cannot be changed for Google accounts"
+            })
+        }
+
+        if (!user.tempEmail) {
+            return res.status(400).json({
+                success: false,
+                message: "No email change request found"
+            })
         }
 
         await sendOtpService(user.tempEmail)
@@ -197,42 +228,87 @@ export const verifyEmailChange = async (req, res) => {
     try {
         console.log("VERIFY HIT")
         const user = await User.findById(req.session.user)
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            })
+        }
 
-        const enteredOtp =
-            req.body.otp1 +
-            req.body.otp2 +
-            req.body.otp3 +
-            req.body.otp4
+        if (user.googleId) {
+            user.tempEmail = null
+            await user.save()
+
+            return res.status(403).json({
+                success: false,
+                message: "Email cannot be changed for Google accounts"
+            })
+        }
+
+
+        if (!user.tempEmail) {
+            return res.status(400).json({
+                success: false,
+                message: "No email change request found"
+            })
+        }
+
+        const enteredOtp = req.body.otp1 + req.body.otp2 + req.body.otp3 + req.body.otp4
+
+        if (!enteredOtp || enteredOtp.length !== 4) {
+            return res.status(400).json({
+                success: false,
+                message: "Please enter the OTP"
+            })
+        }
 
         const record = await Otp.findOne({ email: user.tempEmail })
             .sort({ createdAt: -1 })
 
         if (!record) {
-            return res.status(400).json({ message: "OTP not Found" })
+            return res.status(400).json({ success: false, message: "OTP not Found" })
         }
 
         if (record.expiresAt < new Date()) {
-            return res.status(400).json({ message: "OTP Expired" })
+            return res.status(400).json({ success: false, message: "OTP Expired" })
         }
 
         const isMatch = await bcrypt.compare(enteredOtp, record.otp)
 
         if (!isMatch) {
-            return res.status(400).json({ message: "Invalid OTP" })
+            return res.status(400).json({ success: false, message: "Invalid OTP" })
         }
 
-     
+
         const tempEmail = user.tempEmail
+        const existingUser = await User.findOne({
+            email: user.tempEmail,
+            _id: { $ne: user._id }
+        })
+
+        if (existingUser) {
+            user.tempEmail = null
+            await user.save()
+
+            return res.status(400).json({
+                success: false,
+                message: "Email is already in use"
+            })
+        }
 
         user.email = tempEmail
         user.tempEmail = null
 
         await user.save()
-        await Otp.deleteOne({ email: tempEmail })
-        res.json({ success: true })
+        await Otp.deleteMany({ email: tempEmail })
+        res.json({ success: true, message: "Email updated successfully" })
 
     } catch (err) {
-        console.log(err)
-        res.redirect("/error")
+        console.error("Verify email change error:", err)
+
+        return res.status(500).json({
+            success: false,
+            message: "Unable to update email"
+        })
     }
-};
+}

@@ -46,6 +46,13 @@
           <span onclick="togglePassword('confirmPassword', this)"
             class="absolute right-3 top-3 cursor-pointer">👁</span>
         </div>
+        <div>
+
+
+          <input type="text" id="referralCode" name="referralCode"
+            value="<%= typeof referralCode !== 'undefined' ? referralCode : '' %>"
+            placeholder="Enter referral code (optional)" class="w-full mt-2 px-4 py-3 border rounded-lg ">
+        </div>
 
         <button type="submit" id="registerBtn"
           class="w-full bg-primary text-white py-3 rounded bg-[#4c5c49] transition">
@@ -65,7 +72,8 @@
 
       <!-- Google -->
       <div class="flex justify-center space-y-4 max-w-md mx-auto lg:mx-0 ">
-        <a href="/auth/google"> <button class="border p-3 rounded-full hover:bg-gray-100 transition ">
+        <a href="/auth/google<%= referralCode ? '?ref=' + encodeURIComponent(referralCode) : '' %>">
+          <button class="border p-3 rounded-full hover:bg-gray-100 transition ">
             <img src="/images/Google__G__logo.svg.webp" class="w-6 h-6  ">
           </button></a>
       </div>
@@ -91,6 +99,7 @@
     const emailInput = document.querySelector('input[name="email"]');
     const passwordInput = document.querySelector('input[name="password"]');
     const confirmPasswordInput = document.querySelector('input[name="confirmPassword"]');
+    const referralCodeInput = document.querySelector('input[name="referralCode"]');
     const registerBtn = document.getElementById("registerBtn");
 
     // Regex
@@ -271,7 +280,8 @@
         lastName: lastNameInput.value.trim(),
         email: emailInput.value.trim(),
         password: passwordInput.value,
-        confirmPassword: confirmPasswordInput.value
+        confirmPassword: confirmPasswordInput.value,
+        referralCode: referralCodeInput.value.trim().toUpperCase()
       };
 
       try {
@@ -282,7 +292,7 @@
         showToast("Sending OTP...", "success");
 
         openOtpModal(data.email, "/verifyOtp", "signup");
-       
+
 
         const res = await fetch("/register", {
           method: "POST",

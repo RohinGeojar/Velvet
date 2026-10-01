@@ -1,5 +1,5 @@
 import { createCouponService, deleteCouponService, getCouponByIdService, getCouponService, restoreCouponService, toggleCouponService, updateCouponService } from "../../services/admin/couponService.js"
-import { createOfferService, getCreateOfferData, getEditOfferData, getOfferService } from "../../services/admin/offerService.js"
+import { createOfferService, getCreateOfferData, getEditOfferData,toggleOfferservice, restoreOfferservice, deleteOfferservice, getOfferService, updateOfferService } from "../../services/admin/offerService.js"
 import { capitalizeName } from "../../utils/capitalizer.js"
 import { couponSchema } from "../../validators/couponValidator.js"
 import { offerSchema } from "../../validators/offerValidator.js"
@@ -321,8 +321,8 @@ export const loadOfferManagement = async (req, res) => {
         const limit = 5
 
         const search = req.query.search?.trim() || ""
-        const status = req.query.status || "";
-        const offerType = req.query.offerType || ""
+        const status = req.query.status || ""
+        const offerType = req.query.offerType || "product"
         const sort = req.query.sort || "latest"
 
         const data = await getOfferService({
@@ -425,7 +425,9 @@ export const loadEditOffer = async (req, res) => {
 
     try {
 
-        const data = await getEditOfferData(req.params.id);
+        const data = await getEditOfferData(req.params.id)
+        console.log("edit data")
+        console.log(data.offer);
 
         if (!data) {
             return res.redirect("/couponManagement/offers")
@@ -436,11 +438,115 @@ export const loadEditOffer = async (req, res) => {
             products: data.products,
             categories: data.categories,
             activeNavLink: "Offers",
-            showfooter:false
+            showFooter:false
         })
 
     } catch (error) {
         console.log(error)
 
     }
+}
+
+// Edit offer
+
+export const UpdateOffer =async(req,res)=>{
+    try {
+        
+        const {error, value} = offerSchema.validate(req.body,{
+            abortEarly:false
+        })   
+       
+        if(error){
+            console.log(error.details)
+            const errors = {}
+
+            error.details.forEach(err =>{
+                errors[err.path[0]] = err.message
+            })
+
+            return res.status(400).json({
+                success:false,
+                errors
+            })
+        }
+
+        const updateOffer = await updateOfferService(req.params.id,value,value.offerName)
+
+        if(!updateOffer){
+            return res.status(400).json({
+                success:false,
+                message:"Offer not found"
+            })
+        }
+         return res.json({
+            success: true,
+            message: "Offer updated successfully"
+        })
+    } catch (error) {
+      console.log("Update offer controller error", error)  
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+
+
+export const toggleOffer = async (req, res) => {
+    try {
+        console.log("toggle offer hit")
+        const offer = await toggleOfferservice(req.params.id)
+
+        if(!offer) {
+            return res.status(400).json({
+                success:false
+            })
+        }
+        res.json({
+            success:true
+        })
+
+    } catch (error) {
+        console.log("Block Unblock offer controller error ",error)
+        res.status(500).json({
+            success: false
+        })
+
+    }
+}
+
+
+
+export const deleteOffer = async(req,res) => {
+    try {
+        await deleteOfferservice(req.params.id)
+
+        res.json({
+            success:true
+        })
+    } catch (error) {
+        console.log("delete offer controller error",error)
+         res.status(500).json({
+            success: false
+        })
+    }
+}
+
+
+export const restoreOffer = async(req,res) =>{
+   try {
+     await restoreOfferservice(req.params.id)
+
+     res.json({
+        success:true
+     })
+   } catch (error) {
+    console.log("Restore Offer controller error",error)
+    res.status(500).json({
+        succes:false
+    })
+   }
+
 }

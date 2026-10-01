@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Velvet Vogue - Order Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -59,38 +58,38 @@
                         <%= order.orderStatus %>
 
                     </span>
-                    <%
-                        const hasReturnedItem = order.items.some(item =>
-                            item.status === "Returned" ||
-                            item.status === "Return Requested"
+                    <% const hasInvoiceEligibleItem=order.items.some(item=>
+                        item.status !== "Cancelled" &&
+                        item.status !== "Returned"
                         );
                         %>
-                    <% if (!hasReturnedItem) { %>
-                    <a href="/order/<%= order._id %>/invoice"
-                        class="bg-brand text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-dark transition">
 
-                        View Invoice
+                        <% if (hasInvoiceEligibleItem) { %>
+                            <a href="/order/<%= order._id %>/invoice"
+                                class="bg-brand text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-dark transition">
 
-                    </a>
-                    <% } %>
-                    <% const canCancelOrder=order.items.some(item=>
-                        ["Pending", "Confirmed"].includes(item.status)
-                        );
-                        %>
-                        <% if (canCancelOrder) { %>
+                                View Invoice
 
-                            
-
-                                <button type="button" onclick="openCancelOrderModal('<%= order._id %>')"
-                                    class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition">
-
-                                    Cancel Order
-
-                                </button>
-
-                            
-
+                            </a>
                             <% } %>
+                                <% const canCancelOrder=order.items.some(item=>
+                                    ["Pending", "Confirmed"].includes(item.status)
+                                    );
+                                    %>
+                                    <% if (canCancelOrder) { %>
+
+
+
+                                        <button type="button" onclick="openCancelOrderModal('<%= order._id %>')"
+                                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm transition">
+
+                                            Cancel Order
+
+                                        </button>
+
+
+
+                                        <% } %>
 
             </div>
 
@@ -214,9 +213,7 @@
 
 
             <div class="mb-10 px-4">
-                <p class="text-xs text-gray-500 font-medium mb-6">Order expected arrival <span
-                        class="font-bold text-gray-800">23 nov, 2025</span></p>
-
+               
                 <div class="relative flex items-center justify-between">
                     <!-- Background Line -->
                     <div class="absolute left-0 right-0 top-[14px] h-[3px] bg-gray-200 rounded-full -z-20"></div>
@@ -406,7 +403,7 @@
                                 </div>
 
                                 <!-- Right -->
-                                
+
 
 
                                 <div class="flex flex-col justify-center items-end h-full gap-4">
@@ -433,46 +430,113 @@
                                         <%= item.status %>
 
                                     </span>
+                                    <!-- Cancellation / Return Reason -->
+<% if (item.status === "Cancelled" && item.cancelReason) { %>
+
+    <div class="mt-3 bg-red-50 border border-red-100 rounded-lg p-3 max-w-sm">
+
+        <p class="text-xs font-semibold text-red-700 uppercase tracking-wide">
+            Cancellation Reason
+        </p>
+
+        <p class="text-sm text-red-600 mt-1">
+            <%= item.cancelReason %>
+        </p>
+
+    </div>
+
+<% } %>
+
+<% if (item.status === "Return Requested" && item.returnReason) { %>
+
+    <div class="mt-3 bg-orange-50 border border-orange-100 rounded-lg p-3 max-w-sm">
+
+        <p class="text-xs font-semibold text-orange-700 uppercase tracking-wide">
+            Return Reason
+        </p>
+
+        <p class="text-sm text-orange-600 mt-1">
+            <%= item.returnReason %>
+        </p>
+
+    </div>
+
+<% } %>
+
+<% if (item.status === "Returned" && item.returnReason) { %>
+
+    <div class="mt-3 bg-green-50 border border-green-100 rounded-lg p-3 max-w-sm">
+
+        <p class="text-xs font-semibold text-green-700 uppercase tracking-wide">
+            Return Reason
+        </p>
+
+        <p class="text-sm text-green-600 mt-1">
+            <%= item.returnReason %>
+        </p>
+
+    </div>
+
+<% } %>
+
+<% if (item.returnRejected && item.returnRejectReason) { %>
+
+    <div class="mt-3 bg-red-50 border border-red-100 rounded-lg p-3 max-w-sm">
+
+        <p class="text-xs font-semibold text-red-700 uppercase tracking-wide">
+            Return Rejected
+        </p>
+
+        <p class="text-sm text-red-600 mt-1">
+            <%= item.returnRejectReason %>
+        </p>
+
+    </div>
+
+<% } %>
 
                                     <!-- Action -->
                                     <div class="flex gap-2">
 
                                         <% if (["Pending","Confirmed"].includes(item.status)) { %>
 
-                                           
 
-                                                <button   type="button" onclick="openCancelModal('<%= order._id %>','<%= item._id %>')"
-                                                    class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm">
 
-                                                    Cancel Product
+                                            <button type="button"
+                                                onclick="openCancelModal('<%= order._id %>','<%= item._id %>')"
+                                                class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm">
 
-                                                </button>
+                                                Cancel Product
 
-                                            
+                                            </button>
+
+
 
                                             <% } else if(item.status==="Delivered" && !item.returnRejected ) { %>
 
-                                                <button  type="button" onclick="openReturnModal('<%= order._id %>','<%= item._id %>')" class="px-4 py-2 bg-brand text-white rounded-lg text-sm">
+                                                <button type="button"
+                                                    onclick="openReturnModal('<%= order._id %>','<%= item._id %>')"
+                                                    class="px-4 py-2 bg-brand text-white rounded-lg text-sm">
 
                                                     Return Product
 
                                                 </button>
-                                                
+
 
                                                 <% }else if(item.returnRejected){ %>
-                                                   
 
-                                                <div>
-                                                    <span class="text-red-400 text-sm ">
-                                                    Return Rejected
-                                                </span><br>
 
-                                                <p class="text-xs text-gray-500">
-                                                    Reason: <%= item.returnRejectReason %>
-                                                </p>
-                                                </div>
+                                                    <div>
+                                                        <span class="text-red-400 text-sm ">
+                                                            Return Rejected
+                                                        </span><br>
 
-                                                <% } %>
+                                                        <p class="text-xs text-gray-500">
+                                                            Reason: <%= item.returnRejectReason %>
+                                                        </p>
+                                                    </div>
+
+                                                    <% } %>
 
                                     </div>
 
@@ -590,7 +654,7 @@
 
                                 <span class="text-gray-500">
 
-                                    Subtotal
+                                    Subtotal (MRP)
 
                                 </span>
 
@@ -606,13 +670,13 @@
 
                                 <span class="text-gray-500">
 
-                                    Product Discount
+                                    Offer Discount
 
                                 </span>
 
                                 <span>
 
-                                    - ₹<%= order.productDiscount.toLocaleString("en-IN") %>
+                                    - ₹<%= order.productDiscount?.toLocaleString("en-IN") %>
 
                                 </span>
 
@@ -693,143 +757,138 @@
 
     </main>
     </div>
-    
+
     <!-- Cancel Confirmation Modal -->
-<div id="cancelModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+    <div id="cancelModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
 
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-7">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-7">
 
-        <div class="flex justify-center">
+            <div class="flex justify-center">
 
-            <div id="modalIcon" class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+                <div id="modalIcon" class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
 
-                <i  id="modalIconSvg" data-lucide="triangle-alert" class="w-8 h-8 text-red-600"></i>
+                    <i id="modalIconSvg" data-lucide="triangle-alert" class="w-8 h-8 text-red-600"></i>
+
+                </div>
+
+            </div>
+
+            <h3 id="cancelTitle" class="text-xl font-bold text-center mt-5">
+
+                Cancel Order
+
+            </h3>
+
+            <p id="cancelMessage" class="text-sm text-gray-500 text-center mt-3 leading-6">
+
+                Are you sure you want to continue?
+
+            </p>
+
+            <div class="mt-6">
+
+                <label id="reasonLabel" class="block text-sm font-medium text-gray-700 mb-2">
+
+                    Cancellation Reason
+
+                </label>
+
+                <textarea id="cancelReason" rows="4"
+                    class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-200 resize-none"
+                    placeholder="Please enter the reason for cancellation..."></textarea>
+
+            </div>
+
+            <div id="modalNote" class="bg-red-50 border border-red-100 rounded-xl p-4 mt-5">
+
+                <p class="text-xs text-red-600 leading-5">
+
+                    <strong>Note:</strong>
+
+                    This action cannot be undone. Stock will be restored automatically and the customer will be
+                    notified.
+
+                </p>
+
+            </div>
+
+            <div class="flex gap-3 mt-7">
+
+                <button id="btnCancelClose" type="button"
+                    class="flex-1 border border-gray-300 py-3 rounded-xl font-medium hover:bg-gray-50 transition">
+
+                    Keep Order
+
+                </button>
+
+                <button id="btnConfirmCancel" type="button"
+                    class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition">
+
+                    Yes, Cancel
+
+                </button>
 
             </div>
 
         </div>
 
-        <h3 id="cancelTitle" class="text-xl font-bold text-center mt-5">
-
-            Cancel Order
-
-        </h3>
-
-        <p id="cancelMessage" class="text-sm text-gray-500 text-center mt-3 leading-6">
-
-            Are you sure you want to continue?
-
-        </p>
-
-        <div class="mt-6">
-
-            <label  id="reasonLabel" class="block text-sm font-medium text-gray-700 mb-2">
-
-                Cancellation Reason
-
-            </label>
-
-            <textarea
-                id="cancelReason"
-                rows="4"
-                class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-200 resize-none"
-                placeholder="Please enter the reason for cancellation..."></textarea>
-
-        </div>
-
-        <div  id="modalNote" class="bg-red-50 border border-red-100 rounded-xl p-4 mt-5">
-
-            <p class="text-xs text-red-600 leading-5">
-
-                <strong>Note:</strong>
-
-                This action cannot be undone. Stock will be restored automatically and the customer will be notified.
-
-            </p>
-
-        </div>
-
-        <div class="flex gap-3 mt-7">
-
-            <button
-                id="btnCancelClose"
-                type="button"
-                class="flex-1 border border-gray-300 py-3 rounded-xl font-medium hover:bg-gray-50 transition">
-
-                Keep Order
-
-            </button>
-
-            <button
-                id="btnConfirmCancel"
-                type="button"
-                class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition">
-
-                Yes, Cancel
-
-            </button>
-
-        </div>
-
     </div>
-
-</div>
     <script src="https://unpkg.com/lucide@latest"></script>
 
-   <script>
+    <script>
 
-    lucide.createIcons()
+        lucide.createIcons()
 
-    const cancelModal = document.getElementById("cancelModal")
+        const cancelModal = document.getElementById("cancelModal")
 
-    const cancelTitle = document.getElementById("cancelTitle")
+        const cancelTitle = document.getElementById("cancelTitle")
 
-    const cancelMessage = document.getElementById("cancelMessage")
+        const cancelMessage = document.getElementById("cancelMessage")
 
-    const cancelReason = document.getElementById("cancelReason")
-    const icon=document.getElementById("modalIcon")
+        const cancelReason = document.getElementById("cancelReason")
+        const icon = document.getElementById("modalIcon")
 
-const svg=document.getElementById("modalIconSvg")
+        const svg = document.getElementById("modalIconSvg")
 
-    let orderId = null
+        let orderId = null
 
-    let itemId = null
+        let itemId = null
 
-    let cancelType = null
-    let actionType = null
-     const note = document.getElementById("modalNote")
-     const btn = document.getElementById("btnConfirmCancel")
+        let cancelType = null
+        let actionType = null
+        const note = document.getElementById("modalNote")
+        const btn = document.getElementById("btnConfirmCancel")
 
-    function openCancelModal(order, item) {
-         actionType = "cancelProduct"
-        cancelType = "product"
+        function openCancelModal(order, item) {
+            actionType = "cancelProduct"
+            cancelType = "product"
 
-        orderId = order
+            orderId = order
 
-        itemId = item
-document.getElementById("reasonLabel").textContent = "Cancellation Reason"
-document.getElementById("btnConfirmCancel").textContent = "Yes, Cancel"
-document.getElementById("btnCancelClose").textContent = "Keep Order"
-note.className =
-"bg-red-50 border border-red-100 rounded-xl p-4 mt-5"
-btn.className =
-"flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition"
-icon.className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center"
+            itemId = item
+            document.getElementById("reasonLabel").textContent = "Cancellation Reason"
+            document.getElementById("btnConfirmCancel").textContent = "Yes, Cancel"
+            document.getElementById("btnCancelClose").textContent = "Keep Order"
+            note.className =
+                "bg-red-50 border border-red-100 rounded-xl p-4 mt-5"
+            btn.className =
+                "flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition"
+            icon.className = "w-16 h-16 rounded-full bg-red-100 flex items-center justify-center"
 
-svg.className="w-8 h-8 text-red-600"
+            svg.className = "w-8 h-8 text-red-600"
 
-        cancelTitle.textContent = "Cancel Product"
+            cancelTitle.textContent = "Cancel Product"
 
-        cancelMessage.textContent = "Are you sure you want to cancel this product?"
+            cancelMessage.textContent = "Are you sure you want to cancel this product?"
 
-        cancelReason.value = ""
+            cancelReason.value = ""
 
-        cancelModal.classList.remove("hidden")
+            cancelModal.classList.remove("hidden")
 
-        cancelModal.classList.add("flex")
-        cancelReason.placeholder = "Please enter the cancellation reason..."
+            cancelModal.classList.add("flex")
+            cancelReason.placeholder = "Please enter the cancellation reason..."
 
-document.querySelector("#cancelModal strong").parentElement.innerHTML = `
+            document.querySelector("#cancelModal strong").parentElement.innerHTML = `
 
     <strong>Note:</strong>
 
@@ -837,161 +896,161 @@ document.querySelector("#cancelModal strong").parentElement.innerHTML = `
 
 `
 
-    }
+        }
 
-    function closeCancelModal() {
+        function closeCancelModal() {
 
-        cancelModal.classList.add("hidden")
+            cancelModal.classList.add("hidden")
 
-        cancelModal.classList.remove("flex")
-
-    }
-
-    document.getElementById("btnCancelClose").addEventListener("click", closeCancelModal)
-
-    document.getElementById("btnConfirmCancel").addEventListener("click", async() => {
-         if(actionType==="cancelProduct"){
-
-        await cancelProduct()
-
-    }
-
-    else if(actionType==="cancelOrder"){
-
-        await cancelOrder()
-
-    }
-
-    else if(actionType==="return"){
-
-        await requestReturn()
-
-    }
-    })
-
-    async function cancelProduct() {
-
-        const reason = cancelReason.value.trim()
-
-        if (reason === "") {
-
-            Swal.fire({
-
-                icon: "warning",
-
-                title: "Reason Required",
-
-                text: "Please enter the cancellation reason."
-
-            })
-
-            return
+            cancelModal.classList.remove("flex")
 
         }
 
-        try {
+        document.getElementById("btnCancelClose").addEventListener("click", closeCancelModal)
 
-            const response = await fetch(`/order/${orderId}/items/${itemId}/cancel`, {
+        document.getElementById("btnConfirmCancel").addEventListener("click", async () => {
+            if (actionType === "cancelProduct") {
 
-                method: "PATCH",
+                await cancelProduct()
 
-                headers: {
+            }
 
-                    "Content-Type": "application/json"
+            else if (actionType === "cancelOrder") {
 
-                },
+                await cancelOrder()
 
-                body: JSON.stringify({
+            }
 
-                    reason
+            else if (actionType === "return") {
 
-                })
+                await requestReturn()
 
-            })
+            }
+        })
 
-            const data = await response.json()
+        async function cancelProduct() {
 
-            if (data.success) {
+            const reason = cancelReason.value.trim()
 
-                closeCancelModal()
+            if (reason === "") {
 
                 Swal.fire({
 
-                    icon: "success",
+                    icon: "warning",
 
-                    title: "Cancelled",
+                    title: "Reason Required",
 
-                    text: data.message
-
-                }).then(() => {
-
-                    location.reload()
+                    text: "Please enter the cancellation reason."
 
                 })
 
-            } else {
+                return
+
+            }
+
+            try {
+
+                const response = await fetch(`/order/${orderId}/items/${itemId}/cancel`, {
+
+                    method: "PATCH",
+
+                    headers: {
+
+                        "Content-Type": "application/json"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        reason
+
+                    })
+
+                })
+
+                const data = await response.json()
+
+                if (data.success) {
+
+                    closeCancelModal()
+
+                    Swal.fire({
+
+                        icon: "success",
+
+                        title: "Cancelled",
+
+                        text: data.message
+
+                    }).then(() => {
+
+                        location.reload()
+
+                    })
+
+                } else {
+
+                    Swal.fire({
+
+                        icon: "error",
+
+                        title: "Failed",
+
+                        text: data.message
+
+                    })
+
+                }
+
+            } catch (error) {
+
+                console.log(error)
 
                 Swal.fire({
 
                     icon: "error",
 
-                    title: "Failed",
+                    title: "Error",
 
-                    text: data.message
+                    text: "Something went wrong."
 
                 })
 
             }
 
-        } catch (error) {
-
-            console.log(error)
-
-            Swal.fire({
-
-                icon: "error",
-
-                title: "Error",
-
-                text: "Something went wrong." 
-
-            })
-
         }
+        function openCancelOrderModal(order) {
+            actionType = "cancelOrder"
 
-    }
-    function openCancelOrderModal(order){
-     actionType = "cancelOrder"
+            cancelType = "order"
 
-    cancelType = "order"
+            orderId = order
 
-    orderId = order
+            itemId = null
+            document.getElementById("reasonLabel").textContent = "Cancellation Reason"
+            document.getElementById("btnConfirmCancel").textContent = "Yes, Cancel"
+            document.getElementById("btnCancelClose").textContent = "Keep Order"
+            cancelTitle.textContent = "Cancel Entire Order"
+            note.className =
+                "bg-red-50 border border-red-100 rounded-xl p-4 mt-5"
+            btn.className =
+                "flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition"
+            icon.className = "w-16 h-16 rounded-full bg-red-100 flex items-center justify-center"
 
-    itemId = null
-document.getElementById("reasonLabel").textContent = "Cancellation Reason"
-document.getElementById("btnConfirmCancel").textContent = "Yes, Cancel"
-document.getElementById("btnCancelClose").textContent = "Keep Order"
-    cancelTitle.textContent = "Cancel Entire Order"
-    note.className =
-"bg-red-50 border border-red-100 rounded-xl p-4 mt-5"
-btn.className =
-"flex-1 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold transition"
-icon.className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center"
-
-svg.className="w-8 h-8 text-red-600"
+            svg.className = "w-8 h-8 text-red-600"
 
 
 
-    cancelMessage.textContent = "Are you sure you want to cancel this entire order?"
+            cancelMessage.textContent = "Are you sure you want to cancel this entire order?"
 
-    cancelReason.value = ""
+            cancelReason.value = ""
 
-    cancelModal.classList.remove("hidden")
+            cancelModal.classList.remove("hidden")
 
-    cancelModal.classList.add("flex")
-    cancelReason.placeholder = "Please enter the cancellation reason..."
+            cancelModal.classList.add("flex")
+            cancelReason.placeholder = "Please enter the cancellation reason..."
 
-document.querySelector("#cancelModal strong").parentElement.innerHTML = `
+            document.querySelector("#cancelModal strong").parentElement.innerHTML = `
 
     <strong>Note:</strong>
 
@@ -999,119 +1058,119 @@ document.querySelector("#cancelModal strong").parentElement.innerHTML = `
 
 `
 
-}
-async function cancelOrder(){
+        }
+        async function cancelOrder() {
 
-    const reason = cancelReason.value.trim()
+            const reason = cancelReason.value.trim()
 
-    if(reason === ""){
+            if (reason === "") {
 
-        Swal.fire({
+                Swal.fire({
 
-            icon:"warning",
+                    icon: "warning",
 
-            title:"Reason Required",
+                    title: "Reason Required",
 
-            text:"Please enter the cancellation reason."
+                    text: "Please enter the cancellation reason."
 
-        })
+                })
 
-        return
+                return
 
-    }
+            }
 
-    try{
+            try {
 
-        const response = await fetch(`/order/${orderId}/cancel`,{
+                const response = await fetch(`/order/${orderId}/cancel`, {
 
-            method:"PATCH",
+                    method: "PATCH",
 
-            headers:{
-                "Content-Type":"application/json"
-            },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-            body:JSON.stringify({
+                    body: JSON.stringify({
 
-                reason
+                        reason
 
-            })
+                    })
 
-        })
+                })
 
-        const data = await response.json()
+                const data = await response.json()
 
-        if(data.success){
+                if (data.success) {
 
-            closeCancelModal()
+                    closeCancelModal()
 
-            Swal.fire({
+                    Swal.fire({
 
-                icon:"success",
+                        icon: "success",
 
-                title:"Cancelled",
+                        title: "Cancelled",
 
-                text:data.message
+                        text: data.message
 
-            }).then(()=>{
+                    }).then(() => {
 
-                location.reload()
+                        location.reload()
 
-            })
+                    })
 
-        }else{
+                } else {
 
-            Swal.fire({
+                    Swal.fire({
 
-                icon:"error",
+                        icon: "error",
 
-                title:"Failed",
+                        title: "Failed",
 
-                text:data.message
+                        text: data.message
 
-            })
+                    })
+
+                }
+
+            } catch (error) {
+
+                console.log(error)
+
+            }
 
         }
 
-    }catch(error){
-
-        console.log(error)
-
-    }
-
-}
-
-// =============================================
+        // =============================================
 
 
-function openReturnModal(order,item){
+        function openReturnModal(order, item) {
 
-    actionType = "return"
+            actionType = "return"
 
-    orderId = order
+            orderId = order
 
-    itemId = item
-   
+            itemId = item
 
-note.className =
-"bg-blue-50 border border-blue-100 rounded-xl p-4 mt-5"
-btn.className =
-"flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition"
-    document.getElementById("reasonLabel").textContent = "Return Reason"
-    document.getElementById("btnConfirmCancel").textContent = "Request Return"
-    document.getElementById("btnCancelClose").textContent = "Go Back"
-    icon.className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center"
 
-svg.className="w-8 h-8 text-blue-600"
+            note.className =
+                "bg-blue-50 border border-blue-100 rounded-xl p-4 mt-5"
+            btn.className =
+                "flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition"
+            document.getElementById("reasonLabel").textContent = "Return Reason"
+            document.getElementById("btnConfirmCancel").textContent = "Request Return"
+            document.getElementById("btnCancelClose").textContent = "Go Back"
+            icon.className = "w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center"
 
-    cancelTitle.textContent = "Request Product Return"
+            svg.className = "w-8 h-8 text-blue-600"
 
-    cancelMessage.textContent = "Are you sure you want to request a return for this product?"
+            cancelTitle.textContent = "Request Product Return"
 
-    cancelReason.placeholder = "Please enter the return reason..."
+            cancelMessage.textContent = "Are you sure you want to request a return for this product?"
 
-    cancelReason.value = ""
+            cancelReason.placeholder = "Please enter the return reason..."
 
-    document.querySelector("#cancelModal strong").parentElement.innerHTML = `
+            cancelReason.value = ""
+
+            document.querySelector("#cancelModal strong").parentElement.innerHTML = `
 
         <strong>Note:</strong>
 
@@ -1119,93 +1178,93 @@ svg.className="w-8 h-8 text-blue-600"
 
     `
 
-    cancelModal.classList.remove("hidden")
+            cancelModal.classList.remove("hidden")
 
-    cancelModal.classList.add("flex")
-
-}
-
-async function requestReturn(){
-
-    const reason = cancelReason.value.trim()
-
-    if(reason===""){
-
-        Swal.fire({
-
-            icon:"warning",
-
-            title:"Reason Required",
-
-            text:"Please enter the return reason."
-
-        })
-
-        return
-
-    }
-
-    try{
-
-        const response = await fetch(`/order/${orderId}/items/${itemId}/return`,{
-
-            method:"PATCH",
-
-            headers:{
-                "Content-Type":"application/json"
-            },
-
-            body:JSON.stringify({
-
-                reason
-
-            })
-
-        })
-
-        const data = await response.json()
-
-        if(data.success){
-
-            closeCancelModal()
-
-            Swal.fire({
-
-                icon:"success",
-
-                title:"Return Requested",
-
-                text:data.message
-
-            }).then(()=>{
-
-                location.reload()
-
-            })
-
-        }else{
-
-            Swal.fire({
-
-                icon:"error",
-
-                title:"Failed",
-
-                text:data.message
-
-            })
+            cancelModal.classList.add("flex")
 
         }
 
-    }catch(error){
+        async function requestReturn() {
 
-        console.log(error)
+            const reason = cancelReason.value.trim()
 
-    }
+            if (reason === "") {
 
-}
+                Swal.fire({
 
-</script>
+                    icon: "warning",
+
+                    title: "Reason Required",
+
+                    text: "Please enter the return reason."
+
+                })
+
+                return
+
+            }
+
+            try {
+
+                const response = await fetch(`/order/${orderId}/items/${itemId}/return`, {
+
+                    method: "PATCH",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+
+                        reason
+
+                    })
+
+                })
+
+                const data = await response.json()
+
+                if (data.success) {
+
+                    closeCancelModal()
+
+                    Swal.fire({
+
+                        icon: "success",
+
+                        title: "Return Requested",
+
+                        text: data.message
+
+                    }).then(() => {
+
+                        location.reload()
+
+                    })
+
+                } else {
+
+                    Swal.fire({
+
+                        icon: "error",
+
+                        title: "Failed",
+
+                        text: data.message
+
+                    })
+
+                }
+
+            } catch (error) {
+
+                console.log(error)
+
+            }
+
+        }
+
+    </script>
 </body>
 
 </html>

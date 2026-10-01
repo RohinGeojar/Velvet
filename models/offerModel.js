@@ -12,6 +12,11 @@ const offerSchema = new mongoose.Schema({
         enum: ["product", "category"],
         required: true
     },
+    description: {
+        type: String,
+        trim: true,
+        default: ""
+    },
 
     products: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -22,10 +27,13 @@ const offerSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category"
     }],
+    maxDiscountAmount: {
+        type: Number,
+    },
 
     discountType: {
         type: String,
-        enum: ["percentage"],
+        enum: ["percentage","fixed"],
         default: "percentage"
     },
 

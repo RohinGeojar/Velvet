@@ -136,8 +136,9 @@
                         <button
                           class="addToCartBtn w-full py-4 bg-brand text-white text-xs uppercase tracking-[0.2em] hover:bg-brandGreen transition disabled:opacity-50 disabled:cursor-not-allowed"
                           data-product-id="<%= product._id %>" data-variant-id="<%= product.variantId %>"
-                          data-variant-index="<%= product.variantIndex %>" data-size="<%= product.size %>" data-sizes='<%- JSON.stringify(product.sizes) %>'
-                          <%=product.isUnavailable || product.isOutOfStock ? "disabled" : "" %>>
+                          data-variant-index="<%= product.variantIndex %>" data-size="<%= product.size %>"
+                          data-sizes='<%- JSON.stringify(product.sizes) %>' <%=product.isUnavailable ||
+                          product.isOutOfStock ? "disabled" : "" %>>
 
                           <%= product.isUnavailable ? "Unavailable" : product.isOutOfStock ? "Out of Stock"
                             : "Add To Cart" %>
@@ -155,9 +156,25 @@
                   <%= product.productName %>
                 </h3>
 
-                <p class="mt-2 text-sm text-textMuted">
-                  ₹<%= product.price %>
-                </p>
+                <div class="mt-2 flex items-center justify-center gap-2">
+
+                  <span class="text-sm font-semibold text-black">
+                    ₹<%= product.salePrice %>
+                  </span>
+
+                  <% if(product.offer?.hasOffer){ %>
+
+                    <span class="text-xs text-gray-400 line-through">
+                      ₹<%= product.regularPrice %>
+                    </span>
+
+                    <span class="text-xs font-semibold text-green-600">
+                      <%= product.offer.discountPercentage %>% OFF
+                    </span>
+
+                    <% } %>
+
+                </div>
 
               </div>
 
@@ -202,39 +219,35 @@
 
 
   </main>
-<div id="sizeModal"
-     class="fixed inset-0 hidden bg-black/50 flex items-center justify-center z-50">
+  <div id="sizeModal" class="fixed inset-0 hidden bg-black/50 flex items-center justify-center z-50">
 
     <div class="bg-white rounded-lg w-96 p-6">
 
-        <h3 class="text-lg font-semibold mb-5">
-            Select Size
-        </h3>
+      <h3 class="text-lg font-semibold mb-5">
+        Select Size
+      </h3>
 
-        <div id="sizeContainer"
-             class="grid grid-cols-4 gap-3">
-        </div>
+      <div id="sizeContainer" class="grid grid-cols-4 gap-3">
+      </div>
 
-        <p id="sizeError"
-           class="text-red-500 text-sm mt-3 hidden">
-        </p>
+      <p id="sizeError" class="text-red-500 text-sm mt-3 hidden">
+      </p>
 
-        <div class="flex justify-end mt-6 gap-3">
+      <div class="flex justify-end mt-6 gap-3">
 
-            <button id="cancelSize">
-                Cancel
-            </button>
+        <button id="cancelSize">
+          Cancel
+        </button>
 
-            <button id="confirmAdd"
-                    class="bg-brand text-white px-4 py-2 rounded">
-                Add to Cart
-            </button>
+        <button id="confirmAdd" class="bg-brand text-white px-4 py-2 rounded">
+          Add to Cart
+        </button>
 
-        </div>
+      </div>
 
     </div>
 
-</div>
+  </div>
   <!-- Toast -->
 
   <div id="toastContainer" class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 pointer-events-none">
@@ -282,7 +295,7 @@ transition-all duration-500">
 
   </div>
 
-</body>
+
 
 
 <!-- Interactive JavaScript Logic -->
@@ -340,6 +353,9 @@ transition-all duration-500">
 
           checkEmptyWishlist();
         }, 300)
+         if (data.wishlistCount !== undefined) {
+        updateWishlistBadge(data.wishlistCount);
+    }
       }
 
     });
@@ -405,66 +421,66 @@ transition-all duration-500">
 
 
 
-let selectedProduct = null;
-let selectedSize = null;
+  let selectedProduct = null;
+  let selectedSize = null;
 
-const sizeModal = document.getElementById("sizeModal");
-const sizeContainer = document.getElementById("sizeContainer");
-const sizeError = document.getElementById("sizeError");
+  const sizeModal = document.getElementById("sizeModal");
+  const sizeContainer = document.getElementById("sizeContainer");
+  const sizeError = document.getElementById("sizeError");
 
-document.querySelectorAll(".addToCartBtn").forEach(btn => {
+  document.querySelectorAll(".addToCartBtn").forEach(btn => {
 
     btn.addEventListener("click", (e) => {
 
-        e.preventDefault();
-        e.stopPropagation();
+      e.preventDefault();
+      e.stopPropagation();
 
-        if (btn.disabled) return;
+      if (btn.disabled) return;
 
-        selectedProduct = {
-            productId: btn.dataset.productId,
-            variantId: btn.dataset.variantId,
-            variantIndex: btn.dataset.variantIndex,
-            card: btn.closest(".wishlistCard")
-        };
+      selectedProduct = {
+        productId: btn.dataset.productId,
+        variantId: btn.dataset.variantId,
+        variantIndex: btn.dataset.variantIndex,
+        card: btn.closest(".wishlistCard")
+      };
 
-        selectedSize = null;
-        sizeError.classList.add("hidden");
+      selectedSize = null;
+      sizeError.classList.add("hidden");
 
-        const sizes = JSON.parse(btn.dataset.sizes);
+      const sizes = JSON.parse(btn.dataset.sizes);
 
-        renderSizes(sizes);
+      renderSizes(sizes);
 
-        sizeModal.classList.remove("hidden");
+      sizeModal.classList.remove("hidden");
 
     });
 
-});
-document.getElementById("confirmAdd").addEventListener("click", async () => {
+  });
+  document.getElementById("confirmAdd").addEventListener("click", async () => {
 
     if (!selectedSize) {
 
-        sizeError.textContent = "Please select a size.";
-        sizeError.classList.remove("hidden");
-        return;
+      sizeError.textContent = "Please select a size.";
+      sizeError.classList.remove("hidden");
+      return;
 
     }
 
     const response = await fetch("/shop/cart/add", {
 
-        method: "POST",
+      method: "POST",
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-        body: JSON.stringify({
+      body: JSON.stringify({
 
-            productId: selectedProduct.productId,
-            variantIndex: selectedProduct.variantIndex,
-            size: selectedSize
+        productId: selectedProduct.productId,
+        variantIndex: selectedProduct.variantIndex,
+        size: selectedSize
 
-        })
+      })
 
     });
 
@@ -472,26 +488,29 @@ document.getElementById("confirmAdd").addEventListener("click", async () => {
 
     if (!data.success) {
 
-        sizeError.textContent = data.message;
-        sizeError.classList.remove("hidden");
-        return;
+      sizeError.textContent = data.message;
+      sizeError.classList.remove("hidden");
+      return;
 
     }
+    if (data.cartCount !== undefined) {
+    updateCartBadge(data.cartCount);
+}
 
     const removeResponse = await fetch("/shop/wishlist/remove", {
 
-        method: "POST",
+      method: "POST",
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+      headers: {
+        "Content-Type": "application/json"
+      },
 
-        body: JSON.stringify({
+      body: JSON.stringify({
 
-            productId: selectedProduct.productId,
-            variantId: selectedProduct.variantId
+        productId: selectedProduct.productId,
+        variantId: selectedProduct.variantId
 
-        })
+      })
 
     });
 
@@ -499,88 +518,91 @@ document.getElementById("confirmAdd").addEventListener("click", async () => {
 
     if (removeData.success) {
 
-        selectedProduct.card.remove();
+      selectedProduct.card.remove()
+      if (removeData.wishlistCount !== undefined) {
+        updateWishlistBadge(removeData.wishlistCount);
+    }
 
-        updateWishlistCount();
-        checkEmptyWishlist();
+      updateWishlistCount()
+      checkEmptyWishlist()
 
     }
 
     sizeModal.classList.add("hidden");
 
     showToast(
-        "✓ Added to cart",
-        selectedProduct.card.querySelector("img").src
+      "✓ Added to cart",
+      selectedProduct.card.querySelector("img").src
     );
 
-});
+  });
 
-function renderSizes(sizes) {
+  function renderSizes(sizes) {
 
     sizeContainer.innerHTML = "";
 
     sizes.forEach(size => {
 
-        const btn = document.createElement("button");
+      const btn = document.createElement("button");
 
-        btn.textContent = size.size;
+      btn.textContent = size.size;
 
-        btn.type = "button";
+      btn.type = "button";
 
-        btn.className =
-            "border rounded p-2 text-sm hover:bg-brand hover:text-white";
+      btn.className =
+        "border rounded p-2 text-sm hover:bg-brand hover:text-white";
 
-        if (size.stock <= 0) {
+      if (size.stock <= 0) {
 
-            btn.disabled = true;
+        btn.disabled = true;
 
-            btn.classList.add(
-                "opacity-50",
-                "cursor-not-allowed",
-                "bg-gray-200"
-            );
+        btn.classList.add(
+          "opacity-50",
+          "cursor-not-allowed",
+          "bg-gray-200"
+        );
 
-        } else {
+      } else {
 
-            btn.addEventListener("click", () => {
+        btn.addEventListener("click", () => {
 
-                selectedSize = size.size;
+          selectedSize = size.size;
 
-                sizeError.classList.add("hidden");
+          sizeError.classList.add("hidden");
 
-                document
-                    .querySelectorAll("#sizeContainer button")
-                    .forEach(b => {
+          document
+            .querySelectorAll("#sizeContainer button")
+            .forEach(b => {
 
-                        b.classList.remove(
-                            "bg-brand",
-                            "text-white"
-                        );
-
-                    });
-
-                btn.classList.add(
-                    "bg-brand",
-                    "text-white"
-                );
+              b.classList.remove(
+                "bg-brand",
+                "text-white"
+              );
 
             });
 
-        }
+          btn.classList.add(
+            "bg-brand",
+            "text-white"
+          );
 
-        sizeContainer.appendChild(btn);
+        });
+
+      }
+
+      sizeContainer.appendChild(btn);
 
     });
 
-}
+  }
 
-document
+  document
     .getElementById("cancelSize")
     .addEventListener("click", () => {
 
-        sizeModal.classList.add("hidden");
+      sizeModal.classList.add("hidden");
 
-        selectedSize = null;
+      selectedSize = null;
 
     });
 </script>

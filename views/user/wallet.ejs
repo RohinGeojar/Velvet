@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velvet Vogue - My Wallet</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            50: '#f4f6f3',
+                            100: '#e5ebe3',
+                            500: '#708268',
+                            600: '#5c6c55',
+                            700: '#485643',
+                            800: '#435240',
+                            900: '#3f4d3a',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #1f2937;
+        }
+
+        .brand-font {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+        }
+
+        /* Smooth tab transitions */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 antialiased selection:bg-sage-100 flex flex-col min-h-screen">
+
+    <!-- Announcement Bar -->
+
+
+    <!-- Header Navbar -->
+
+    <%- include("../partials/user/otpModal") %>
+        <!-- Main Workspace Area -->
+        <div
+            class="flex-1 flex flex-col lg:flex-row max-w-7xl w-full mx-auto bg-white border-x border-gray-100 shadow-sm">
+
+            <!-- Sidebar Navigation -->
+
+
+            <!-- Main Content Area -->
+            <main class="flex-1 p-4 sm:p-8 lg:p-10 bg-white">
+
+                <!-- TAB CONTENT: MY WALLET (Default Active Tab) -->
+                <div id="tab-wallet" class="tab-content active space-y-8">
+                    <!-- Wallet Summary Top Card -->
+                    <div
+                        class="flex flex-col sm:flex-row justify-between items-start sm:items-center border border-gray-200 rounded-lg p-6 bg-white shadow-sm gap-4">
+                        <div class="flex items-center space-x-4">
+                            <div
+                                class="w-14 h-14 rounded-lg border-2 border-gray-300 flex items-center justify-center text-gray-600 bg-gray-50">
+                                <i data-lucide="credit-card" class="w-7 h-7 stroke-[1.5]"></i>
+                            </div>
+                            <div>
+                                <div
+                                    class="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight flex items-center gap-1">
+                                    <span>₹</span><span id="wallet-balance-text">
+                                        <%= wallet.balance.toLocaleString("en-IN") %>
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-500 font-medium tracking-wide mt-0.5">My Wallet Balance</p>
+                            </div>
+                        </div>
+
+                        <button onclick="openAddMoneyModal()"
+                            class="w-full sm:w-auto bg-sage-500 hover:bg-sage-600 text-white px-6 py-2.5 rounded-md text-sm font-medium transition-all shadow-sm hover:shadow flex items-center justify-center space-x-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Add Money</span>
+                        </button>
+                    </div>
+
+                    <!-- Transaction Section Container -->
+                    <div class="space-y-4">
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-gray-100">
+                            <h3 class="text-xs font-semibold tracking-wider text-gray-800 uppercase">Transaction Details
+                            </h3>
+
+                           
+                        </div>
+
+                        <!-- Table Wrapper -->
+                        <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-xs">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-xs text-left">
+                                    <thead
+                                        class="bg-gray-50 border-b border-gray-200 text-gray-500 font-semibold uppercase tracking-wider">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3.5">Transaction ID</th>
+                                            <th scope="col" class="px-6 py-3.5">Description</th>
+                                            <th scope="col" class="px-6 py-3.5">Date</th>
+                                            <th scope="col" class="px-6 py-3.5">Withdrawal</th>
+                                            <th scope="col" class="px-6 py-3.5">Deposit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200 text-gray-700">
+
+                                        <% if(transactions.length){ %>
+
+                                            <% transactions.forEach(transaction=> { %>
+
+                                                <tr class="hover:bg-gray-50">
+
+                                                    <td class="px-6 py-4 font-medium">
+                                                        <%= transaction.transactionId %>
+                                                    </td>
+
+                                                    <td class="px-6 py-4">
+                                                        <%= transaction.description %>
+                                                    </td>
+
+                                                    <td class="px-6 py-4">
+                                                        <%= new Date(transaction.createdAt).toLocaleDateString("en-IN")
+                                                            %>
+                                                    </td>
+
+                                                    <td class="px-6 py-4">
+
+                                                        <% if(transaction.type==="debit" ){ %>
+
+                                                            ₹ <%= transaction.amount.toLocaleString("en-IN") %>
+
+                                                                <% } else { %>
+
+                                                                    -
+
+                                                                    <% } %>
+
+                                                    </td>
+
+                                                    <td class="px-6 py-4">
+
+                                                        <% if(transaction.type==="credit" ){ %>
+
+                                                            ₹ <%= transaction.amount.toLocaleString("en-IN") %>
+
+                                                                <% } else { %>
+
+                                                                    -
+
+                                                                    <% } %>
+
+                                                    </td>
+
+                                                </tr>
+
+                                                <% }) %>
+
+                                                    <% } else { %>
+
+                                                        <tr>
+
+                                                            <td colspan="5" class="text-center py-10 text-gray-400">
+
+                                                                No Transactions Found
+
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <% } %>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+  
+
+                        <!-- Pagination Bar -->
+
+                        <% if(totalTransactions> 0){ %>
+
+                            <div class="flex flex-col sm:flex-row items-center justify-between pt-4 gap-4">
+
+                                <!-- Transaction Count -->
+
+                                <span class="text-xs text-gray-500">
+
+                                    Showing
+                                    <%= (currentpage - 1) * 10 + 1 %>
+
+                                        -
+
+                                        <%= Math.min(currentpage * 10, totalTransactions) %>
+
+                                            of
+
+                                            <%= totalTransactions %>
+
+                                                Transactions
+
+                                </span>
+
+
+                                <!-- Pagination Buttons -->
+
+                                <% if(totalPages> 1){ %>
+
+                                    <div class="flex items-center gap-2">
+
+                                        <!-- Previous -->
+
+                                        <a href="/wallet?page=<%= currentpage - 1 %>" class=" px-3 py-2 text-xs border border-gray-200 rounded-md transition
+
+                                    <%= currentpage === 1
+                                        ? 'hidden'
+                                        : 'hover:bg-gray-50'
+                                    %>
+                                    ">
+
+                                            Previous
+
+                                        </a>
+
+
+                                        <!-- Page Numbers -->
+
+                                        <% for(let i=1; i <=totalPages; i++){ %>
+
+                                            <a href="/wallet?page=<%= i %>" class=" w-9 h-9 flex  items-center justify-center  text-xs rounded-md border transition
+
+                                                    <%= currentpage === i
+                                                        ? 'bg-sage-500 text-white border-sage-500'
+                                                        : 'bg-white border-gray-200 hover:bg-gray-50'
+                                                    %>
+                                                    ">
+
+                                                <%= i %>
+
+                                            </a>
+
+                                            <% } %>
+
+
+                                                <!-- Next -->
+
+                                                <a href="/wallet?page=<%= currentpage + 1 %>" class="px-3 py-2 text-xs border border-gray-200 rounded-md transition
+                                                <%= currentpage === totalPages
+                                                    ? 'hidden'
+                                                    : 'hover:bg-gray-50'
+                                                %>">
+
+                                                    Next
+
+                                                </a>
+                                    </div>
+
+                                    <% } %>
+
+                            </div>
+
+                            <% } %>
+
+
+                    </div>
+                </div>
+        </div>
+
+        <!-- TAB CONTENT: OVERVIEW -->
+        <div id="tab-overview" class="tab-content space-y-6">
+            <h2 class="text-2xl brand-font font-medium text-gray-900 border-b pb-3">Account Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="border border-gray-200 p-5 rounded-lg bg-gray-50/50">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Total Orders</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-2">14</p>
+                </div>
+                <div class="border border-gray-200 p-5 rounded-lg bg-gray-50/50">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Saved Addresses</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-2">3</p>
+                </div>
+                <div class="border border-gray-200 p-5 rounded-lg bg-gray-50/50">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">Wishlist Items</p>
+                    <p class="text-2xl font-bold text-gray-900 mt-2">8</p>
+                </div>
+            </div>
+            <div class="border border-gray-200 rounded-lg p-6 space-y-3">
+                <h3 class="font-medium text-gray-900">Recent Activity</h3>
+                <p class="text-sm text-gray-600">Your last transaction of <span
+                        class="font-semibold text-gray-900">₹6,000</span> was added to your wallet on Dec 30,
+                    2023.</p>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: ACCOUNT DETAILS -->
+        <div id="tab-account" class="tab-content space-y-6">
+            <h2 class="text-2xl brand-font font-medium text-gray-900 border-b pb-3">Account Details</h2>
+            <form onsubmit="event.preventDefault(); showToast('Account details updated successfully!');"
+                class="max-w-lg space-y-4 text-sm">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Full Name</label>
+                    <input type="text" value="Rohin Geojar"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:border-sage-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Email
+                        Address</label>
+                    <input type="email" value="rohin@gmail.com"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:border-sage-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Phone Number</label>
+                    <input type="text" value="+91 98765 43210"
+                        class="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:border-sage-500">
+                </div>
+                <button type="submit"
+                    class="bg-sage-500 hover:bg-sage-600 text-white px-6 py-2 rounded-md font-medium text-xs uppercase tracking-wider transition-colors">Save
+                    Changes</button>
+            </form>
+        </div>
+
+        <!-- TAB CONTENT: ORDER HISTORY -->
+        <div id="tab-orders" class="tab-content space-y-6">
+            <h2 class="text-2xl brand-font font-medium text-gray-900 border-b pb-3">Order History</h2>
+            <div class="space-y-4">
+                <div
+                    class="border border-gray-200 rounded-lg p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div>
+                        <span
+                            class="text-xs bg-sage-100 text-sage-800 font-semibold px-2.5 py-1 rounded">DELIVERED</span>
+                        <p class="font-medium text-gray-900 mt-2">Order #VV-98421</p>
+                        <p class="text-xs text-gray-500">Dec 24, 2023 • Silk Evening Gown (M)</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold text-gray-900">₹36,000</p>
+                        <button onclick="showToast('Reorder functionality initiated!')"
+                            class="text-xs text-sage-600 font-medium hover:underline mt-1">View Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: WISHLIST -->
+        <div id="tab-wishlist" class="tab-content space-y-6">
+            <h2 class="text-2xl brand-font font-medium text-gray-900 border-b pb-3">Wishlist</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="border border-gray-200 rounded-lg overflow-hidden group">
+                    <div class="h-48 bg-gray-100 flex items-center justify-center text-gray-400 relative">
+                        <i data-lucide="image" class="w-10 h-10"></i>
+                        <span
+                            class="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full text-red-500 cursor-pointer"><i
+                                data-lucide="heart" class="w-4 h-4 fill-current"></i></span>
+                    </div>
+                    <div class="p-4 space-y-1">
+                        <h4 class="font-medium text-sm text-gray-900">Velvet Wrap Midi Dress</h4>
+                        <p class="text-xs text-gray-500">₹14,500</p>
+                        <button onclick="showToast('Added to cart!')"
+                            class="w-full mt-3 bg-gray-900 text-white text-xs py-2 rounded hover:bg-black transition-colors">Move
+                            To Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: ADDRESSES -->
+        <div id="tab-addresses" class="tab-content space-y-6">
+            <h2 class="text-2xl brand-font font-medium text-gray-900 border-b pb-3">Saved Addresses</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="border-2 border-sage-500 p-4 rounded-lg bg-sage-50/20 relative">
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-wider bg-sage-500 text-white px-2 py-0.5 rounded absolute top-3 right-3">Default</span>
+                    <h4 class="font-medium text-gray-900">Rohin Geojar</h4>
+                    <p class="text-xs text-gray-600 mt-2 leading-relaxed">42 Atelier Boulevard, Suite
+                        300<br>Bandra West, Mumbai, 400050<br>Maharashtra, India</p>
+                    <p class="text-xs text-gray-500 mt-2">+91 98765 43210</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: MY CART -->
+        <div id="tab-cart" class="tab-content space-y-6">
+            <h2 class="text-2xl brand-font font-medium text-gray-900 border-b pb-3">My Shopping Cart</h2>
+            <div class="border border-gray-200 rounded-lg p-6 space-y-4">
+                <div class="flex justify-between items-center pb-4 border-b">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-400">
+                            <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-medium">Silk Evening Gown</h4>
+                            <p class="text-xs text-gray-500">Size: M | Color: Emerald</p>
+                        </div>
+                    </div>
+                    <p class="text-sm font-semibold">₹36,000</p>
+                </div>
+                <div class="flex justify-between items-center pt-2">
+                    <span class="text-sm font-semibold">Subtotal</span>
+                    <span class="text-base font-bold">₹36,000</span>
+                </div>
+                <button onclick="showToast('Proceeding to checkout using Wallet Balance!')"
+                    class="w-full bg-sage-500 hover:bg-sage-600 text-white py-2.5 rounded-md text-sm font-medium transition-colors">Proceed
+                    to Checkout</button>
+            </div>
+        </div>
+        </main>
+        </div>
+
+        <!-- Footer -->
+
+
+        <!-- Add Money Modal -->
+        <div id="add-money-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop hidden">
+            <div
+                class="bg-white rounded-xl max-w-md w-full p-6 shadow-xl relative animate-in fade-in zoom-in duration-150">
+                <button onclick="closeAddMoneyModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-sage-100 text-sage-800 flex items-center justify-center">
+                        <i data-lucide="wallet" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900">Add Money to Wallet</h3>
+                        <p class="text-xs text-gray-500">Current Balance: ₹<span id="modal-current-balance">
+                                <%= wallet.balance.toLocaleString("en-IN") %>
+                            </span></p>
+                    </div>
+                </div>
+
+                <form onsubmit="handleAddMoneySubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Enter Amount (₹)</label>
+                        <input type="number" id="add-amount-input" min="500" step="100" required placeholder="e.g. 500"
+                            class="w-full text-lg px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-sage-500">
+                    </div>
+
+                    <!-- Quick Selection Buttons -->
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="setQuickAmount(1000)"
+                            class="flex-1 py-1.5 border text-xs font-medium rounded hover:bg-gray-50 border-gray-200">+₹1,000</button>
+                        <button type="button" onclick="setQuickAmount(2000)"
+                            class="flex-1 py-1.5 border text-xs font-medium rounded hover:bg-gray-50 border-gray-200">+₹2,000</button>
+                        <button type="button" onclick="setQuickAmount(5000)"
+                            class="flex-1 py-1.5 border text-xs font-medium rounded hover:bg-gray-50 border-gray-200">+₹5,000</button>
+                        <button type="button" onclick="setQuickAmount(10000)"
+                            class="flex-1 py-1.5 border text-xs font-medium rounded hover:bg-gray-50 border-gray-200">+₹10,000</button>
+                    </div>
+
+
+
+                    <div class="pt-2 flex justify-end space-x-3">
+                        <button type="button" onclick="closeAddMoneyModal()"
+                            class="px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-100 rounded-md">Cancel</button>
+                        <button type="submit"
+                            class="px-5 py-2 text-xs font-medium bg-sage-500 hover:bg-sage-600 text-white rounded-md transition-colors">Add
+                            Funds</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Search Overlay Modal -->
+        <div id="search-modal"
+            class="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 modal-backdrop hidden">
+            <div class="bg-white rounded-xl max-w-xl w-full p-4 shadow-2xl relative">
+                <div class="flex items-center space-x-3 border-b border-gray-200 pb-3">
+                    <i data-lucide="search" class="w-5 h-5 text-gray-400"></i>
+                    <input type="text" placeholder="Search Velvet Vogue collections, dresses..."
+                        class="w-full text-sm focus:outline-none">
+                    <button onclick="toggleSearchModal()" class="text-xs text-gray-500 hover:text-black">ESC</button>
+                </div>
+                <div class="p-4 text-xs text-gray-400">
+                    Popular: Silk Dress, Evening Wear, Velvet Gown, New Arrivals
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification Container -->
+        <div id="toast"
+            class="fixed bottom-6 right-6 z-50 bg-gray-900 text-white px-5 py-3 rounded-lg shadow-lg text-xs font-medium transform translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-2">
+            <span id="toast-icon">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+            </span>
+            <span id="toast-message">Notification message</span>
+        </div>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script>
+            // State Management
+            lucide.createIcons();
+
+
+            // Tab Switcher
+            function switchTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('bg-sage-500', 'text-white', 'shadow-sm');
+                    item.classList.add('text-gray-600', 'hover:bg-gray-50');
+                });
+
+                const targetTab = document.getElementById(`tab-${tabId}`);
+                if (targetTab) {
+                    targetTab.classList.add('active');
+                }
+
+                const targetNav = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+                if (targetNav) {
+                    targetNav.classList.remove('text-gray-600', 'hover:bg-gray-50');
+                    targetNav.classList.add('bg-sage-500', 'text-white', 'shadow-sm');
+                }
+            }
+
+            // Render Transaction Table
+
+
+            // Filter trigger
+
+
+            // Render Circular Pagination matching UI design image
+
+
+
+            // Add Money Modal Functions
+            function openAddMoneyModal() {
+                document.getElementById("add-money-modal").classList.remove("hidden");
+            }
+
+            function closeAddMoneyModal() {
+                document.getElementById('add-money-modal').classList.add('hidden');
+            }
+
+            function setQuickAmount(amt) {
+                document.getElementById('add-amount-input').value = amt;
+            }
+
+            async function handleAddMoneySubmit(e) {
+
+                e.preventDefault();
+
+                const amount = Number(
+                    document.getElementById("add-amount-input").value
+                );
+
+                if (!amount || amount < 500 || amount % 100 !== 0) {
+
+                    showToast("Please enter an amount of ₹500 or more in multiples of ₹100.", "error");
+
+                    return;
+                }
+
+                try {
+
+                    const response = await fetch("/wallet/createOrder", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            amount
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!data.success) {
+
+                        showToast(data.message);
+
+                        return;
+                    }
+                    closeAddMoneyModal()
+                    openRazorpay(data, amount);
+
+                } catch (err) {
+
+                    console.log(err);
+
+                    showToast("Something went wrong");
+
+                }
+
+            }
+
+
+            // ================= open razorpay
+
+            function openRazorpay(data) {
+
+                const options = {
+
+                    key: data.key,
+
+                    amount: data.order.amount,
+
+                    currency: data.order.currency,
+
+                    name: "Velvet",
+
+                    description: "Wallet Top-up",
+
+                    order_id: data.order.id,
+
+                    handler: async function (response) {
+
+                        await verifyPayment(response);
+
+                    },
+
+                    prefill: {
+
+                        name: "<%= user.name %>",
+
+                        email: "<%= user.email %>",
+
+                        contact: "<%= user.phone %>"
+
+                    },
+
+                    modal: {
+
+                        ondismiss: function () {
+
+                            showToast("Payment Cancelled");
+
+                        }
+
+                    },
+
+                    theme: {
+
+                        color: "#111827"
+
+                    }
+
+                };
+
+                const rzp = new Razorpay(options);
+
+                rzp.on("payment.failed", function (response) {
+
+                    console.log(response.error);
+
+                    showToast(response.error.description);
+
+                });
+
+                rzp.open();
+
+            }
+
+            // =================  verify payment
+
+            async function verifyPayment(response, amount) {
+
+                try {
+
+                    const verify = await fetch("/wallet/verifyPayment", {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            razorpay_order_id: response.razorpay_order_id,
+
+                            razorpay_payment_id: response.razorpay_payment_id,
+
+                            razorpay_signature: response.razorpay_signature,
+
+
+
+                        })
+
+                    });
+
+                    const data = await verify.json();
+
+                    if (data.success) {
+
+                        showToast(data.message, "success");
+
+                        setTimeout(() => {
+
+                            location.reload();
+
+                        }, 1500);
+
+                    } else {
+
+                        showToast(data.message, "error");
+
+                    }
+
+                } catch (err) {
+
+                    console.log(err);
+
+                    showToast("Verification Failed", "error");
+
+                }
+
+            }
+
+
+
+
+
+
+            // Toggle Search Modal
+            function toggleSearchModal() {
+                const modal = document.getElementById('search-modal');
+                modal.classList.toggle('hidden');
+            }
+
+            // Newsletter Handler
+            function handleNewsletterSubmit(e) {
+                e.preventDefault();
+                showToast('Thank you for subscribing to Velvet Vogue!');
+                e.target.reset();
+            }
+
+            // Toast Helper
+            function showToast(message, type = "success") {
+
+                const toast = document.getElementById("toast")
+                const iconContainer = document.getElementById("toast-icon")
+                const text = document.getElementById("toast-message")
+
+                text.innerText = message
+
+                toast.className =
+                    "fixed bottom-6 right-6 z-50 px-5 py-3 rounded-lg shadow-lg text-sm font-medium flex items-center space-x-2 transition-all duration-300"
+
+                if (type === "success") {
+
+                    toast.classList.add(
+                        "bg-green-600",
+                        "text-white"
+                    )
+
+                    iconContainer.innerHTML =
+                        '<i data-lucide="check-circle" class="w-4 h-4"></i>'
+
+                } else if (type === "error") {
+
+                    toast.classList.add(
+                        "bg-red-600",
+                        "text-white"
+                    )
+
+                    iconContainer.innerHTML =
+                        '<i data-lucide="x-circle" class="w-4 h-4"></i>'
+
+                } else if (type === "warning") {
+
+                    toast.classList.add(
+                        "bg-yellow-500",
+                        "text-black"
+                    )
+
+                    iconContainer.innerHTML =
+                        '<i data-lucide="alert-circle" class="w-4 h-4"></i>'
+                }
+
+                lucide.createIcons()
+
+                toast.classList.remove(
+                    "translate-y-20",
+                    "opacity-0"
+                )
+
+                toast.classList.add(
+                    "translate-y-0",
+                    "opacity-100"
+                )
+
+                setTimeout(() => {
+
+                    toast.classList.remove(
+                        "translate-y-0",
+                        "opacity-100"
+                    )
+
+                    toast.classList.add(
+                        "translate-y-20",
+                        "opacity-0"
+                    )
+
+                }, 2500)
+            }
+
+            function handleLogout() {
+                showToast('You have logged out successfully.');
+            }
+        </script>
+</body>
+
+</html>

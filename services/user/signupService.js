@@ -1,6 +1,7 @@
 import User from "../../models/user.js"
 import { sendOtpService } from "./otpService.js"
 import { hashPassword } from "../../utils/hash.js"
+import Order from "../../models/order.js"
 
 export const signupService = async (data) => {
 
@@ -38,4 +39,89 @@ export const signupService = async (data) => {
     await sendOtpService(email)
     return tempUser
 
+}
+
+
+
+
+const excludedStatuses = ["Cancelled", "Returned"]
+
+export const getHomeBestSellers = async () => {
+
+    const bestSellers = await Order.aggregate([
+
+        {
+            $unwind: "$items"
+        },
+
+        {
+            $match: {
+                "items.status": {
+                    $nin: excludedStatuses
+                }
+            }
+        },
+
+        {
+            $group: {
+
+                _id: "$items.productId",
+
+                totalSold: {
+                    $sum: "$items.quantity"
+                }
+
+            }
+        },
+
+
+        {
+            $sort: {
+                totalSold: -1
+            }
+        },
+
+  
+        {
+            $limit: 3
+        },
+
+        {
+            $lookup: {
+
+                from: "products",
+
+                localField: "_id",
+
+                foreignField: "_id",
+
+                as: "product"
+
+            }
+        },
+
+        {
+            $unwind: "$product"
+        },
+
+
+        {
+            $project: {
+
+                _id: "$product._id",
+
+                productName: "$product.productName",
+
+                slug: "$product.slug",
+
+                variants: "$product.variants",
+
+                totalSold: 1
+
+            }
+        }
+
+    ])
+
+    return bestSellers
 }

@@ -46,7 +46,7 @@ export const createCategory = async (data) => {
 
 
 
-export const getCategories = async ({ page = 1, limit = 10, search = "" }) => {
+export const getCategories = async ({ page = 1, limit = 5, search = "" }) => {
     const { currentPage, perPage, skip } = getPagination(page, limit);
 
     const query = {

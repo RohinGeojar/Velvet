@@ -373,7 +373,7 @@
 
                                                     <% } else if (totalStock <=10) { %>
 
-                                                        <span class="text-sm font-bold text-red-400">
+                                                        <span class="text-sm font-bold text-red-500">
                                                             <%= totalStock %> units
                                                         </span>
 
@@ -950,24 +950,12 @@ ${product.category?.name || "No Category"}
 <td class="px-6 py-4">
 
 ${totalStock === 0
+    ? `<span class="text-red-500 font-bold">0 units</span>`
+    : totalStock <= 10
+        ? `<span class="text-sm font-bold text-amber-500">${totalStock} units</span>`
+        : `<span class="text-sm font-bold text-gray-500">${totalStock} units</span>`
 
-                            ? `
 
-<span class="text-red-500 font-bold">
-
-0 units
-
-</span>
-`
-
-                            : `
-
-<span class="text-sm font-bold text-gray-500">
-
-${totalStock} units
-
-</span>
-`
                         }
 
 </td>

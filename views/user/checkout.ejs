@@ -299,7 +299,7 @@
                             </div>
                             <div>
                                 <h3 class="font-bold text-[#1A2E40] text-base">My Wallet</h3>
-                                <p class="text-sm text-gray-400 mt-0.5">Balance: ₹12,500.00</p>
+                                <p id="walletBalance" class="text-sm text-gray-400 mt-0.5">Balance: ₹0</p>
                             </div>
                         </div>
                         <div
@@ -348,7 +348,7 @@
                         <div class="checkout-item flex items-start min-h-[118px] rounded space-x-4 pb-6 border-b border-gray-300/40 "
                             data-item-id="<%= item._id %>"">
 
-                            <div class=" relative flex-shrink-0">
+                                <div class=" relative flex-shrink-0">
                             <div class="relative flex-shrink-0 w-16 h-20 overflow-hidden rounded-md">
 
                                 <img src="<%= item.productId.variants[item.variantIndex].images[0].url %>"
@@ -445,40 +445,40 @@
 
             <div class="mt-8 pt-6 border-t border-gray-300/60 space-y-3.5 text-sm">
                 <div class="flex justify-between text-gray-600">
-                    <span>
-                        Subtotal (<span id="cartCount">
-                            <%= cartCount %>
-                        </span>)
+                    <span>Total MRP (<span id="cartCount">
+                            <%= cartItemCount %>
+                        </span>)</span>
+                    <span id="checkoutOriginalTotal">
+                        ₹<%= originalTotal %>
                     </span>
+                </div>
 
-                    <span id="checkoutSubtotal">
-                        ₹<%= subtotal.toFixed(2) %>
+                <div class="flex justify-between text-gray-600">
+                    <span>Discount on MRP</span>
+                    <span id="checkoutOfferDiscount" class="text-green-600 font-medium">
+                        - ₹<%= offerDiscount %>
                     </span>
                 </div>
-                <div class="flex justify-between text-gray-600">
-                    <span>Discount</span>
-                    <span id="checkoutDiscount" class="font-medium text-gray-950">₹<%=discount %></span>
-                </div>
+
                 <div class="flex justify-between text-gray-600">
                     <span>Coupon Discount</span>
-                    <span class="font-medium text-gray-950">₹0</span>
-                </div>
-                <div class="flex justify-between text-gray-600">
-                    <span>Shipping</span>
-                    <span id="checkoutShipping" class="font-medium text-emerald-600">
-                        <%= shipping %>
-                    </span>
-                </div>
-                <div class="flex justify-between py-2">
-                    <span>Round Off</span>
-                    <span>
-                        <%= roundOff>= 0 ? "+" : "" %>₹<%= roundOff.toFixed(2) %>
+                    <span id="checkoutCouponDiscount" class="text-green-600 font-medium">
+                        - ₹<%= couponDiscount %>
                     </span>
                 </div>
 
-                <div class="flex justify-between text-base font-bold text-gray-900 pt-4 border-t border-gray-300/60">
-                    <span>Total :</span>
-                    <span id="checkoutGrandTotal"> ₹ <%= grandTotal.toFixed(2) %></span>
+                <div class="flex justify-between text-gray-600">
+                    <span>Shipping</span>
+                    <span id="checkoutShipping" class="font-medium">
+                        <%= shipping===0 ? "Free" : `₹${shipping}` %>
+                    </span>
+                </div>
+
+                <div class="flex justify-between text-lg font-bold pt-4 border-t">
+                    <span>Total Amount</span>
+                    <span id="checkoutGrandTotal">
+                        ₹<%= grandTotal %>
+                    </span>
                 </div>
             </div>
 
@@ -489,10 +489,11 @@
                 </button>
 
                 <div class="flex space-x-2 pt-2">
-                    <input type="text" placeholder="Enter coupon code"
-                        class="flex-1 bg-white border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-gray-400 placeholder-gray-400">
-                    <button
-                        class="bg-brand hover:bg-brand-dark text-white text-sm font-medium px-6 py-2.5 rounded transition">
+                    <input id="couponInput" type="text" placeholder="Enter coupon code"
+                        class="flex-1 bg-white border border-gray-300 rounded px-4 py-2.5 text-sm">
+
+                    <button id="applyCouponBtn"
+                        class="bg-brand hover:bg-brand-dark text-white text-sm font-medium px-6 py-2.5 rounded">
                         Apply
                     </button>
                 </div>
@@ -676,14 +677,14 @@
 
     <!-- ====================== -->
     <!-- Coupon Modal -->
-    <div id="couponModal" class="fixed inset-0 hidden items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+    <div id="couponModal" class="fixed inset-0 hidden items-center justify-center  bg-black/40 backdrop-blur-sm z-50">
 
         <div class="bg-white w-full max-w-md rounded-xl shadow-2xl overflow-hidden">
 
             <!-- Header -->
             <div class="flex items-center justify-between px-5 py-4 border-b">
 
-                <h2 class="text-lg font-semibold text-[#1A1A1A]">
+                <h2 class="text-xl font-black font-semibold text-brand">
                     Available Coupons
                 </h2>
 
@@ -698,107 +699,14 @@
             <!-- Coupon List -->
             <div class="p-5 space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar">
 
-                <!-- Coupon -->
-                <div
-                    class="flex items-center justify-between border border-dashed border-[#DDD7CD] rounded-lg bg-[#FAF9F5] px-4 py-3">
+                <div class="p-5">
 
-                    <div>
+                    <input id="couponSearch" type="text" placeholder="Search coupon..."
+                        class="w-full border rounded-lg px-4 py-2 mb-4">
 
-                        <h3 class="text-xl font-black tracking-tight text-[#1A1A1A]">
-                            NEW100
-                        </h3>
-
-                        <p class="text-sm text-gray-600">
-                            ₹100 OFF • Min ₹1000
-                        </p>
+                    <div id="couponContainer" class="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar">
 
                     </div>
-
-                    <button
-                        class="applyCoupon bg-[#6F816A] hover:bg-[#5C6E58] text-white text-sm font-medium px-5 py-2 rounded-md transition"
-                        data-code="NEW100" data-discount="100">
-
-                        Apply
-
-                    </button>
-
-                </div>
-
-                <!-- Coupon -->
-                <div
-                    class="flex items-center justify-between border border-dashed border-[#DDD7CD] rounded-lg bg-[#FAF9F5] px-4 py-3">
-
-                    <div>
-
-                        <h3 class="text-xl font-black tracking-tight text-[#1A1A1A]">
-                            SAVE250
-                        </h3>
-
-                        <p class="text-sm text-gray-600">
-                            ₹250 OFF • Min ₹2000
-                        </p>
-
-                    </div>
-
-                    <button
-                        class="applyCoupon bg-[#6F816A] hover:bg-[#5C6E58] text-white text-sm font-medium px-5 py-2 rounded-md transition"
-                        data-code="SAVE250" data-discount="250">
-
-                        Apply
-
-                    </button>
-
-                </div>
-
-                <!-- Coupon -->
-                <div
-                    class="flex items-center justify-between border border-dashed border-[#DDD7CD] rounded-lg bg-[#FAF9F5] px-4 py-3">
-
-                    <div>
-
-                        <h3 class="text-xl font-black tracking-tight text-[#1A1A1A]">
-                            FEST500
-                        </h3>
-
-                        <p class="text-sm text-gray-600">
-                            ₹500 OFF • Min ₹5000
-                        </p>
-
-                    </div>
-
-                    <button
-                        class="applyCoupon bg-[#6F816A] hover:bg-[#5C6E58] text-white text-sm font-medium px-5 py-2 rounded-md transition"
-                        data-code="FEST500" data-discount="500">
-
-                        Apply
-
-                    </button>
-
-                </div>
-
-                <!-- Coupon -->
-                <div
-                    class="flex items-center justify-between border border-dashed border-[#DDD7CD] rounded-lg bg-[#FAF9F5] px-4 py-3">
-
-                    <div>
-
-                        <h3 class="text-xl font-black tracking-tight text-[#1A1A1A]">
-                            WELCOME50
-                        </h3>
-
-                        <p class="text-sm text-gray-600">
-                            ₹50 OFF • Min ₹500
-                        </p>
-
-                    </div>
-
-                    <button
-                        class=" applyCoupon bg-[#6F816A] hover:bg-[#5C6E58] text-white text-sm font-medium px-5 py-2 rounded-md transition"
-                        data-code="WELCOME50" data-discount="50">
-
-                        Apply
-
-                    </button>
 
                 </div>
 
@@ -808,7 +716,7 @@
 
     </div>
 
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         lucide.createIcons()
 
@@ -845,7 +753,7 @@
         const paymentOptions = document.querySelectorAll(".payment-option")
 
         paymentOptions.forEach(option => {
-            option.addEventListener("click", () => {
+            option.addEventListener("click", async () => {
                 paymentOptions.forEach(item => {
                     item.classList.remove(
                         "bg-[#D2E9D9]",
@@ -874,6 +782,13 @@
                 option.querySelector(".payment-check").classList.remove("hidden")
 
                 option.querySelector("input").checked = true
+
+                if (option.dataset.method === "Wallet") {
+
+                    await loadWalletBalance()
+
+                }
+
             })
         })
 
@@ -1002,6 +917,114 @@
             });
 
         })
+        // ========================Coupon
+        const couponContainer =
+            document.getElementById("couponContainer");
+
+        async function loadCoupons() {
+
+            const response =
+                await fetch("/shop/checkout/coupons");
+
+            const data =
+                await response.json();
+
+            if (!data.success) return;
+
+            renderCoupons(data.coupons);
+
+        }
+        let coupons = [];
+        let appliedCouponCode = null
+
+        function renderCoupons(list) {
+
+            coupons = list
+
+            couponContainer.innerHTML = ""
+
+            list.forEach(coupon => {
+
+                const isApplied =
+                    appliedCouponCode === coupon.couponCode
+
+                couponContainer.innerHTML += `
+
+            <div class="flex items-center justify-between border border-dashed border-[#DDD7CD] rounded-lg bg-[#FAF9F5] px-4 py-3">
+
+                <div>
+
+                    <h3 class="text-xl font-black">
+                        ${coupon.couponCode}
+                    </h3>
+
+                    <p class="text-sm text-gray-600">
+
+                        ${coupon.discountType === "percentage"
+                        ? `${coupon.discountValue}% OFF`
+                        : `₹${coupon.discountValue} OFF`
+                    }
+
+                        • Min ₹${coupon.minOrderAmount}
+
+                    </p>
+
+                </div>
+
+                <button
+                    class="${isApplied
+                        ? "cancelCoupon bg-red-500 hover:bg-red-600"
+                        : "applyCoupon bg-[#6F816A] hover:bg-[#5C6E58]"
+                    } text-white text-sm px-5 py-2 rounded"
+                    data-code="${coupon.couponCode}">
+
+                    ${isApplied ? "Cancel" : "Apply"}
+
+                </button>
+
+            </div>
+
+        `
+            })
+        }
+
+        document
+            .getElementById("couponSearch")
+            .addEventListener("input", (e) => {
+
+                const keyword =
+                    e.target.value.toLowerCase();
+
+                const filtered =
+                    coupons.filter(coupon =>
+
+                        coupon.couponCode
+                            .toLowerCase()
+                            .includes(keyword)
+
+                        ||
+
+                        coupon.couponName
+                            .toLowerCase()
+                            .includes(keyword)
+
+                    );
+
+                renderCoupons(filtered);
+
+            });
+
+        document
+            .getElementById("openCouponModal")
+            .addEventListener("click", async () => {
+
+                couponModal.classList.remove("hidden");
+
+                couponModal.classList.add("flex");
+
+                await loadCoupons();
+
+            });
 
         const deleteModal = document.getElementById("deleteAddressModal");
         const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
@@ -1254,14 +1277,7 @@
 
         const couponModal = document.getElementById("couponModal");
 
-        document.getElementById("openCouponModal")
-            .addEventListener("click", () => {
 
-                couponModal.classList.remove("hidden");
-
-                couponModal.classList.add("flex");
-
-            });
 
         document.getElementById("closeCouponModal")
             .addEventListener("click", () => {
@@ -1274,28 +1290,99 @@
         const couponTitle = document.getElementById("couponTitle");
         const couponSubtitle = document.getElementById("couponSubtitle");
 
-        document.querySelectorAll(".applyCoupon").forEach(button => {
 
-            button.addEventListener("click", () => {
 
-                const code = button.dataset.code;
-                const discount = button.dataset.discount;
 
-                couponTitle.textContent = `✓ Coupon Applied • ${code}`;
-                couponSubtitle.classList.remove("font-semibold")
+        async function applyCoupon(couponCode) {
 
-                couponSubtitle.textContent = `You saved ₹${discount}`;
+            try {
 
-                couponModal.classList.remove("flex");
-                couponModal.classList.add("hidden");
+                const response = await fetch("/shop/checkout/applyCoupon", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ couponCode })
+                });
+
+                const data = await response.json();
+                console.log(data);
+
+                if (!data.success) {
+                    showToast("error", data.message);
+                    return;
+                }
+                appliedCouponCode = data.couponCode
+
+                const couponDiscount = document.getElementById("checkoutCouponDiscount");
+
+                couponDiscount.textContent = `- ₹${data.discount}`;
+                couponDiscount.classList.remove("text-gray-950");
+                couponDiscount.classList.add("text-green-600")
+
+                document.getElementById("checkoutShipping").textContent =
+                    data.shipping === 0 ? "Free" : `₹${data.shipping}`;
+
+                document.getElementById("checkoutGrandTotal").textContent =
+                    `₹${data.grandTotal}`;
+
+                couponTitle.textContent = `✓ Coupon Applied • ${data.couponCode}`;
                 couponTitle.classList.remove("text-gray-500");
                 couponTitle.classList.add("text-green-600");
 
-                showToast("success", `${code} applied successfully.`);
+                couponSubtitle.textContent = `You saved ₹${data.discount}`;
 
-            });
+                couponModal.classList.remove("flex");
+                couponModal.classList.add("hidden");
+
+                showToast("success", `${data.couponCode} applied successfully.`);
+
+            } catch (err) {
+
+                console.log(err);
+                showToast("error", "Something went wrong.");
+
+            }
+
+        }
+
+        couponContainer.addEventListener("click", (e) => {
+
+            if (!e.target.classList.contains("applyCoupon")) return;
+
+            applyCoupon(e.target.dataset.code);
 
         });
+
+        document.getElementById("applyCouponBtn").addEventListener("click", () => {
+
+            const couponCode = document.getElementById("couponInput").value.trim();
+
+            if (!couponCode) {
+                showToast("error", "Please enter a coupon code.");
+                return;
+            }
+
+            applyCoupon(couponCode);
+
+        });
+
+        couponContainer.addEventListener("click", (e) => {
+
+            if (e.target.classList.contains("applyCoupon")) {
+
+                applyCoupon(e.target.dataset.code)
+
+                return
+            }
+
+            if (e.target.classList.contains("cancelCoupon")) {
+
+                removeCoupon()
+
+            }
+
+        })
         // =============================================
 
         const placeOrderBtn = document.getElementById("placeOrderBtn");
@@ -1336,6 +1423,7 @@
 
 
 
+
         placeOrderBtn.addEventListener("click", async () => {
 
             const selectedAddress = document.querySelector(
@@ -1353,61 +1441,187 @@
                 'input[name="paymentMethod"]:checked'
             ).value;
 
+            placeOrderBtn.disabled = true;
+            placeOrderBtn.textContent = "Processing...";
+
             try {
 
-                placeOrderBtn.disabled = true;
-                placeOrderBtn.textContent = "Placing Order...";
+                // ================= COD & WALLET =================
 
-                const response = await fetch("/shop/placeOrder", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        addressId,
-                        paymentMethod
-                    })
-                });
+                if (paymentMethod === "COD" || paymentMethod === "Wallet") {
 
-                const data = await response.json();
+                    const response = await fetch("/shop/placeOrder", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            addressId,
+                            paymentMethod
+                        })
+                    });
 
-                if (!data.success) {
-                    if (data.type === "stockUpdated") {
+                    const data = await response.json();
 
-    showToast("info", data.message);
+                    if (!data.success) {
 
-    placeOrderBtn.disabled = false;
-    placeOrderBtn.textContent = "Place Order";
+                        if (data.type === "stockUpdated") {
 
-    setTimeout(() => {
-        window.location.reload();
-    }, 1200);
+                            showToast("info", data.message);
 
-    return;
-}
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1200);
 
-                    showToast("error", data.message);
+                        } else {
 
-                    placeOrderBtn.disabled = false;
-                    placeOrderBtn.textContent = "Place Order";
+                            showToast("error", data.message);
+
+                            placeOrderBtn.disabled = false;
+                            placeOrderBtn.textContent = "Place Order";
+
+                        }
+
+                        return;
+                    }
+
+                    showToast("success", data.message);
+
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 1000);
 
                     return;
                 }
 
-                showToast("success", data.message);
+                // ================= RAZORPAY =================
 
-                setTimeout(() => {
-                    window.location.href = data.redirect;
-                }, 800);
+                if (paymentMethod === "Razorpay") {
+
+                    const response = await fetch("/shop/createRazorpayOrder", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            addressId
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (!data.success) {
+
+                        showToast("error", data.message);
+
+                        placeOrderBtn.disabled = false;
+                        placeOrderBtn.textContent = "Place Order";
+
+                        return;
+                    }
+
+                    const options = {
+
+                        key: data.key,
+
+                        amount: data.order.amount,
+
+                        currency: data.order.currency,
+
+                        name: "Velvet",
+
+                        description: "Order Payment",
+
+                        order_id: data.order.id,
+
+                        handler: async function (response) {
+
+                            try {
+
+                                const verifyResponse = await fetch(
+                                    "/shop/verifyRazorpayPayment",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            razorpay_order_id: response.razorpay_order_id,
+                                            razorpay_payment_id: response.razorpay_payment_id,
+                                            razorpay_signature: response.razorpay_signature,
+                                            addressId
+                                        })
+                                    }
+                                );
+
+                                const verifyData = await verifyResponse.json();
+
+                                if (!verifyData.success) {
+
+                                    window.location.href = `/shop/paymentResult?status=failed&message=${encodeURIComponent(verifyData.message)}`
+
+                                    return;
+                                }
+
+                                showToast("success", verifyData.message);
+
+                                window.location.href = verifyData.redirect;
+
+
+                            } catch (err) {
+
+                                console.log("Payment verification error:", err);
+
+                                showToast("error", "Payment verification failed");
+
+                                window.location.replace(`/shop/paymentResult?status=failed&message=${encodeURIComponent("Payment verification failed.")}`);
+                            }
+
+                        },
+
+                        modal: {
+
+                            ondismiss: function () {
+
+                                showToast("info", "Payment cancelled");
+
+                                placeOrderBtn.disabled = false;
+                                placeOrderBtn.textContent = "Place Order";
+
+                            }
+
+                        },
+
+                        theme: {
+                            color: "#72846D"
+                        }
+
+                    };
+
+                    const rzp = new Razorpay(options);
+
+                    rzp.on("payment.failed", function (response) {
+
+                        console.log("Razorpay payment failed:", response);
+
+
+
+                    });
+
+                    rzp.open();
+
+                    return;
+                }
 
             } catch (err) {
 
                 console.log(err);
 
-                showToast("error", "Something went wrong.");
+                showToast("error", "Something went wrong");
 
                 placeOrderBtn.disabled = false;
                 placeOrderBtn.textContent = "Place Order";
+
             }
 
         });
@@ -1487,7 +1701,7 @@
 
                         togglePlaceOrderButton();
                     }
-                    
+
 
 
 
@@ -1501,24 +1715,28 @@
 
                 // item total
                 itemRow.querySelector(".item-total").textContent =
-                    `₹${data.itemTotal.toFixed(2)}`;
+                    `₹${data.itemTotal}`;
 
                 // summary
-                document.getElementById("checkoutSubtotal").textContent =
-                    `₹${data.subtotal.toFixed(2)}`;
-
                 document.getElementById("cartCount").textContent =
                     data.cartCount;
-                document.getElementById("checkoutDiscount").textContent =
-                    `₹${data.discount.toFixed(2)}`;
+
+                document.getElementById("checkoutOriginalTotal").textContent =
+                    `₹${data.originalTotal}`;
+
+                document.getElementById("checkoutOfferDiscount").textContent =
+                    `- ₹${data.offerDiscount}`;
+
+                document.getElementById("checkoutCouponDiscount").textContent =
+                    `- ₹${data.couponDiscount}`;
 
                 document.getElementById("checkoutShipping").textContent =
                     data.shipping === 0
                         ? "Free"
-                        : `₹${data.shipping.toFixed(2)}`;
+                        : `₹${data.shipping}`;
 
                 document.getElementById("checkoutGrandTotal").textContent =
-                    `₹${data.grandTotal.toFixed(2)}`;
+                    `₹${data.grandTotal}`;
 
                 // clear previous error
                 errorBox.textContent = "";
@@ -1575,32 +1793,31 @@
                     }
 
                     itemRow.remove();
-
                     document.getElementById("cartCount").textContent =
-                        data.cartCount;
+                        data.cartItemCount;
 
-                    document.getElementById("checkoutSubtotal").textContent =
-                        `₹${data.subtotal.toFixed(2)}`;
+                    document.getElementById("checkoutOriginalTotal").textContent =
+                        `₹${data.originalTotal}`;
 
-                    document.getElementById("checkoutDiscount").textContent =
-                        `₹${data.discount.toFixed(2)}`;
+                    document.getElementById("checkoutOfferDiscount").textContent =
+                        `- ₹${data.offerDiscount}`;
+
+                    document.getElementById("checkoutCouponDiscount").textContent =
+                        `- ₹${data.couponDiscount}`;
 
                     document.getElementById("checkoutShipping").textContent =
                         data.shipping === 0
                             ? "Free"
-                            : `₹${data.shipping.toFixed(2)}`;
+                            : `₹${data.shipping}`;
 
                     document.getElementById("checkoutGrandTotal").textContent =
-                        `₹${data.grandTotal.toFixed(2)}`;
+                        `₹${data.grandTotal}`;
 
                     showToast("success", "Item removed from cart.");
 
-                    if (data.cartCount === 0) {
-
-                        setTimeout(() => {
-                            window.location.href = "/shop/cart";
-                        }, 700);
-
+                    if (data.isEmpty) {
+                        window.location.href = "/shop/cart";
+                        return;
                     }
 
                 } catch (err) {
@@ -1614,7 +1831,80 @@
             });
 
         });
+        async function loadWalletBalance() {
 
+            try {
+
+                const response = await fetch("/wallet/details")
+
+                const data = await response.json()
+                console.log("data", data)
+
+                if (!data.success) {
+                    document.getElementById("walletBalance").textContent =
+                        "Unable to load wallet balance."
+                    return
+                }
+
+                const balance = Number(data.wallet.balance || 0)
+
+                document.getElementById("walletBalance").textContent =
+                    `Available Balance: ₹${balance.toFixed(2)}`
+
+            } catch (error) {
+
+                console.log("Wallet balance error:", error)
+
+                document.getElementById("walletBalance").textContent =
+                    "Unable to load wallet balance."
+            }
+        }
+        loadWalletBalance()
+
+        async function removeCoupon() {
+    try {
+        const response = await fetch("/shop/checkout/removeCoupon", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+
+        const data = await response.json()
+
+        if (!data.success) {
+            showToast("error", data.message || "Unable to remove coupon.")
+            return
+        }
+
+        appliedCouponCode = null
+
+        document.getElementById("checkoutCouponDiscount").textContent = "- ₹0"
+
+        document.getElementById("checkoutShipping").textContent =
+            data.shipping === 0 ? "Free" : `₹${data.shipping}`
+
+        document.getElementById("checkoutGrandTotal").textContent =
+            `₹${data.grandTotal}`
+
+        couponTitle.textContent = "Apply Coupon"
+        couponTitle.classList.remove("text-green-600")
+        couponTitle.classList.add("text-gray-500")
+
+        couponSubtitle.textContent = "Save more with available coupons"
+
+        renderCoupons(coupons)
+
+        couponModal.classList.remove("flex")
+        couponModal.classList.add("hidden")
+
+        showToast("success", "Coupon removed successfully.")
+
+    } catch (error) {
+        console.log("Remove coupon error:", error)
+        showToast("error", "Something went wrong.")
+    }
+}
 
     </script>
 </body>

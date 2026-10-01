@@ -47,11 +47,19 @@
 
             <!-- Desktop Nav Links -->
             <nav class="hidden md:flex space-x-6 lg:space-x-8">
-                <a href="/shop" class="<%= currentPath === '/shop' && !category  ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Collection</a>
-                <a href="/shop?category=dresses" class="<%= typeof category !== 'undefined' && category === 'dresses' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Dresses</a>
-                <a href="/shop?category=ethnic-wear" class="<%= typeof category !== 'undefined' && category === 'ethnic-wear' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %>transition text-sm lg:text-base">Ethnic Wear</a>
-                <a href="/shop?category=activewear" class="<%= typeof category !== 'undefined' && category === 'activewear' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Active Wear</a>
-                <a href="/shop?category=outerwear" class="<%= typeof category !== 'undefined' && category === 'outerwear' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Outer Wear</a>
+                <a href="/shop"
+                    class="<%= currentPath === '/shop' && !category  ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Collection</a>
+                <a href="/shop?category=dresses"
+                    class="<%= typeof category !== 'undefined' && category === 'dresses' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Dresses</a>
+                <a href="/shop?category=ethnic-wear"
+                    class="<%= typeof category !== 'undefined' && category === 'ethnic-wear' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %>transition text-sm lg:text-base">Ethnic
+                    Wear</a>
+                <a href="/shop?category=activewear"
+                    class="<%= typeof category !== 'undefined' && category === 'activewear' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Active
+                    Wear</a>
+                <a href="/shop?category=outerwear"
+                    class="<%= typeof category !== 'undefined' && category === 'outerwear' ? 'text-green-800  font-semibold border-b-2 border-green-800 pb-1' : 'text-gray-600 hover:text-brand' %> transition text-sm lg:text-base">Outer
+                    Wear</a>
             </nav>
 
             <!-- Icons -->
@@ -68,40 +76,55 @@
                     <i class="ph ph-user text-xl sm:text-2xl"></i>
                 </a>
                 <!-- Wishlist -->
-<div class="relative inline-block">
-    <a href="/shop/wishlist"
-        class="text-gray-600 hover:text-brand transition p-1"
-        aria-label="Favorites">
+                <!-- Wishlist -->
+                <div class="relative inline-block">
+                    <a href="/shop/wishlist" class="text-gray-600 hover:text-brand transition p-1"
+                        aria-label="Favorites">
 
-        <i class="ph ph-heart text-xl sm:text-2xl"></i>
+                        <i class="ph ph-heart text-xl sm:text-2xl"></i>
 
-        <% if(typeof wishlistCount !== "undefined" && wishlistCount > 0)  { %>
-            <span
-                class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
-                <%= wishlistCount %>
-            </span>
-        <% } %>
+                        <span id="wishlist-count" class="<%= typeof wishlistCount !== 'undefined' && wishlistCount > 0
+                ? 'flex'
+                : 'hidden' %>
+                absolute -top-1 -right-1
+                bg-red-500 text-white text-[10px]
+                font-semibold rounded-full
+                min-w-[18px] h-[18px]
+                items-center justify-center px-1">
 
-    </a>
-</div>
+                            <%= typeof wishlistCount !=="undefined" && wishlistCount> 0
+                                ? wishlistCount
+                                : "" %>
 
-<!-- Cart -->
-<div class="relative inline-block">
-    <a href="/shop/cart"
-        class="text-gray-600 hover:text-brand transition p-1"
-        aria-label="Cart">
+                        </span>
 
-        <i class="ph ph-tote text-xl sm:text-2xl"></i>
+                    </a>
+                </div>
 
-        <% if (typeof cartCount !== "undefined" && cartCount > 0) { %>
-            <span
-                class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
-                <%= cartCount %>
-            </span>
-        <% } %>
+                <!-- Cart -->
+                <!-- Cart -->
+                <div class="relative inline-block">
+                    <a href="/shop/cart" class="text-gray-600 hover:text-brand transition p-1" aria-label="Cart">
 
-    </a>
-</div>
+                        <i class="ph ph-tote text-xl sm:text-2xl"></i>
+
+                        <span id="cart-count" class="<%= typeof cartCount !== 'undefined' && cartCount > 0
+                ? 'flex'
+                : 'hidden' %>
+                absolute -top-1 -right-1
+                bg-red-500 text-white text-[10px]
+                font-semibold rounded-full
+                min-w-[18px] h-[18px]
+                items-center justify-center px-1">
+
+                            <%= typeof cartCount !=="undefined" && cartCount> 0
+                                ? cartCount
+                                : "" %>
+
+                        </span>
+
+                    </a>
+                </div>
                 <% if (typeof error !=="undefined" && error) { %>
                     <a class="text-[#475845] mx-4 bg-dark border-b-2 border-[#475845] pb-1 font-bold" href="/register">
                         signup</a></p>
@@ -111,40 +134,32 @@
 
 
     </header>
-    <div id="search-bar"
-    class="hidden bg-white border-b border-gray-200 w-full">
+    <div id="search-bar" class="hidden bg-white border-b border-gray-200 w-full">
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
-        <form action="/shop" method="GET"
-            class="flex items-center gap-4">
+            <form action="/shop" method="GET" class="flex items-center gap-4">
 
-            <!-- Search Icon -->
-            <i class="ph ph-magnifying-glass text-2xl text-gray-400"></i>
+                <!-- Search Icon -->
+                <i class="ph ph-magnifying-glass text-2xl text-gray-400"></i>
 
-            <!-- Input -->
-            <input
-                type="text"
-                name="search"
-                placeholder="Search products..."
-                class="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400 text-sm sm:text-base"
-                autocomplete="off"
-            >
+                <!-- Input -->
+                <input type="text" name="search" placeholder="Search products..."
+                    class="w-full bg-transparent outline-none text-gray-700 placeholder-gray-400 text-sm sm:text-base"
+                    autocomplete="off">
 
-            <!-- Close Button -->
-            <button type="button"
-                id="close-search"
-                class="text-gray-500 hover:text-brand transition">
+                <!-- Close Button -->
+                <button type="button" id="close-search" class="text-gray-500 hover:text-brand transition">
 
-                <i class="ph ph-x text-2xl"></i>
+                    <i class="ph ph-x text-2xl"></i>
 
-            </button>
+                </button>
 
-        </form>
+            </form>
+
+        </div>
 
     </div>
-
-</div>
 </div>
 <script>
 
@@ -174,5 +189,59 @@
         searchBar.classList.add("hidden")
 
     })
+
+     function updateCartBadge(count) {
+
+        const badge = document.getElementById("cart-count");
+
+        if (!badge) return;
+
+        count = Number(count) || 0;
+
+        badge.textContent = count > 0 ? count : "";
+
+        if (count > 0) {
+            badge.classList.remove("hidden");
+            badge.classList.add("flex");
+        } else {
+            badge.classList.add("hidden");
+            badge.classList.remove("flex");
+        }
+    }
+
+
+    function updateWishlistBadge(count) {
+
+        const badge = document.getElementById("wishlist-count");
+
+        if (!badge) return;
+
+        count = Number(count) || 0;
+
+        badge.textContent = count > 0 ? count : "";
+
+        if (count > 0) {
+            badge.classList.remove("hidden");
+            badge.classList.add("flex");
+        } else {
+            badge.classList.add("hidden");
+            badge.classList.remove("flex");
+        }
+    }
+
+
+    function updateNavbarCounts({
+        cartCount,
+        wishlistCount
+    } = {}) {
+
+        if (cartCount !== undefined) {
+            updateCartBadge(cartCount);
+        }
+
+        if (wishlistCount !== undefined) {
+            updateWishlistBadge(wishlistCount);
+        }
+    }
 
 </script>

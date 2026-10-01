@@ -276,10 +276,10 @@
 
                                                 </div>
                                                 <div>
-                                                    <label
+                                                    <label id="discountValueLabel"
                                                         class="block text-[13px] font-medium text-gray-700 mb-1.5">Discount
                                                         Value</label>
-                                                    <input type="number" name="discountValue"
+                                                    <input id="discountValue" type="number" name="discountValue"
                                                         value="<%= offer?.discountValue || '' %>"
                                                         class="w-full border border-brand-border rounded-xl px-4 py-2.5 text-sm text-brand-dark focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent shadow-sm bg-brand-card">
                                                     <p id="discountValueError" class="text-red-500 text-xs mt-1"></p>
@@ -293,7 +293,7 @@
                                                         class="block text-[13px] font-medium text-gray-700 mb-1.5">Start
                                                         Date</label>
                                                     <div class="date-input-wrapper shadow-sm rounded-xl relative">
-                                                        <input type="date" name="startDate"
+                                                        <input type="date" name="startDate"    id="startDate"
                                                             value="<%= offer ? offer.startDate.toISOString().split('T')[0] : '' %>"
                                                             class="w-full border border-brand-border rounded-xl pl-4 pr-10 py-2.5 text-sm text-brand-dark placeholder-gray-400 focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent bg-brand-card relative z-10 bg-transparent">
                                                         <!-- Visual Placeholder/Text underneath transparent input -->
@@ -312,7 +312,7 @@
                                                         class="block text-[13px] font-medium text-gray-700 mb-1.5">End
                                                         Date</label>
                                                     <div class="date-input-wrapper shadow-sm rounded-xl relative">
-                                                        <input type="date" name="expiryDate"
+                                                        <input type="date" name="expiryDate"  id="expiryDate"
                                                             value="<%= offer ? offer.expiryDate.toISOString().split('T')[0] : '' %>"
                                                             class="w-full border border-brand-border rounded-xl pl-4 pr-10 py-2.5 text-sm text-brand-dark placeholder-gray-400 focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent bg-brand-card relative z-10 bg-transparent">
                                                         <svg class="date-icon w-4 h-4 z-20" fill="none"
@@ -398,9 +398,11 @@
 
                                                     <% products.forEach(product=> { %>
 
-                                                        <option value="<%= product._id %>" <%=offer?.products?.some(id=>
-                                                            id.toString() === product._id.toString()) ? "selected" : ""
-                                                            %>>
+                                                        <option value="<%= product._id %>" <%=offer &&
+                                                            offer.products.some(p=> p._id.toString() ===
+                                                            product._id.toString())
+                                                            ? "selected"
+                                                            : "" %>>
 
                                                             <%= product.productName %>
 
@@ -425,9 +427,11 @@
 
                                                     <% categories.forEach(category=> { %>
 
-                                                        <option value="<%= category._id %>"
-                                                            <%=offer?.categories?.some(id=> id.toString() ===
-                                                            category._id.toString()) ? "selected" : "" %>>
+                                                        <option value="<%= category._id %>" <%=offer &&
+                                                            offer.categories.some(c=> c._id.toString() ===
+                                                            category._id.toString())
+                                                            ? "selected"
+                                                            : "" %>>
 
                                                             <%= category.name %>
 
@@ -438,13 +442,13 @@
                                                 <p id="categoriesError" class="text-red-500 text-xs mt-1"></p>
                                             </div>
                                             <!-- Max Discount -->
-                                            <div>
+                                            <div id="maxDiscountWrapper">
                                                 <label class="block text-[13px] font-medium text-gray-700 mb-1.5">Max
                                                     Discount Amount</label>
                                                 <div class="relative shadow-sm rounded-xl">
                                                     <div
                                                         class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                                        <span class="text-gray-500 text-sm">$</span>
+                                                        <span class="text-gray-500 text-sm">₹</span>
                                                     </div>
                                                     <input type="number" name="maxDiscountAmount"
                                                         value="<%= offer?.maxDiscountAmount || '' %>"
@@ -465,7 +469,7 @@
                                                 <!-- Toggle Switch -->
                                                 <label class="relative inline-flex items-center cursor-pointer">
                                                     <input type="checkbox" name="isActive" <%=offer?.isActive
-                                                        ? "checked" : "" %> checked class="sr-only peer">
+                                                        ? "checked" : "" %> class="sr-only peer">
                                                     <div
                                                         class="w-12 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-accent">
                                                     </div>
@@ -482,33 +486,69 @@
 
                                         <!-- Preview Box -->
                                         <div
-                                            class="border-2 border-dashed border-[#e0dcd3] bg-[#fdfcf9] rounded-2xl p-5 flex gap-4">
-                                            <!-- Icon Box -->
-                                            <div
-                                                class="w-14 h-14 rounded-xl bg-[#f2ecdf] text-brand-accent flex items-center justify-center flex-shrink-0">
-                                                <span class="text-2xl font-bold">%</span>
-                                            </div>
-                                            <!-- Content -->
-                                            <div class="flex-1">
-                                                <div class="text-lg font-bold text-brand-dark leading-tight">20% OFF
-                                                </div>
-                                                <div class="text-[14px] font-medium text-brand-dark mt-1">Summer
-                                                    Clearance Campaign</div>
-                                                <div class="text-[12px] text-gray-500 mt-1.5 flex items-center gap-1.5">
-                                                    Valid for Selected Products • Max $500 cap
-                                                </div>
-                                                <div class="text-[11px] text-gray-400 mt-3 flex items-center gap-1.5">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                                        viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                            stroke-width="2"
-                                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                        </path>
-                                                    </svg>
-                                                    Oct 24, 2023 - Nov 24, 2023
-                                                </div>
-                                            </div>
-                                        </div>
+    class="border-2 border-dashed border-[#e0dcd3] bg-[#fdfcf9] rounded-2xl p-5 flex gap-4">
+
+    <!-- Icon Box -->
+    <div
+        class="w-14 h-14 rounded-xl bg-[#f2ecdf] text-brand-accent flex items-center justify-center flex-shrink-0">
+
+        <span id="previewIcon" class="text-2xl font-bold">%</span>
+
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1">
+
+        <div id="previewDiscount"
+            class="text-lg font-bold text-brand-dark leading-tight">
+
+            20% OFF
+
+        </div>
+
+        <div id="previewName"
+            class="text-[14px] font-medium text-brand-dark mt-1">
+
+            Summer Clearance Campaign
+
+        </div>
+
+        <div
+            class="text-[12px] text-gray-500 mt-1.5 flex items-center gap-1.5">
+
+            <span id="previewTarget">
+                Valid for Selected Products
+            </span>
+
+            •
+
+            <span id="previewMaxDiscount">
+                Max ₹0
+            </span>
+
+        </div>
+
+        <div
+            class="text-[11px] text-gray-400 mt-3 flex items-center gap-1.5">
+
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                </path>
+            </svg>
+
+            <span id="previewDate">
+                MM DD, YYYY - MM DD, YYYY
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
                                     </div>
 
                                 </div>
@@ -570,18 +610,50 @@
 
         });
 
+        const discountType = document.querySelector("[name='discountType']");
+        const discountValue = document.getElementById("discountValue");
+        const maxDiscountWrapper = document.getElementById("maxDiscountWrapper");
+
+        function toggleDiscountField() {
+
+            if (discountType.value === "percentage") {
+
+                maxDiscountWrapper.classList.remove("hidden");
+
+                discountValueLabel.textContent = "Percentage Value";
+                discountValue.max = 90;
+
+                discountValue.placeholder = "1 - 90";
+
+            } else {
+
+                maxDiscountWrapper.classList.add("hidden");
+                discountValueLabel.textContent = "Discount Amount";
+
+                discountValue.removeAttribute("max");
+
+                discountValue.placeholder = "Enter amount";
+
+            }
+
+        }
+
+        toggleDiscountField();
+
+        discountType.addEventListener("change", toggleDiscountField);
 
 
-        new TomSelect("#products", {
+
+        const productSelect = new TomSelect("#products", {
             plugins: ["remove_button"],
             create: false,
             persist: false,
             closeAfterSelect: false,
-            hideSelected: true,
+            hideSelected: false,
             placeholder: "Select Products..."
-        });
+        })
 
-        new TomSelect("#categories", {
+        const categorySelect = new TomSelect("#categories", {
             plugins: ["remove_button"],
             create: false,
             persist: false,
@@ -590,8 +662,44 @@
             placeholder: "Select Categories..."
         });
 
-
+        productSelect.sync();
+        categorySelect.sync();
         // ===================
+
+
+
+        // ================= DATE VALIDATION =================
+
+const startDate = document.getElementById("startDate");
+const expiryDate = document.getElementById("expiryDate");
+
+const today = new Date().toISOString().split("T")[0];
+
+const isEdit = <%= offer ? "true" : "false" %>;
+
+// Create Offer
+if (!isEdit) {
+
+    startDate.min = today;
+    expiryDate.min = today;
+
+}
+// Edit Offer
+else if (startDate.value) {
+
+    expiryDate.min = startDate.value;
+
+}
+
+startDate.addEventListener("change", () => {
+
+    expiryDate.min = startDate.value;
+
+    if (expiryDate.value && expiryDate.value < startDate.value) {
+        expiryDate.value = "";
+    }
+
+});
 
         const form = document.getElementById("offerForm");
 
@@ -603,13 +711,21 @@
 
             clearErrors();
 
+            const validation = validateOffer();
+
+            if (!validation.valid) {
+                showErrors(validation.errors);
+                return;
+            }
+
             const formData = new FormData(form);
 
             const data = {
-                ...Object.fromEntries(formData.entries()),
-                products: formData.getAll("products"),
-                categories: formData.getAll("categories")
-            }
+    ...Object.fromEntries(new FormData(form).entries()),
+    products: productSelect.getValue(),
+    categories: categorySelect.getValue()
+}
+console.log("Submitting offer:", data)
 
             try {
 
@@ -666,6 +782,94 @@
                 })
 
             }
+
+        }
+
+        function validateOffer() {
+
+            const errors = {};
+
+            const offerName = form.offerName.value.trim();
+            const description = form.description.value.trim();
+            const offerType = form.offerType.value;
+            const discountType = form.discountType.value;
+            const discountValue = Number(form.discountValue.value);
+            const maxDiscount = Number(form.maxDiscountAmount.value);
+
+            const startDate = form.startDate.value;
+            const expiryDate = form.expiryDate.value;
+
+            const products = formDataFromTom("products");
+            const categories = formDataFromTom("categories");
+
+            // Offer Name
+            if (!offerName) {
+                errors.offerName = "Offer name is required";
+            } else if (offerName.length < 3) {
+                errors.offerName = "Minimum 3 characters";
+            } else if (offerName.length > 30) {
+                errors.offerName = "Maximum 30 characters";
+            } else if (!/^[A-Za-z][A-Za-z0-9 ]*$/.test(offerName)) {
+                errors.offerName = "Must start with a letter and contain only letters, numbers and spaces";
+            }
+
+            // Description
+            if (description.length > 200) {
+                errors.description = "Maximum 200 characters";
+            }
+
+            // Product
+            if (offerType === "product" && products.length === 0) {
+                errors.products = "Select at least one product";
+            }
+
+            // Category
+            if (offerType === "category" && categories.length === 0) {
+                errors.categories = "Select at least one category";
+            }
+
+            // Discount
+            if (!discountValue || discountValue <= 0) {
+                errors.discountValue = "Enter a valid discount";
+            }
+
+            if (discountType === "percentage") {
+
+                if (discountValue > 90) {
+                    errors.discountValue = "Percentage cannot exceed 90";
+                }
+
+                if (!maxDiscount || maxDiscount <= 0) {
+                    errors.maxDiscountAmount = "Enter maximum discount amount";
+                }
+            }
+
+            // Dates
+            if (!startDate) {
+                errors.startDate = "Start date is required";
+            }
+
+            if (!expiryDate) {
+                errors.expiryDate = "Expiry date is required";
+            }
+
+            if (startDate && expiryDate && new Date(expiryDate) <= new Date(startDate)) {
+                errors.expiryDate = "Expiry date must be after start date";
+            }
+
+            return {
+                valid: Object.keys(errors).length === 0,
+                errors
+            };
+
+        }
+        function formDataFromTom(id) {
+
+            const select = document.getElementById(id);
+
+            return select.tomselect
+                ? select.tomselect.getValue()
+                : [];
 
         }
         function showErrors(errors) {
@@ -742,6 +946,105 @@
             input.addEventListener("change", clearField);
 
         });
+
+        // ================= LIVE PREVIEW =================
+
+const previewDiscount = document.getElementById("previewDiscount");
+const previewName = document.getElementById("previewName");
+const previewTarget = document.getElementById("previewTarget");
+const previewMaxDiscount = document.getElementById("previewMaxDiscount");
+const previewDate = document.getElementById("previewDate");
+
+function updatePreview() {
+
+    const offerName = form.offerName.value.trim();
+    const offerType = form.offerType.value;
+    const discountType = form.discountType.value;
+    const discountValue = form.discountValue.value;
+    const maxDiscount = form.maxDiscountAmount.value;
+    const startDate = form.startDate.value;
+    const expiryDate = form.expiryDate.value;
+
+    // Offer Name
+    previewName.textContent = offerName || "Offer Name";
+
+    // Discount
+    if (discountValue) {
+
+        previewDiscount.textContent =
+            discountType === "percentage"
+                ? `${discountValue}% OFF`
+                : `₹${discountValue} OFF`;
+
+    } else {
+
+        previewDiscount.textContent = "0% OFF";
+
+    }
+
+    // Target
+    previewTarget.textContent =
+        offerType === "product"
+            ? "Selected Products"
+            : "Selected Categories";
+
+    // Max Discount
+    if (discountType === "percentage") {
+
+        previewMaxDiscount.textContent =
+            maxDiscount
+                ? `Max Discount : ₹${maxDiscount}`
+                : "Max Discount : —";
+
+    } else {
+
+        previewMaxDiscount.textContent = "Fixed Discount";
+
+    }
+
+    // Date
+    if (startDate && expiryDate) {
+
+        const start = new Date(startDate).toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        });
+
+        const end = new Date(expiryDate).toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        });
+
+        previewDate.textContent = `${start} - ${end}`;
+
+    } else {
+
+        previewDate.textContent = "Select dates";
+
+    }
+
+}
+
+// Initial Preview
+updatePreview();
+
+// Listen to all fields
+[
+    form.offerName,
+    form.offerType,
+    form.discountType,
+    form.discountValue,
+    form.maxDiscountAmount,
+    form.startDate,
+    form.expiryDate
+].forEach(input => {
+
+    input.addEventListener("input", updatePreview);
+    input.addEventListener("change", updatePreview);
+
+});
     </script>
 </body>
 

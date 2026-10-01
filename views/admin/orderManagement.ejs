@@ -297,6 +297,10 @@
                                         <option value="Cancelled" <%=status==="Cancelled" ? "selected" : "" %>>
                                             Cancelled
                                         </option>
+                                        <option value="Return Requested" <%=status==="Return Requested" ? "selected"
+                                            : "" %>>
+                                            Return Requested
+                                        </option>
 
                                     </select>
 
@@ -331,10 +335,12 @@
 
                                     </select>
 
+                                    
+
                                 </form>
                             </div>
 
-                            <button > <a href="/orderManagement"
+                            <button> <a href="/orderManagement"
                                     class="border border-red-200 bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition">
 
                                     Clear
@@ -371,7 +377,7 @@
 
                                             <tr>
 
-                                                <td class="px-3 py-2">
+                                                <td class="px-3 py-2 ">
 
                                                     <%= order.orderId %>
 
@@ -379,17 +385,16 @@
 
                                                 <td class="px-3 py-2">
 
-                                                    <div class="font-semibold">
+                                                    <div class="font-semibold ">
 
-                                                        <%= order.userId.firstName %>
-
-                                                            <%= order.userId.lastName %>
+                                                       <%= order.userId?.firstName %>
+                                                       <%= order.userId?.lastName %>
 
                                                     </div>
 
                                                     <div class="text-xs text-gray-500">
 
-                                                        <%= order.userId.email %>
+                                                       
 
                                                     </div>
 
@@ -439,25 +444,29 @@
                                                     ₹<%= Number(order.grandTotal).toLocaleString("en-IN") %>
 
                                                 </td>
+                                                <% const hasReturnRequest=order.items.some( item=> item.status === "Return Requested" )
 
-                                                <td class="px-3 py-2 text-center">
-                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+                                                    const displayStatus = hasReturnRequest ? "Return Requested" : order.orderStatus
+                                                    %>
+                                                    <td class="px-3 py-2 text-center">
+                                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
                                                     <%= order.paymentStatus === 'Paid'
-                                                        ? 'bg-emerald-100 text-emerald-700'
+                                                        ? 'bg-green-100 text-green-700'
                                                         : order.paymentStatus === 'Pending'
-                                                        ? 'bg-amber-100 text-amber-700'
+                                                        ? 'bg-yellow-100 text-yellow-700'
                                                         : order.paymentStatus === 'Failed'
                                                         ? 'bg-red-100 text-red-700'
                                                         : order.paymentStatus === 'Refunded'
-                                                        ? 'bg-slate-100 text-slate-700'
+                                                        ? 'bg-purple-100 text-purple-700'
                                                         : 'bg-gray-100 text-gray-700' %>">
 
-                                                        <%= order.paymentStatus %>
-                                                    </span>
-                                                </td>
+                                                            <%= order.paymentStatus %>
 
-                                                <td class="px-3 py-2 text-center">
-                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
+                                                        </span>
+                                                    </td>
+
+                                                    <td class="px-3 py-2 text-center">
+                                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
                                                         <%= order.orderStatus === 'Pending'
                                                             ? 'bg-yellow-100 text-yellow-700'
                                                             : order.orderStatus === 'Confirmed'
@@ -474,29 +483,30 @@
                                                             ? 'bg-purple-100 text-purple-700'
                                                             : 'bg-gray-100 text-gray-700' %>">
 
-                                                        <%= order.orderStatus %>
-                                                    </span>
-                                                    
-                                                </td>
-                                            
-                                                <td class="px-3 py-2">
+                                                            <%= order.orderStatus %>
+                                                        </span>
 
-                                                    <%= new Date(order.createdAt).toLocaleDateString("en-IN", {
-                                                        day: "2-digit" , month: "short" , year: "numeric" }) %>
+                                                    </td>
 
-                                                </td>
+                                                    <td class="px-3 py-2">
 
-                                                <td class="px-4 py-2 text-center">
+                                                        <%= new Date(order.createdAt).toLocaleDateString("en-IN", {
+                                                            day: "2-digit" , month: "short" , year: "numeric" }) %>
 
-                                                    <a href="/orderManagement/<%= order._id %>" class="text-[#8A5C38]">
+                                                    </td>
 
-                                                        <button type="submit"
-                                                            class="bg-[#8A5C38] hover:bg-[#734A2C] text-white min-w-[110px]  py-1 rounded-lg text-sm transition">
-                                                            View details</button>
-                                                    </a>
+                                                    <td class="px-4 py-2 text-center">
+
+                                                        <a href="/orderManagement/<%= order._id %>"
+                                                            class="text-[#8A5C38]">
+
+                                                            <button type="submit"
+                                                                class="bg-[#8A5C38] hover:bg-[#734A2C] text-white min-w-[110px]  py-1 rounded-lg text-sm transition">
+                                                                View details</button>
+                                                        </a>
 
 
-                                                </td>
+                                                    </td>
 
                                             </tr>
 

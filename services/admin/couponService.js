@@ -1,5 +1,6 @@
 
-import Coupon from "../../models/couponModel.js";
+import Coupon from "../../models/couponModel.js"
+
 
 export const createCouponService = async (data) => {
 
@@ -243,7 +244,6 @@ export const deleteCouponService = async (id) => {
     return coupon
 
 }
-
 export const restoreCouponService = async (id) => {
 
     const coupon = await Coupon.findById(id);

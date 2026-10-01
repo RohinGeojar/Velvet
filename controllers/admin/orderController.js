@@ -1,4 +1,5 @@
-import { approveReturnService, getOrderDetails, getOrders, rejectReturnService, updateOrderStatus } from "../../services/admin/orderService.js"
+
+import { approveReturnService, getOrderDetails, getOrders, rejectReturnService, updateItemStatusService, updateOrderStatus } from "../../services/admin/orderService.js"
 
 
 export const loadOrderManagement = async (req, res) => {
@@ -9,15 +10,18 @@ export const loadOrderManagement = async (req, res) => {
         const limit = 5
         const status = req.query.status?.trim() || ""
         const sort = req.query.sort || ""
-        const { orders,totalOrders,totalPages,stats } = await getOrders({
-                page,
-                limit,
-                search,
-                status,
-                sort
 
-            })
-           
+
+
+        const { orders, totalOrders, totalPages, stats } = await getOrders({
+            page,
+            limit,
+            search,
+            status,
+            sort
+
+        })
+
 
         res.render("admin/orderManagement", {
             orders,
@@ -27,8 +31,7 @@ export const loadOrderManagement = async (req, res) => {
             search,
             page,
             limit,
-            search,
-            status ,
+            status,
             sort,
             activeNavLink: "Order",
             showFooter: false
@@ -42,39 +45,53 @@ export const loadOrderDetails = async (req, res) => {
 
     try {
         const orderId = req.params.id
-       
+
         const order = await getOrderDetails(orderId)
-        
-        
-        if(!order){
+
+        if (!order) {
             return res.redirect("/OrderManagement")
         }
-        
-        res.render("admin/orderDetails",{
+
+        res.render("admin/orderDetails", {
             order,
             activeNavLink: "Order",
             showFooter: false
         })
-    
+
     } catch (error) {
-       console.log("Load order details  admin error :",error ) 
+        console.log("Load order details  admin error :", error)
     }
 }
 
 
 
-export const updateStatus = async (req,res) => {
+export const updateStatus = async (req, res) => {
     try {
         console.log("update status hit")
         const orderId = req.params.id
-        const {status }= req.body
+        const { status } = req.body
 
-        const result = await updateOrderStatus(orderId,status)
+        const result = await updateOrderStatus(orderId, status)
 
         return res.json(result)
     } catch (error) {
-        console.log("update Status admin error  " ,error)
+        console.log("update Status admin error  ", error)
         return res.json({
+            success: false,
+            message: "Something went wrong"
+        })
+    }
+}
+export const updateItemStatus = async (req, res) => {
+    try {
+        const { orderId, itemId } = req.params
+        const { status } = req.body
+
+        const result = await updateItemStatusService(orderId, itemId, status)
+        return res.status(result.success ? 200 : 400).json(result)
+    } catch (error) {
+        console.log("update item status error ", error)
+        return res.status(500).json({
             success: false,
             message: "Something went wrong"
         })
@@ -86,7 +103,7 @@ export const updateStatus = async (req,res) => {
 
 export const approveReturn = async (req, res) => {
     try {
-         console.log("Approve return hit")
+        console.log("Approve return hit")
         const { orderId, itemId } = req.params
 
         const result = await approveReturnService(orderId, itemId)
@@ -118,7 +135,7 @@ export const rejectReturn = async (req, res) => {
 
         const { reason } = req.body
 
-        const result = await rejectReturnService(orderId,itemId,reason)
+        const result = await rejectReturnService(orderId, itemId, reason)
 
         if (!result.success) {
             return res.status(400).json(result)
@@ -137,3 +154,5 @@ export const rejectReturn = async (req, res) => {
 
     }
 }
+
+

@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sales Report - Velvet Vogue Admin Panel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#8B5E3C',
+                            hover: '#734D30',
+                            light: '#F9F6F0',
+                            border: '#E6DFD3'
+                        },
+                        canvas: '#F4F1EA',
+                        sidebar: '#EFEBE4',
+                        charcoal: '#2D3748'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #EFEBE4;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #D5CFC5;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8B5E3C;
+        }
+
+        .status-delivered {
+            background: #DCFCE7;
+            color: #15803D;
+        }
+
+        .status-shipped {
+            background: #DBEAFE;
+            color: #2563EB;
+        }
+
+        .status-processing {
+            background: #FEF3C7;
+            color: #B45309;
+        }
+
+        .status-cancelled {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .status-returned {
+            background: #F3E8FF;
+            color: #9333EA;
+        }
+
+        .period-btn.active {
+            background: #FFF7ED!important;
+            color: #EA580C!important;
+            font-weight: 600!important;
+        }
+    </style>
+
+</head>
+
+
+<body class=" bg-canvas text-charcoal font-sans min-h-screen flex overflow-x-hidden">
+
+    <%- include("../partials/admin/adminSidebar") %>
+
+
+        <div class="flex-1 ml-[250px] min-h-screen flex flex-col">
+
+
+            <!-- HEADER -->
+
+            <header
+                class="sticky top-0 bg-[#F4F1EA]/90 backdrop-blur-md z-20 px-4 lg:px-8 py-4 border-b border-[#E2DBD1]/40 flex items-center justify-between">
+
+                <div class="flex items-center space-x-4 flex-1">
+
+                    <button id="mobile-nav-toggle" class="lg:hidden p-2 text-gray-600 hover:bg-gray-200/50 rounded-lg">
+
+                        <i data-lucide="menu" class="w-6 h-6">
+                        </i>
+
+                    </button>
+
+
+                    <div class="relative max-w-md w-full hidden sm:block">
+
+                        <span
+                            class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+
+                            <i data-lucide="search" class="w-4 h-4">
+                            </i>
+
+                        </span>
+
+                        <input type="text" placeholder="Search anything..."
+                            class="w-full bg-white pl-10 pr-4 py-2.5 text-sm rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand">
+
+                    </div>
+
+                </div>
+
+
+                <div class="flex items-center space-x-4">
+
+                    <button class="relative p-2 text-gray-600 hover:bg-white rounded-full">
+
+                        <i data-lucide="bell" class="w-5 h-5">
+                        </i>
+
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full">
+                        </span>
+
+                    </button>
+
+
+                    <div class="h-6 w-[1px] bg-gray-300/60"></div>
+
+
+                    <div class="flex items-center space-x-3">
+
+                        <div class="text-right hidden md:block">
+
+                            <h4 class="text-sm font-semibold text-gray-800">
+                                Rohin Geojar
+                            </h4>
+
+                            <span class="text-[10px] text-gray-500 uppercase tracking-wider">
+                                Administrator
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            class="w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm">
+
+                            RG
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- MAIN -->
+
+            <main class="flex-1 p-4 lg:p-8 overflow-y-auto">
+
+
+                <!-- BREADCRUMB -->
+
+                <div class="mb-2">
+
+                    <div class="flex items-center gap-2 text-xs text-gray-400">
+
+                        <span>
+                            Dashboard
+                        </span>
+
+                        <span>
+                            /
+                        </span>
+
+                        <span>
+                            Analytics
+                        </span>
+
+                        <span>
+                            /
+                        </span>
+
+                        <span class="text-gray-700 font-medium">
+                            Sales Report
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- TITLE -->
+
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-7">
+
+                    <div>
+
+                        <h1 class="text-2xl font-bold text-gray-900">
+                            Sales Report
+                        </h1>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Monitor store revenue, orders, and sales performance.
+                        </p>
+
+                    </div>
+
+
+                    <div class="flex items-center gap-3 flex-wrap">
+
+
+                        <!-- FILTER -->
+
+                        <div class="bg-white border border-gray-100 rounded-xl p-1 flex items-center shadow-sm">
+
+                            <button onclick="changePeriod('daily', this)"
+                                class="period-btn px-4 py-2 text-xs font-medium text-gray-500 rounded-lg">
+
+                                Daily
+
+                            </button>
+
+
+                            <button onclick="changePeriod('weekly', this)"
+                                class="period-btn px-4 py-2 text-xs font-medium text-gray-500 rounded-lg">
+
+                                Weekly
+
+                            </button>
+
+
+                            <button onclick="changePeriod('monthly', this)"
+                                class="period-btn active px-4 py-2 text-xs font-medium rounded-lg">
+
+                                Monthly
+
+                            </button>
+
+
+                            <button onclick="changePeriod('yearly', this)"
+                                class="period-btn px-4 py-2 text-xs font-medium text-gray-500 rounded-lg">
+
+                                Yearly
+
+                            </button>
+
+
+                            <button onclick="openCustomDate(this)"
+                                class="period-btn px-4 py-2 text-xs font-medium text-gray-500 rounded-lg">
+
+                                Custom
+
+                            </button>
+
+                        </div>
+                        <!-- DOWNLOAD -->
+
+                        <div class="flex items-center gap-2">
+
+                            <button onclick="downloadPDFReport()"
+                                class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm">
+
+                                <i data-lucide="file-text" class="w-4 h-4">
+                                </i>
+
+                                PDF
+
+                            </button>
+
+
+                            <button onclick="downloadExcelReport()"
+                                class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-xl text-sm font-semibold flex items-center gap-2 shadow-sm">
+
+                                <i data-lucide="file-spreadsheet" class="w-4 h-4">
+                                </i>
+
+                                Excel
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- KPI CARDS -->
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+
+
+                    <!-- REVENUE -->
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+
+                        <div class="flex items-center justify-between mb-5">
+
+                            <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
+
+                                <i data-lucide="wallet" class="w-5 h-5 text-orange-500">
+                                </i>
+
+                            </div>
+
+
+                            <span class="text-xs font-semibold text-emerald-500 bg-emerald-50 px-2 py-1 rounded-full">
+
+                                Revenue
+
+                            </span>
+
+                        </div>
+
+
+                        <p class="text-xs text-gray-500 mb-1">
+                            Total Revenue
+                        </p>
+
+
+                        <h2 id="totalRevenue" class="text-2xl font-bold text-gray-900">
+
+                            ₹<%= Number(report.totalRevenue || 0).toLocaleString("en-IN") %>
+
+                        </h2>
+
+                    </div>
+
+
+
+                    <!-- ORDERS -->
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+
+                        <div class="flex items-center justify-between mb-5">
+
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+
+                                <i data-lucide="shopping-bag" class="w-5 h-5 text-blue-500">
+                                </i>
+
+                            </div>
+
+
+                            <span class="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-1 rounded-full">
+
+                                Orders
+
+                            </span>
+
+                        </div>
+
+
+                        <p class="text-xs text-gray-500 mb-1">
+                            Total Orders
+                        </p>
+
+
+                        <h2 id="totalOrders" class="text-2xl font-bold text-gray-900">
+
+                            <%= Number(report.totalOrders || 0).toLocaleString("en-IN") %>
+
+                        </h2>
+
+                    </div>
+
+
+
+                    <!-- AVERAGE -->
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+
+                        <div class="flex items-center justify-between mb-5">
+
+                            <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center">
+
+                                <i data-lucide="chart-pie" class="w-5 h-5 text-purple-500">
+                                </i>
+
+                            </div>
+
+
+                            <span class="text-xs font-semibold text-purple-500 bg-purple-50 px-2 py-1 rounded-full">
+
+                                AOV
+
+                            </span>
+
+                        </div>
+
+
+                        <p class="text-xs text-gray-500 mb-1">
+                            Average Order Value
+                        </p>
+
+
+                        <h2 id="averageOrder" class="text-2xl font-bold text-gray-900">
+
+                            ₹<%= Number(report.averageOrderValue || 0).toLocaleString("en-IN") %>
+
+                        </h2>
+
+                    </div>
+
+
+
+                    <!-- CUSTOMERS -->
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+
+                        <div class="flex items-center justify-between mb-5">
+
+                            <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center">
+
+                                <i data-lucide="users" class="w-5 h-5 text-orange-500">
+                                </i>
+
+                            </div>
+
+
+                            <span class="text-xs font-semibold text-emerald-500 bg-emerald-50 px-2 py-1 rounded-full">
+
+                                Customers
+
+                            </span>
+
+                        </div>
+
+
+                        <p class="text-xs text-gray-500 mb-1">
+                            Total Customers
+                        </p>
+
+
+                        <h2 id="totalCustomers" class="text-2xl font-bold text-gray-900">
+
+                            <%= Number(report.totalCustomers || 0).toLocaleString("en-IN") %>
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CHARTS -->
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+
+                    <!-- MONTHLY REVENUE -->
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+
+                        <div class="flex items-center justify-between mb-5">
+
+                            <div>
+
+                                <h3 class="font-bold text-gray-900">
+                                    Monthly Revenue
+                                </h3>
+
+                                <p class="text-xs text-gray-400 mt-1">
+                                    Revenue performance
+                                </p>
+
+                            </div>
+
+
+                            <i data-lucide="more-horizontal" class="w-5 h-5 text-gray-400">
+                            </i>
+
+                        </div>
+
+
+                        <div class="h-64">
+
+                            <canvas id="revenueChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- WEEKLY ORDERS -->
+
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+
+                        <div class="flex items-center justify-between mb-5">
+
+                            <div>
+
+                                <h3 class="font-bold text-gray-900">
+                                    Weekly Orders
+                                </h3>
+
+                                <p class="text-xs text-gray-400 mt-1">
+                                    Orders by day
+                                </p>
+
+                            </div>
+
+
+                            <i data-lucide="more-horizontal" class="w-5 h-5 text-gray-400">
+                            </i>
+
+                        </div>
+
+
+                        <div class="h-64">
+
+                            <canvas id="ordersChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- TOP PRODUCTS -->
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm mb-8 overflow-hidden">
+
+                    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+
+                        <div>
+
+                            <h3 class="font-bold text-gray-900">
+                                Top Selling Products
+                            </h3>
+
+                            <p class="text-xs text-gray-400 mt-1">
+                                Products generating the highest revenue
+                            </p>
+
+                        </div>
+
+
+                        <span class="text-xs font-semibold text-orange-600">
+
+                            Top 10
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="overflow-x-auto">
+
+                        <table class="w-full">
+
+                            <thead class="bg-gray-50">
+
+                                <tr>
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Product
+
+                                    </th>
+
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Units Sold
+
+                                    </th>
+
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Revenue
+
+                                    </th>
+
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Trend
+
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                <% if (report.productSales && report.productSales.length) { %>
+
+                                    <% report.productSales.slice(0, 10).forEach((product, index)=> { %>
+
+                                        <tr class="border-b border-gray-50 hover:bg-gray-50/50">
+
+                                            <td class="px-5 py-4">
+
+                                                <div class="flex items-center gap-3">
+
+                                                    <div
+                                                        class="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center">
+
+                                                        <span class="text-xs font-bold text-gray-500">
+
+                                                            <%= index + 1 %>
+
+                                                        </span>
+
+                                                    </div>
+
+
+                                                    <span class="font-semibold text-sm text-gray-800">
+
+                                                        <%= product.productName || "Unknown Product" %>
+
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <td class="px-5 py-4 text-sm font-semibold text-gray-700">
+
+                                                <%= Number(product.quantity || 0).toLocaleString("en-IN") %>
+
+                                            </td>
+
+
+                                            <td class="px-5 py-4 text-sm font-bold text-gray-800">
+
+                                                ₹<%= Number(product.revenue || 0).toLocaleString("en-IN") %>
+
+                                            </td>
+
+
+                                            <td class="px-5 py-4">
+
+                                                <i data-lucide="trending-up" class="w-5 h-5 text-emerald-500">
+                                                </i>
+
+                                            </td>
+
+                                        </tr>
+
+                                        <% }) %>
+
+                                            <% } else { %>
+
+                                                <tr>
+
+                                                    <td colspan="4" class="text-center py-12 text-sm text-gray-400">
+
+                                                        No sales data available
+
+                                                    </td>
+
+                                                </tr>
+
+                                                <% } %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RECENT SALES -->
+
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm mb-8 overflow-hidden">
+
+                    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+
+                        <div>
+
+                            <h3 class="font-bold text-gray-900">
+                                Recent Sales
+                            </h3>
+
+                            <p class="text-xs text-gray-400 mt-1">
+                                Latest completed sales
+                            </p>
+
+                        </div>
+
+
+                        <div class="relative">
+
+                            <select id="statusFilter" onchange="filterRecentSales()"
+                                class="appearance-none bg-gray-50 border border-gray-200 rounded-lg text-xs px-4 py-2 pr-8 focus:outline-none">
+
+                                <option value="all">
+                                    All Status
+                                </option>
+
+                                <option value="Delivered">
+                                    Delivered
+                                </option>
+
+                                <option value="Shipped">
+                                    Shipped
+                                </option>
+
+                                <option value="Confirmed">
+                                    Confirmed
+                                </option>
+
+                                <option value="Pending">
+                                    Pending
+                                </option>
+
+                            </select>
+
+                            <i data-lucide="chevron-down"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 pointer-events-none text-gray-500">
+                            </i>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="overflow-x-auto">
+
+                        <table class="w-full">
+
+                            <thead class="bg-gray-50">
+
+                                <tr>
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Order ID
+
+                                    </th>
+
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Customer
+
+                                    </th>
+
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Product
+
+                                    </th>
+
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Total
+
+                                    </th>
+
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Status
+
+                                    </th>
+
+
+                                    <th class="px-5 py-4 text-left text-[10px] font-semibold text-gray-400 uppercase">
+
+                                        Date
+
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="salesTableBody">
+
+                                <% if (report.recentSales && report.recentSales.length) { %>
+
+                                    <% report.recentSales.forEach(order=> { %>
+
+                                        <tr data-status="<%= order.status || '' %>"
+                                            class="recent-sale-row border-b border-gray-50 hover:bg-gray-50/50">
+
+                                            <td class="px-5 py-4 text-sm font-semibold text-orange-600">
+
+                                                <%= order.orderId || "N/A" %>
+
+                                            </td>
+
+
+                                            <td class="px-5 py-4">
+
+                                                <div class="flex items-center gap-2">
+
+                                                    <div
+                                                        class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-xs font-bold text-emerald-700">
+
+                                                        <%= (order.customerName || "G" ) .charAt(0) .toUpperCase() %>
+
+                                                    </div>
+
+
+                                                    <span class="text-sm font-medium text-gray-700">
+
+                                                        <%= order.customerName || "Guest" %>
+
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <td class="px-5 py-4 text-sm text-gray-600">
+
+                                                <%= order.productName || "Multiple Items" %>
+
+                                            </td>
+
+
+                                            <td class="px-5 py-4 text-sm font-bold text-gray-800">
+
+                                                ₹<%= Number(order.total || 0).toLocaleString("en-IN") %>
+
+                                            </td>
+
+
+                                            <td class="px-5 py-4">
+
+                                                <%
+                                                    let statusClass = "status-processing";
+
+                                                    if (order.status === "Delivered") {
+                                                        statusClass = "status-delivered";
+
+                                                    } else if (order.status === "Shipped") {
+                                                        statusClass = "status-shipped";
+
+                                                    } else if (order.status === "Cancelled") {
+                                                        statusClass = "status-cancelled";
+
+                                                    } else if (order.status === "Returned") {
+                                                        statusClass = "status-returned";
+                                                    }
+                                                %>
+
+                                                    <span
+                                                        class="px-3 py-1 rounded-full text-[9px] font-bold uppercase <%= statusClass %>">
+
+                                                        <%= order.status || "Processing" %>
+
+                                                    </span>
+
+                                            </td>
+
+
+                                            <td class="px-5 py-4 text-sm text-gray-500">
+
+                                                <%= order.createdAt ? new
+                                                    Date(order.createdAt).toLocaleDateString( "en-IN" , { day: "2-digit"
+                                                    , month: "short" , year: "numeric" } ) : "—" %>
+
+                                            </td>
+
+                                        </tr>
+
+                                        <% }) %>
+
+                                            <% } else { %>
+
+                                                <tr>
+
+                                                    <td colspan="6" class="text-center py-12 text-sm text-gray-400">
+
+                                                        No recent sales found
+
+                                                    </td>
+
+                                                </tr>
+
+                                                <% } %>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+            </main>
+
+        </div>
+
+
+
+        <!-- CUSTOM DATE MODAL -->
+
+        <div id="customDateModal"
+            class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-50">
+
+            <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
+
+                <div class="flex items-center justify-between mb-6">
+
+                    <div>
+
+                        <h3 class="text-lg font-bold text-gray-900">
+                            Custom Date Range
+                        </h3>
+
+                        <p id="tagHead" class="text-xs text-gray-400 mt-1">
+                            Select the sales report period.
+                        </p>
+
+                    </div>
+
+
+                    <button onclick="closeCustomDate()" class="text-gray-400 hover:text-gray-700">
+
+                        <i data-lucide="x" class="w-5 h-5">
+                        </i>
+
+                    </button>
+
+                </div>
+
+
+                <div class="space-y-4">
+
+                    <div>
+
+                        <label class="block text-xs font-semibold text-gray-600 mb-2">
+
+                            Start Date
+
+                        </label>
+
+                        <input type="date" id="startDate"
+                            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand">
+
+                    </div>
+
+
+                    <div>
+
+                        <label class="block text-xs font-semibold text-gray-600 mb-2">
+
+                            End Date
+
+                        </label>
+
+                        <input type="date" id="endDate"
+                            class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand">
+
+                    </div>
+
+                </div>
+
+
+                <div class="flex justify-end gap-3 mt-6">
+
+                    <button onclick="closeCustomDate()"
+                        class="px-4 py-2.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg">
+
+                        Cancel
+
+                    </button>
+
+
+                    <button onclick="applyCustomDate()"
+                        class="px-5 py-2.5 text-sm font-semibold bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+
+                        Apply
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+
+            lucide.createIcons()
+
+
+            let currentPeriod = "monthly"
+
+            let revenueChart = null
+
+            let ordersChart = null
+
+
+            // PERIOD CHANGE
+
+            function changePeriod(period, button) {
+
+                currentPeriod = period
+
+                document
+                    .querySelectorAll(".period-btn")
+                    .forEach(btn => {
+                        btn.classList.remove("active")
+                    })
+
+                if (button) {
+                    button.classList.add("active")
+                }
+
+                fetchSalesReport(period)
+
+            }
+
+
+            // CUSTOM DATE MODAL
+
+            function openCustomDate(button) {
+
+                const modal = document.getElementById("customDateModal");
+
+    if (!modal) {
+        console.error("Custom date modal not found");
+        return;
+    }
+
+    // Remove active class from all buttons
+    document.querySelectorAll(".period-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    // Add active class to Custom button
+    if (button) {
+        button.classList.add("active");
+    }
+
+    // Show modal
+    modal.classList.remove("hidden");
+    modal.classList.add("flex");
+
+                lucide.createIcons()
+
+            }
+
+
+            function closeCustomDate() {
+
+                const modal =
+                    document.getElementById("customDateModal")
+
+                modal.classList.add("hidden")
+
+                modal.classList.remove("flex")
+
+            }
+
+
+            function applyCustomDate() {
+
+                const startDate =
+                    document.getElementById("startDate").value
+
+                const endDate =
+                    document.getElementById("endDate").value
+
+
+                if (!startDate || !endDate) {
+
+                    
+                     tagHead.classList.remove("text-gray-400")
+                    tagHead.classList.add("text-red-500")
+                    tagHead.textContent = "*Please select both dates"
+
+                    setTimeout(() => {
+                        tagHead.classList.remove("text-red-500")
+                        tagHead.classList.add("text-gray-400")
+                        tagHead.textContent = "Select the sales report period."
+                    }, 3000)
+
+                    return
+
+                }
+
+
+                if (startDate > endDate) {
+                    tagHead.classList.remove("text-gray-400")
+                    tagHead.classList.add("text-red-500")
+                    tagHead.textContent = "* Start date must be before end date"
+
+                    setTimeout(() => {
+                        tagHead.classList.remove("text-red-500")
+                        tagHead.classList.add("text-gray-400")
+                        tagHead.textContent = "Select the sales report period."
+                    }, 3000)
+
+                    return
+
+                }
+
+
+                currentPeriod = "custom"
+
+                document
+                    .querySelectorAll(".period-btn")
+                    .forEach(btn => {
+                        btn.classList.remove("active")
+                    })
+
+
+                closeCustomDate()
+
+                fetchSalesReport(
+                    "custom",
+                    startDate,
+                    endDate
+                )
+
+            }
+
+
+            // FETCH REPORT
+
+            async function fetchSalesReport(
+                period,
+                startDate = "",
+                endDate = ""
+            ) {
+
+                try {
+
+                    let url =
+                        `/salesReport/data?period=${encodeURIComponent(period)}`
+
+
+                    if (period === "custom") {
+
+                        url +=
+                            `&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`
+
+                    }
+
+
+                    const response =
+                        await fetch(url)
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            `HTTP ${response.status}`
+                        )
+
+                    }
+
+
+                    const result =
+                        await response.json()
+
+
+                    if (!result.success) {
+
+                        throw new Error(
+                            result.message ||
+                            "Failed to load report"
+                        )
+
+                    }
+
+
+                    updateReport(result.data)
+
+                } catch (error) {
+
+                    console.error(
+                        "Sales report error:",
+                        error
+                    )
+
+                }
+
+            }
+
+
+            // UPDATE REPORT
+
+            function updateReport(data) {
+
+                if (!data) return
+
+
+                if (data.totalRevenue !== undefined) {
+
+                    document.getElementById(
+                        "totalRevenue"
+                    ).textContent =
+                        "₹" +
+                        Number(
+                            data.totalRevenue
+                        ).toLocaleString("en-IN")
+
+                }
+
+
+                if (data.totalOrders !== undefined) {
+
+                    document.getElementById(
+                        "totalOrders"
+                    ).textContent =
+                        Number(
+                            data.totalOrders
+                        ).toLocaleString("en-IN")
+
+                }
+
+
+                if (data.averageOrderValue !== undefined) {
+
+                    document.getElementById(
+                        "averageOrder"
+                    ).textContent =
+                        "₹" +
+                        Number(
+                            data.averageOrderValue
+                        ).toLocaleString("en-IN")
+
+                }
+
+
+                if (data.totalCustomers !== undefined) {
+
+                    document.getElementById(
+                        "totalCustomers"
+                    ).textContent =
+                        Number(
+                            data.totalCustomers
+                        ).toLocaleString("en-IN")
+
+                }
+
+
+                if (data.monthlyRevenue) {
+
+                    renderRevenueChart(
+                        data.monthlyRevenue
+                    )
+
+                }
+
+
+                if (data.weeklyOrders) {
+
+                    renderOrdersChart(
+                        data.weeklyOrders
+                    )
+
+                }
+
+            }
+
+
+            // REVENUE CHART
+
+            function renderRevenueChart(data) {
+
+                const canvas = document.getElementById("revenueChart")
+
+                if (!canvas) return
+
+                const ctx = canvas.getContext("2d")
+
+                if (revenueChart) {
+                    revenueChart.destroy()
+                }
+
+                const labels = [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec"
+                ]
+
+                const values = Array.isArray(data)
+                    ? data.map(value => Number(value || 0))
+                    : []
+
+                revenueChart = new Chart(ctx, {
+                    type: "bar",
+
+                    data: {
+                        labels,
+                        datasets: [
+                            {
+                                data: values,
+                                backgroundColor: "#F9C9B7",
+                                borderRadius: 5,
+                                borderSkipped: false
+                            }
+                        ]
+                    },
+
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+
+                            tooltip: {
+                                callbacks: {
+                                    label: context =>
+                                        "₹" +
+                                        Number(context.parsed.y || 0).toLocaleString("en-IN", {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        })
+                                }
+                            }
+                        },
+
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+
+                                grid: {
+                                    color: "#F3F4F6"
+                                },
+
+                                ticks: {
+                                    color: "#94A3B8",
+
+                                    callback: value =>
+                                        "₹" +
+                                        Number(value).toLocaleString("en-IN")
+                                }
+                            },
+
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+
+                                ticks: {
+                                    color: "#94A3B8"
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+
+            // ORDERS CHART
+
+            function renderOrdersChart(data) {
+
+                const canvas = document.getElementById("ordersChart")
+
+                if (!canvas) return
+
+                const ctx = canvas.getContext("2d")
+
+                if (ordersChart) {
+                    ordersChart.destroy()
+                }
+
+                const labels = [
+                    "Sun",
+                    "Mon",
+                    "Tue",
+                    "Wed",
+                    "Thu",
+                    "Fri",
+                    "Sat"
+                ]
+
+                const values = Array.isArray(data)
+                    ? data.map(value => Number(value || 0))
+                    : []
+
+                ordersChart = new Chart(ctx, {
+                    type: "bar",
+
+                    data: {
+                        labels,
+
+                        datasets: [
+                            {
+                                data: values,
+                                backgroundColor: "#DCE7F7",
+                                borderRadius: 5,
+                                borderSkipped: false
+                            }
+                        ]
+                    },
+
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+
+                            tooltip: {
+                                callbacks: {
+                                    label: context =>
+                                        Number(context.parsed.y || 0).toLocaleString("en-IN") +
+                                        " orders"
+                                }
+                            }
+                        },
+
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+
+                                ticks: {
+                                    precision: 0,
+                                    color: "#94A3B8"
+                                },
+
+                                grid: {
+                                    color: "#F3F4F6"
+                                }
+                            },
+
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+
+                                ticks: {
+                                    color: "#94A3B8"
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+            // STATUS FILTER
+
+            function filterRecentSales() {
+
+                const filter =
+                    document.getElementById(
+                        "statusFilter"
+                    ).value
+
+
+                const rows =
+                    document.querySelectorAll(
+                        ".recent-sale-row"
+                    )
+
+
+                rows.forEach(row => {
+
+                    const status =
+                        row.dataset.status
+
+
+                    if ( filter === "all" || status === filter ) {
+
+                        row.classList.remove(
+                            "hidden"
+                        )
+
+                    } else {
+
+                        row.classList.add(
+                            "hidden"
+                        )
+
+                    }
+
+                })
+
+            }
+
+
+            // DOWNLOAD
+
+            function downloadPDFReport() {
+
+                let url =
+                    `/salesReport/downloadPdf?period=${encodeURIComponent(currentPeriod)}`
+
+                if (currentPeriod === "custom") {
+
+                    const startDate =
+                        document.getElementById("startDate").value
+
+                    const endDate =
+                        document.getElementById("endDate").value
+
+                    if (!startDate || !endDate) {
+
+                        alert("Please select both start date and end date")
+
+                        return
+                    }
+
+                    if (startDate > endDate) {
+
+                        alert("Start date must be before end date")
+
+                        return
+                    }
+
+                    url +=
+                        `&startDate=${encodeURIComponent(startDate)}` +
+                        `&endDate=${encodeURIComponent(endDate)}`
+                }
+
+                window.location.href = url
+            }
+            function downloadExcelReport() {
+
+                let url =
+                    `/salesReport/downloadExcel?period=${encodeURIComponent(currentPeriod)}`
+
+                if (currentPeriod === "custom") {
+
+                    const startDate = document.getElementById("startDate").value
+                    const endDate = document.getElementById("endDate").value
+                    const tagHead = document.getElementById("tagHead")
+
+                    if (!startDate || !endDate) {
+
+                     
+                        
+                     tagHead.classList.remove("text-gray-400")
+                    tagHead.classList.add("text-red-500")
+                    tagHead.textContent = "*Please select both start date and end date"
+
+                    setTimeout(() => {
+                        tagHead.classList.remove("text-red-500")
+                        tagHead.classList.add("text-gray-400")
+                        tagHead.textContent = "Select the sales report period."
+                    }, 3000)
+
+                        return
+                    }
+
+                    if (startDate > endDate) {
+
+                       
+                          tagHead.classList.remove("text-gray-400")
+                    tagHead.classList.add("text-red-500")
+                    tagHead.textContent = "*Start date must be before end date"
+
+                    setTimeout(() => {
+                        tagHead.classList.remove("text-red-500")
+                        tagHead.classList.add("text-gray-400")
+                        tagHead.textContent = "Select the sales report period."
+                    }, 3000)
+
+
+                        return
+                    }
+
+                    url +=
+                        `&startDate=${encodeURIComponent(startDate)}` +
+                        `&endDate=${encodeURIComponent(endDate)}`
+                }
+
+                window.location.href = url
+            }
+
+            // INITIAL LOAD
+
+
+
+            document.addEventListener("DOMContentLoaded", () => {
+
+                lucide.createIcons();
+
+                const monthlyRevenue = <%- JSON.stringify(report.monthlyRevenue || []) %>;
+
+                const weeklyOrders = <%- JSON.stringify(report.weeklyOrders || []) %>;
+
+
+                if (monthlyRevenue.length > 0) {
+
+                    renderRevenueChart(monthlyRevenue);
+
+                }
+
+
+                if (weeklyOrders.length > 0) {
+
+                    renderOrdersChart(weeklyOrders);
+
+                }
+
+            });
+
+
+
+        </script>
+
+</body>
+
+</html>

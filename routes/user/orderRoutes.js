@@ -3,6 +3,7 @@ import { userAuth } from "../../middleware/auth.js"
 import { cancelOrder, cancelOrderItem, downloadInvoice, loadInvoice, orderDetails, orderHistory, requestReturn, searchOrders } from "../../controllers/user/orderController.js"
 import { navbarCounts } from "../../middleware/navbarCounts.js"
 
+
 const router = express.Router()
 router.use(navbarCounts)
 router.get("/",userAuth,orderHistory)

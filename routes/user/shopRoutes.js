@@ -1,7 +1,8 @@
 import express from "express";
 import { userAuth } from "../../middleware/auth.js";
-import { addToCart, checkout, clearCart, loadCart, loadProductDetails, loadShop, loadWishlist, orderStatus, placeOrder, removeCartItem, removeWishlistItem, toggleWishlist, updateCartQuantity } from "../../controllers/user/shopController.js";
+import { addToCart, checkout, clearCart, createRazorpayOrder, loadCart, loadPaymentResult, loadProductDetails, loadShop, loadWishlist, orderStatus, placeOrder, removeCartItem, removeWishlistItem, toggleWishlist, updateCartQuantity, verifyRazorpayPayment } from "../../controllers/user/shopController.js";
 import { navbarCounts } from "../../middleware/navbarCounts.js";
+import { applyCoupon, loadCoupons, removeCoupon } from "../../controllers/user/couponController.js";
 
 const router = express.Router();
 
@@ -23,7 +24,19 @@ router.delete("/cart/clear",userAuth, clearCart)
  router.post("/wishlist/remove",userAuth,removeWishlistItem)
 
 router.get("/checkout",userAuth,checkout)
+
+router.get("/checkout/coupons",userAuth,loadCoupons)
+router.post("/checkout/applyCoupon",userAuth, applyCoupon)
+router.post("/checkout/removeCoupon",userAuth, removeCoupon)
+
 router.post("/placeOrder",userAuth,placeOrder)
 
+router.post("/createRazorpayOrder", userAuth, createRazorpayOrder)
+router.post("/verifyRazorpayPayment", userAuth, verifyRazorpayPayment)
+router.get("/paymentResult", userAuth, loadPaymentResult)
+
 router.get("/orderSuccess",userAuth,orderStatus)
+
+
+
 export default router

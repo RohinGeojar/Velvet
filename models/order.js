@@ -36,6 +36,23 @@ const orderItemSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+   
+
+    productDiscount: {
+        type: Number,
+        default: 0
+    },
+
+    couponDiscount: {
+        type: Number,
+        default: 0
+    },
+
+    finalTotal: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     status: {
         type: String,
         enum: [
@@ -49,6 +66,7 @@ const orderItemSchema = new mongoose.Schema({
         ],
         default: "Pending"
     },
+
     cancelReason: {
         type: String,
         default: null
@@ -61,6 +79,10 @@ const orderItemSchema = new mongoose.Schema({
         type: Date,
         default: null
     },
+    refundProcessed: {
+        type: Boolean,
+        default: false
+    },
 
     returnApprovedAt: {
         type: Date,
@@ -72,13 +94,13 @@ const orderItemSchema = new mongoose.Schema({
         default: null
     },
     returnRejected: {
-    type: Boolean,
-    default: false
-},
-returnRejectReason: {
-    type: String,
-    default: null
-}
+        type: Boolean,
+        default: false
+    },
+    returnRejectReason: {
+        type: String,
+        default: null
+    }
 
 
 }, { _id: true })
@@ -150,7 +172,9 @@ const orderSchema = new mongoose.Schema({
             "Pending",
             "Paid",
             "Failed",
-            "Refunded"
+            "Cancelled",
+            "Refunded",
+            "Partially Refunded"
         ],
         default: "Pending"
     },

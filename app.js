@@ -12,6 +12,7 @@ import authRoutes from "./routes/user/authRoutes.js"
 import profileRoutes from "./routes/user/profileRoutes.js"
 import addressRoutes from "./routes/user/addressRoutes.js"
 import adminUserRoutes from "./routes/admin/userRoutes.js";
+import dashboardRoutes from "./routes/admin/dashboardRoutes.js";
 import adminAuth from "./routes/admin/adminAuth.js"
 import categoryRoutes from "./routes/admin/categoryRoutes.js"
 import productRoutes from "./routes/admin/productRoutes.js"
@@ -19,6 +20,9 @@ import shopRoutes from "./routes/user/shopRoutes.js"
 import orderRoutes from "./routes/user/orderRoutes.js"
 import orderManagementRoutes from "./routes/admin/orderRoutes.js"
 import couponRoutes from "./routes/admin/couponRoutes.js"
+import walletRoutes from "./routes/user/walletRoutes.js"
+import salesReportRoute from "./routes/admin/salesReportRoute.js"
+import referralRoutes from "./routes/user/referralRoutes.js"
 dotenv.config();
 
 const app = express();
@@ -79,18 +83,22 @@ app.use("/PageNotFound",(req,res)=> {
    }
 )
 } )
-app.use("/",authRoutes );
-app.use("/profile", profileRoutes);
+app.use("/",authRoutes )
+app.use("/profile", profileRoutes)
 app.use("/address",addressRoutes)
 app.use("/shop",shopRoutes)
 app.use("/orderManagement",orderManagementRoutes)
 app.use("/couponManagement",couponRoutes)
+app.use("/dashboard", dashboardRoutes)
+app.use( "/salesReport", salesReportRoute)
+app.use("/", referralRoutes);
 
-app.use("/admin", adminUserRoutes);
+app.use("/admin", adminUserRoutes)
 app.use("/adminAuth",adminAuth)
 app.use("/admin/category",categoryRoutes)
 app.use("/products",productRoutes)
 app.use("/order",orderRoutes)
+app.use("/wallet",walletRoutes)
 
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");

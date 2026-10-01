@@ -1,9 +1,9 @@
-import * as addressService from "../../services/user/addressService.js";
-import User from "../../models/user.js";
-import { addressSchema } from "../../validators/addressValidator.js";
-import Address from "../../models/address.js";
-import mongoose from "mongoose";
-import { capitalizeName, normalizeText } from "../../utils/capitalizer.js";
+import * as addressService from "../../services/user/addressService.js"
+
+import { addressSchema } from "../../validators/addressValidator.js"
+import Address from "../../models/address.js"
+import mongoose from "mongoose"
+import { capitalizeName, normalizeText } from "../../utils/capitalizer.js"
 
 
 export const loadAddAddress = (req, res) => {
@@ -16,12 +16,11 @@ export const loadAddAddress = (req, res) => {
       layout: "partials/user/layout",
       showSidebar: true,
       showNavbar: true,
-      
       currentPage:"address"
-    });
+    })
   } catch (error) {
-    console.log(error);
-    res.status(500).send("Error loading add address page");
+    console.log(error)
+    res.status(500).send("Error loading add address page")
   }
 }
 
@@ -30,7 +29,7 @@ export const loadAddressPage = async (req, res) => {
     const userId = req.user._id;
     
 
-    const addresses = await addressService.getUserAddresses(userId);
+    const addresses = await addressService.getUserAddresses(userId)
 
     res.render("user/address", {
       addresses,
@@ -39,29 +38,29 @@ export const loadAddressPage = async (req, res) => {
       showSidebar: true,
       showNavbar: true,
       currentPage:"address"
-    });
+    })
 
   } catch (error) {
     console.log(error);
-    res.status(500).send("Failed to load addresses");
+    res.status(500).send("Failed to load addresses")
   }
-};
+}
 
 
 
 export const addAddress = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user._id
 
     const data = {
       ...req.body,
       isDefault: req.body.isDefault === "on"
-    };
+    }
 
  
     const validatedData = await addressSchema.validateAsync(data, {
       abortEarly: false
-    });
+    })
 
     
     validatedData.name = `${validatedData.firstName} ${validatedData.lastName}`.trim()
@@ -71,7 +70,7 @@ export const addAddress = async (req, res) => {
       await Address.updateMany(
         { user: userId },
         { isDefault: false }
-      );
+      )
     }
 
     await addressService.addAddress(userId, validatedData)
@@ -80,7 +79,7 @@ export const addAddress = async (req, res) => {
     return res.json({ success: true })
 
   } catch (error) {
-    console.log(error);
+    console.log(error)
 
 
     if (error.isJoi) {
@@ -89,25 +88,25 @@ export const addAddress = async (req, res) => {
           field: err.path[0],
           message: err.message
         }))
-      });
+      })
     }
 
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" })
   }
-};
+}
 
 
 
 export const loadEditAddress = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const { id } = req.params;
+    const userId = req.user._id
+    const { id } = req.params
 
 
      if (!id || !mongoose.isValidObjectId(id)) {
-  return res.status(400).send("Invalid address ID");
+  return res.status(400).send("Invalid address ID")
 }
-    const address = await addressService.getAddressById(id, userId);
+    const address = await addressService.getAddressById(id, userId)
 
     res.render("user/addAddress", {
       address,
@@ -116,24 +115,20 @@ export const loadEditAddress = async (req, res) => {
       showSidebar: true,
       showNavbar: true,
       currentPage:"address"
-    });
+    })
 
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error.message);
+    console.log(error)
+    res.status(500).send(error.message)
   }
-};
+}
 
 
 
 export const updateAddress = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const { id } = req.params;
-
-    const data = { ...req.body };
-
-
+    const userId = req.user._id
+    const { id } = req.params
     const {error,value} = addressSchema.validate(req.body,{abortEarly:false})
     
             if(error){
@@ -158,45 +153,45 @@ export const updateAddress = async (req, res) => {
       await Address.updateMany(
         { user: userId },
         { isDefault: false }
-      );
+      )
     }
 
   
-    await addressService.updateAddress(id, userId, validatedData);
+    await addressService.updateAddress(id, userId, validatedData)
 
-    return res.json({ success: true });
+    return res.json({ success: true })
 
   } catch (error) {
-    console.log(error);
+    console.log(error)
    if (error.isJoi) {
     const errors = error.details.map(err => ({
       field: err.path[0],
       message: err.message
-    }));
+    }))
 
-    return res.status(400).json({ errors });
+    return res.status(400).json({ errors })
   }
 
-  return res.status(500).json({ message: "Server error" });
+  return res.status(500).json({ message: "Server error" })
   }
-};
+}
 
 
 
 export const deleteAddress = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const { id } = req.params;
+    const userId = req.user._id
+    const { id } = req.params
 
     await addressService.deleteAddress(id, userId)
     console.log(req.query)
     return res.json({
       success: true,
       message: "Address deleted successfully"
-    });
+    })
 
   } catch (error) {
-    console.log(error);
+    console.log(error)
     res.status(500).send(error.message)
   }
 }
@@ -205,23 +200,23 @@ export const deleteAddress = async (req, res) => {
 //  Set Default Address
 export const setDefaultAddress = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const { id } = req.params;
+    const userId = req.user._id
+    const { id } = req.params
 
-    await addressService.setDefaultAddress(id, userId);
+    await addressService.setDefaultAddress(id, userId)
 
     return res.json({
       success: true,
       message: "Default address updated."
-    });
+    })
 
   } catch (error) {
-    console.log(error);
+    console.log(error)
 
     return res.status(500).json({
       success: false,
       message: "Failed to update default address."
-    });
+    })
   }
 }
 
@@ -232,7 +227,7 @@ export const getAddress = async (req,res )=> {
       return res.status(404).json({
         success: false,
         message: "Address not found"
-      });
+      })
     }
     const firstName = address.name.split(" ")[0]
     const lastName = address.name.split(" ")[1]
