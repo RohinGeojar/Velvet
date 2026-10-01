@@ -8,7 +8,7 @@ export const createUploader = (folderName, fileSize = 2) => {
     cloudinary,
     params: {
       folder: `velvet/${folderName}`,
-      allowed_formats: ["jpg", "jpeg", "png", "webp"]
+      allowed_formats: ["jpg", "jpeg", "png", "webp", "avif"]
     }
   });
 

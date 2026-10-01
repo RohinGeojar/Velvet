@@ -943,7 +943,7 @@ export const checkout = async (req, res) => {
 export const addcheckoutAddress = async (req, res) => {
     try {
         const userId = req.user._id
-        console.log(req.body)
+        
 
         const { error, value } = addressSchema.validate(req.body, { abortEarly: false })
 
@@ -1652,11 +1652,11 @@ export const verifyRazorpayPayment = async (req, res) => {
 
 export const orderStatus = async (req, res) => {
     try {
-        console.log(" order status hit")
-        const order = await Order.findOne({
+        
+        await Order.findOne({
             userId: req.user._id
         }).sort({ createdAt: -1 })
-        console.log(order.orderId)
+        
         res.render("user/orderStatus", {
             showNavbar: true,
             showFooter: false,

@@ -16,7 +16,7 @@ export const getWalletService = async (userId, page) => {
         })
     }
 
-    const sortedTransactions = [...wallet.transactions].sort((a, b) => new Date(b.createdAt) - (a.createdAt))
+    const sortedTransactions = [...wallet.transactions].sort((a, b) => new Date(b.createdAt) -  new Date(a.createdAt))
 
     const totalTransactions = sortedTransactions.length
 
