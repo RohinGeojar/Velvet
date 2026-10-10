@@ -5,6 +5,7 @@ import Product from "../../models/productModel.js"
 import { creditWalletService } from "./walletService.js"
 
 
+
 export const createOrder = async (
     userId,
     cart,
@@ -16,7 +17,10 @@ export const createOrder = async (
     shipping,
     paymentMethod,
     address,
-    couponCode = null) => {
+    couponCode = null,
+    options = {}
+) => {
+    const { deductStock = true, clearCart = true } = options
 
     const order = await Order.create({
         userId,
@@ -29,11 +33,12 @@ export const createOrder = async (
             addressLine2: address.addressLine2,
             landmark: address.landmark,
             city: address.city,
+            state: address.state,
             country: address.country,
             postalCode: address.postalCode
         },
         paymentMethod,
-        paymentStatus: paymentMethod === "COD" ? "Pending" : "Paid",
+        paymentStatus: paymentMethod === "Razorpay" ? "Pending" : paymentMethod === "COD"? "Pending":  "Paid",
         orderStatus: "Pending",
         subtotal,
         shippingCharge: shipping,
@@ -43,24 +48,38 @@ export const createOrder = async (
         couponCode: couponDiscount > 0 ? couponCode : null
     })
 
+    if (deductStock) {
+        for (const item of cart.items) {
+            const productId = item.productId?._id || item.productId
+            const product = await Product.findById(productId)
 
+            if (!product) {
+                throw new Error(`Product not found: ${productId}`)
+            }
 
-    for (const item of cart.items) {
+            const variant = product.variants[item.variantIndex]
 
-        const product = await Product.findById(item.productId._id)
+            if (!variant) {
+                throw new Error("Product variant not found")
+            }
 
-        const variant = product.variants[item.variantIndex]
+            const sizeData = variant.sizes.find(
+                size => size.size === item.size
+            )
 
-        const sizeData = variant.sizes.find(
-            s => s.size === item.size
-        )
-        sizeData.stock -= item.quantity
-        await product.save()
+            if (!sizeData || sizeData.stock < item.quantity) {
+                throw new Error( `Insufficient stock for ${product.productName}`)
+            }
+
+            sizeData.stock -= item.quantity
+            await product.save()
+        }
     }
 
-    cart.items = []
-    await cart.save()
-
+    if (clearCart) {
+        cart.items = []
+        await cart.save()
+    }
 
     return order
 }
@@ -167,13 +186,13 @@ export const cancelProduct = async (orderId, itemId, userId, reason) => {
         }
 
         const variant = product.variants.find(
-    variant => variant.color.toLowerCase() === item.color.toLowerCase()
-)
+            variant => variant.color.toLowerCase() === item.color.toLowerCase()
+        )
 
         if (!variant) {
             console.log("Variant not found")
             console.log("Order variantId:", item.variantId)
-            console.log( "Product variants:",  product.variants.map(v => ({ id: v._id, color: v.color })) )
+            console.log("Product variants:", product.variants.map(v => ({ id: v._id, color: v.color })))
 
             return {
                 success: false,
@@ -181,7 +200,7 @@ export const cancelProduct = async (orderId, itemId, userId, reason) => {
             }
         }
 
-        const size = variant.sizes.find( size => size.size === item.size )
+        const size = variant.sizes.find(size => size.size === item.size)
 
         if (!size) {
             console.log("Size not found:", item.size)

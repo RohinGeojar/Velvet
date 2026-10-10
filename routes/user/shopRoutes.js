@@ -3,6 +3,7 @@ import { userAuth } from "../../middleware/auth.js";
 import { addToCart, checkout, clearCart, createRazorpayOrder, loadCart, loadPaymentResult, loadProductDetails, loadShop, loadWishlist, orderStatus, placeOrder, removeCartItem, removeWishlistItem, toggleWishlist, updateCartQuantity, verifyRazorpayPayment } from "../../controllers/user/shopController.js";
 import { navbarCounts } from "../../middleware/navbarCounts.js";
 import { applyCoupon, loadCoupons, removeCoupon } from "../../controllers/user/couponController.js";
+import { retryRazorpayPayment, verifyRetryRazorpayPayment} from "../../controllers/user/shopController.js"
 
 const router = express.Router();
 
@@ -33,6 +34,10 @@ router.post("/placeOrder",userAuth,placeOrder)
 
 router.post("/createRazorpayOrder", userAuth, createRazorpayOrder)
 router.post("/verifyRazorpayPayment", userAuth, verifyRazorpayPayment)
+router.post( "/retry-payment", userAuth,retryRazorpayPayment)
+
+router.post("/verify-retry-payment", userAuth, verifyRetryRazorpayPayment)
+
 router.get("/paymentResult", userAuth, loadPaymentResult)
 
 router.get("/orderSuccess",userAuth,orderStatus)

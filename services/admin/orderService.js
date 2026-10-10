@@ -38,6 +38,7 @@ export const getOrders = async ({ page, limit, search, status, sort }) => {
                 }
             ]
         }
+        
 
         if (status && status !== "All") {
             if (status === "Return Requested") {
@@ -78,24 +79,36 @@ export const getOrders = async ({ page, limit, search, status, sort }) => {
         const totalPages = Math.ceil(totalOrders / limit)
 
 
-        const stats = await Order.aggregate([
-            {
-                $group: {
-                    _id: "$orderStatus",
-                    count: { $sum: 1 }
+         const [aggregatedStats, returnRequests] = await Promise.all([
+            Order.aggregate([
+                {
+                    $group: {
+                        _id: "$orderStatus",
+                        count: { $sum: 1 }
+                    }
                 }
-            }
-        ])
+            ]),
+
+            Order.countDocuments({
+                items: {
+                    $elemMatch: {
+                        status: "Return Requested"
+                    }
+                }
+            })
+        ]);
+        
 
         const orderStats = {
             totalOrders: 0,
             pendingOrders: 0,
             shippedOrders: 0,
             deliveredOrders: 0,
-            cancelledOrders: 0
+            cancelledOrders: 0,
+             returnRequests
 
         }
-        stats.forEach(item => {
+        aggregatedStats.forEach(item => {
             orderStats.totalOrders += item.count
 
             switch (item._id) {
@@ -172,6 +185,16 @@ export const updateOrderStatus = async (orderId, status) => {
 
             }
         }
+        if (
+    order.paymentMethod === "Razorpay" &&
+    order.paymentStatus !== "Paid" &&
+    ["Confirmed", "Shipped", "Delivered"].includes(status)
+) {
+    return {
+        success: false,
+        message: "Razorpay payment is not completed."
+    }
+}
 
         if (!allowedTransitions[currentStatus].includes(status)) {
             return {
@@ -305,6 +328,16 @@ export const updateItemStatusService = async (orderId, itemId, status) => {
         }
 
         const currentStatus = item.status
+        if (
+    order.paymentMethod === "Razorpay" &&
+    order.paymentStatus !== "Paid" &&
+    ["Confirmed", "Shipped", "Delivered"].includes(status)
+) {
+    return {
+        success: false,
+        message: "Razorpay payment is not completed."
+    }
+}
 
         if (currentStatus === status) {
             return {
@@ -312,6 +345,7 @@ export const updateItemStatusService = async (orderId, itemId, status) => {
                 message: "Item already in the status"
             }
         }
+        
 
         if (!allowedTransitions[currentStatus]?.includes(status)) {
             return {

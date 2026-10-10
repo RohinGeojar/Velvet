@@ -118,10 +118,12 @@ export const updateProfile = async (req, res) => {
 
 
         await updateUserProfile(user._id, data)
+      
 
         res.json({
             success: true,
-            message: "Profile updated successfully"
+            message: "Profile updated successfully",
+            
         })
 
     } catch (err) {

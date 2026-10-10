@@ -21,6 +21,7 @@ export const loadOrderManagement = async (req, res) => {
             sort
 
         })
+       
 
 
         res.render("admin/orderManagement", {
@@ -38,6 +39,7 @@ export const loadOrderManagement = async (req, res) => {
         })
     } catch (error) {
         console.log("load order management error => ", error)
+        res.status(500).send("Failed to load order management")
     }
 }
 
