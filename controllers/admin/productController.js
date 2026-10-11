@@ -246,6 +246,11 @@ export const addProduct = async (req, res) => {
 
     } catch (error) {
         console.log("add product error",error)
+         return res.status(500).json({
+        success: false,
+        message: error.message,
+        error: error
+    })
     }
 }
 

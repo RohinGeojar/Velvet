@@ -843,97 +843,100 @@
 
             // ================================= 
 
-            const productForm = document.getElementById("productForm");
+           const productForm = document.getElementById("productForm");
 
-            productForm.addEventListener("submit", async function (e) {
+productForm.addEventListener("submit", async function (e) {
 
-                e.preventDefault();
-                if (!validateVariantColors()) {
-                    showToast(
-                        "Each variant must have a unique color",
-                        "error"
-                    );
+    e.preventDefault();
 
-                    return;
-                }
+    if (!validateVariantColors()) {
+        showToast(
+            "Each variant must have a unique color",
+            "error"
+        );
 
-                // clear old errors
-                document
-                    .querySelectorAll(".error-text")
-                    .forEach(el => el.textContent = "");
+        return;
+    }
 
-                // image validation
-                const imageInputs =
-                    document.querySelectorAll(
-                        ".variant-image-input"
-                    );
+    document
+        .querySelectorAll(".error-text")
+        .forEach(el => el.textContent = "");
 
+    const imageInputs = document.querySelectorAll(".variant-image-input");
 
+    for (const input of imageInputs) {
 
-                try {
+        if (input.files.length < 3) {
 
-                    const formData =
-                        new FormData(productForm);
-
-                    const response = await fetch(
-
-                        "/products/add",
-
-                        {
-                            method: "POST",
-
-                            body: formData
-                        }
-                    );
-
-                    const data = await response.json();
-
-                    // ================= SUCCESS =================
-
-                    if (data.success) {
-
-                        showToast(
-                            data.message,
-                            "success"
-                        );
-
-                        productForm.reset();
-                        window.location.href =
-                            data.redirect;
-
-                        return;
-                    }
-
-                    // ================= VALIDATION =================
-
-                    if (data.errors) {
-
-                        showErrors(data.errors);
-                    }
-                    for (const input of imageInputs) {
-
-                        if (input.files.length < 3) {
-
-                            showToast(
-                                "Each variant must contain at least 3 images",
-                                "error"
-                            );
-
-                            return;
-                        }
-                    }
-
-                } catch (error) {
-
-                    console.log(error);
-
-                    showToast(
-                        "Something went wrong",
-                        "error"
-                    );
-                }
-            }
+            showToast(
+                "Each variant must contain at least 3 images",
+                "error"
             );
+
+            return;
+        }
+    }
+
+    try {
+
+        console.log("Submitting product...");
+
+        const formData = new FormData(productForm);
+
+        const response = await fetch("/products/add", {
+            method: "POST",
+            body: formData
+        });
+
+        console.log("Response status:", response.status);
+        console.log("Response type:", response.headers.get("content-type"));
+
+        const text = await response.text();
+
+        console.log("Server response:", text);
+
+        if (!response.ok) {
+
+            showToast(
+                `Server error: ${response.status}`,
+                "error"
+            );
+
+            return;
+        }
+
+        const data = JSON.parse(text);
+
+        console.log("Data:", data);
+
+        if (data.success) {
+
+            showToast(
+                data.message,
+                "success"
+            );
+
+            productForm.reset();
+
+            window.location.href = data.redirect;
+
+            return;
+        }
+
+        if (data.errors) {
+            showErrors(data.errors);
+        }
+
+    } catch (error) {
+
+        console.error("Add product error:", error);
+
+        showToast(
+            "Something went wrong",
+            "error"
+        );
+    }
+});
             function showToast(message, type = "success") {
 
                 const toast = document.getElementById("toast");

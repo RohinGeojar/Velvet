@@ -15,7 +15,7 @@ const transactionSchema = new mongoose.Schema({
     transactionId: {
         type: String,
         required: true,
-        unique: true
+        
     },
     description: {
         type: String,

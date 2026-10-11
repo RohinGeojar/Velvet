@@ -234,6 +234,11 @@
                                                     View Details →
 
                                                 </a>
+                                                <% if (order.paymentMethod === "Razorpay" && ["Pending", "Failed"].includes(order.paymentStatus) && !["Cancelled", "Returned"].includes(order.orderStatus)) { %>
+                                                    <button type="button" class="retry-payment-btn mt-3 px-4 py-2 rounded-lg bg-brand text-white hover:bg-brand-dark transition disabled:opacity-50" data-order-id="<%= order._id %>">
+                                                        Retry Payment
+                                                    </button>
+                                                <% } %>
 
                                             </div>
 
@@ -750,7 +755,106 @@ function getStatusClass(status){
             return "bg-gray-100 text-gray-700";
     }
 }
-        
+
+       
+
+
+
+document.getElementById("ordersContainer").addEventListener("click", async (event) => {
+    const button = event.target.closest(".retry-payment-btn");
+    if (!button) return;
+
+    const orderId = button.dataset.orderId;
+    const originalText = button.textContent;
+
+    button.disabled = true;
+    button.textContent = "Processing...";
+
+    try {
+        const response = await fetch("/shop/retry-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Unable to initiate payment");
+        }
+
+        const openCheckout = () => {
+            const checkout = new Razorpay({
+                key: data.key,
+                amount: data.amount,
+                currency: data.currency,
+                name: "Velvet Vogue",
+                description: `Payment for Order ${data.orderId}`,
+                order_id: data.razorpayOrderId,
+                handler: async (paymentResponse) => {
+                    try {
+                        const verifyResponse = await fetch("/shop/verify-retry-payment", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                applicationOrderId: data.applicationOrderId,
+                                razorpay_order_id: paymentResponse.razorpay_order_id,
+                                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                                razorpay_signature: paymentResponse.razorpay_signature
+                            })
+                        });
+
+                        const verifyData = await verifyResponse.json();
+
+                        if (!verifyResponse.ok || !verifyData.success) {
+                            throw new Error(verifyData.message || "Payment verification failed");
+                        }
+
+                        window.location.href = verifyData.redirect;
+                    } catch (error) {
+                        alert(error.message);
+                        button.disabled = false;
+                        button.textContent = originalText;
+                    }
+                },
+                modal: {
+                    ondismiss: () => {
+                        button.disabled = false;
+                        button.textContent = originalText;
+                    }
+                },
+                theme: { color: "#7a9575" }
+            });
+
+            checkout.on("payment.failed", (paymentResponse) => {
+                alert(paymentResponse.error?.description || "Payment failed. Please retry.");
+                button.disabled = false;
+                button.textContent = originalText;
+            });
+
+            checkout.open();
+        };
+
+        if (window.Razorpay) {
+            openCheckout();
+        } else {
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.onload = openCheckout;
+            script.onerror = () => {
+                alert("Unable to load Razorpay Checkout");
+                button.disabled = false;
+                button.textContent = originalText;
+            };
+            document.head.appendChild(script);
+        }
+    } catch (error) {
+        alert(error.message);
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+});
+
     </script>
 </body>
 

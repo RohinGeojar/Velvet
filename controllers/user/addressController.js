@@ -184,7 +184,7 @@ export const deleteAddress = async (req, res) => {
     const { id } = req.params
 
     await addressService.deleteAddress(id, userId)
-    console.log(req.query)
+    
     return res.json({
       success: true,
       message: "Address deleted successfully"

@@ -8,8 +8,6 @@ export const loadWallet = async (req, res, next) => {
     try {
         const page = Number(req.query.page) || 1
        
-
-
         const {wallet,transactions,currentpage, totalPages,totalTransactions} = await getWalletService(req.user._id,page)
         const user = await User.findById(req.user._id).lean()
 
