@@ -36,7 +36,8 @@ const transactionSchema = new mongoose.Schema({
             "order_return",
             "referral_bonus",
             "admin_credit",
-            "order_payment"
+            "order_payment",
+            "payment_incomplete_refund"
         ],
         required: true
     }
