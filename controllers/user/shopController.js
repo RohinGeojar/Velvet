@@ -16,10 +16,70 @@ import { calculateBestOffer } from "../../services/user/OfferCalculationService.
 import { calculateCouponDiscount, validateCoupon, markCouponUsed } from "../../services/user/couponService.js"
 import razorpay from "../../config/razorpay.js"
 import crypto from "crypto"
-import { getWalletService, debitWalletService } from "../../services/user/walletService.js"
+import { getWalletService, debitWalletService, creditWalletService } from "../../services/user/walletService.js"
 import { getWishlistCountService } from "../../services/user/navbarCountService.js"
 import { MESSAGES } from "../../utils/messages.js"
 import { STATUS } from "../../utils/statusCodes.js"
+// A captured payment must not be left pending when order fulfilment fails.
+// Stable wallet transaction IDs prevent duplicate credits on repeated verification.
+const refundIncompleteCapturedPayment = async ({ res, order, payment, message }) => {
+    const expectedAmount = Math.round(Number(order.grandTotal) * 100);
+
+    if (!payment || payment.status !== "captured" || payment.amount !== expectedAmount || payment.currency !== "INR") {
+        return res.status(400).json({
+            success: false,
+            message: "The captured payment could not be verified for refund. Please contact support."
+        });
+    }
+
+    const refundTransactionId = "REFUND-INCOMPLETE-" + order._id + "-" + payment.id;
+
+    try {
+        await creditWalletService(
+            order.userId,
+            payment.amount / 100,
+            "Refund for incomplete order " + order.orderId,
+            "payment_incomplete_refund",
+            order._id,
+            refundTransactionId
+        );
+    } catch (refundError) {
+        console.error("Incomplete-payment wallet refund failed:", refundError);
+        order.refundStatus = "Pending";
+        order.paymentDetails.paymentId = payment.id;
+        order.paymentDetails.transactionId = payment.id;
+        order.timeline.push({
+            status: "Refund Pending",
+            message: "Payment was captured but the wallet refund failed. Reason: " + message
+        });
+        await order.save();
+        return res.status(500).json({
+            success: false,
+            refundPending: true,
+            message: "Payment was captured, but the refund could not be credited automatically. Please contact support and do not pay again."
+        });
+    }
+
+    order.paymentStatus = "Refunded";
+    order.refundStatus = "Completed";
+    order.orderStatus = "Cancelled";
+    order.cancelledAt = new Date();
+    order.paymentDetails.paymentId = payment.id;
+    order.paymentDetails.transactionId = payment.id;
+    order.timeline.push({
+        status: "Refunded",
+        message: "INR " + (payment.amount / 100).toFixed(2) + " credited to the wallet because order fulfilment failed. Reason: " + message
+    });
+    await order.save();
+
+    return res.status(409).json({
+        success: false,
+        refunded: true,
+        message: message + " The captured payment has been refunded to your Velvet Vogue wallet.",
+        redirect: "/shop/paymentResult?status=failed&orderId=" + encodeURIComponent(order.orderId) + "&message=" + encodeURIComponent("Payment refunded to wallet because the order could not be completed.")
+    });
+};
+
 
 
 export const loadShop = async (req, res) => {
@@ -1593,8 +1653,10 @@ export const verifyRazorpayPayment = async (req, res) => {
             const product = await Product.findById(item.productId)
 
             if (!product || product.isDeleted || !product.isActive) {
-                return res.status(400).json({
-                    success: false,
+                return await refundIncompleteCapturedPayment({
+                    res,
+                    order: applicationOrder,
+                    payment,
                     message: `${item.productName} is no longer available.`
                 })
             }
@@ -1605,8 +1667,10 @@ export const verifyRazorpayPayment = async (req, res) => {
             )
 
             if (!variant) {
-                return res.status(400).json({
-                    success: false,
+                return await refundIncompleteCapturedPayment({
+                    res,
+                    order: applicationOrder,
+                    payment,
                     message: `${item.productName} variant is unavailable.`
                 })
             }
@@ -1616,10 +1680,11 @@ export const verifyRazorpayPayment = async (req, res) => {
             )
 
             if (!sizeData || sizeData.stock < item.quantity) {
-                return res.status(400).json({
-                    success: false,
-                    type: "stockUpdated",
-                    message: `Insufficient stock for ${item.productName}. Payment was captured; contact support for assistance.`
+                return await refundIncompleteCapturedPayment({
+                    res,
+                    order: applicationOrder,
+                    payment,
+                    message: `Insufficient stock for ${item.productName}.`
                 })
             }
 
@@ -1873,9 +1938,11 @@ export const verifyRetryRazorpayPayment = async (req, res) => {
             const product = await Product.findById(item.productId)
 
             if (!product || product.isDeleted || !product.isActive) {
-                return res.status(400).json({
-                    success: false,
-                    message: `${item.productName} is unavailable. Payment was captured; refund or support action may be required.`
+                return await refundIncompleteCapturedPayment({
+                    res,
+                    order,
+                    payment,
+                    message: `${item.productName} is unavailable.`
                 })
             }
 
@@ -1884,9 +1951,11 @@ export const verifyRetryRazorpayPayment = async (req, res) => {
             )
 
             if (!variant) {
-                return res.status(400).json({
-                    success: false,
-                    message: `${item.productName} variant is unavailable. Payment was captured; refund or support action may be required.`
+                return await refundIncompleteCapturedPayment({
+                    res,
+                    order,
+                    payment,
+                    message: `${item.productName} variant is unavailable.`
                 })
             }
 
@@ -1895,10 +1964,11 @@ export const verifyRetryRazorpayPayment = async (req, res) => {
             )
 
             if (!sizeData || sizeData.stock < item.quantity) {
-                return res.status(400).json({
-                    success: false,
-                    type: "stockUpdated",
-                    message: `Insufficient stock for ${item.productName}. Payment was captured; refund or support action may be required.`
+                return await refundIncompleteCapturedPayment({
+                    res,
+                    order,
+                    payment,
+                    message: `Insufficient stock for ${item.productName}.`
                 })
             }
 
