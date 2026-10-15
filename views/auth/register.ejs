@@ -286,13 +286,8 @@
 
       try {
 
-        document.getElementById("otpModal").classList.remove("hidden");
-        document.getElementById("otpEmail").textContent = data.email;
-
-        showToast("Sending OTP...", "success");
-
-        openOtpModal(data.email, "/verifyOtp", "signup");
-
+        registerBtn.disabled = true;
+        registerBtn.textContent = "Sending OTP...";
 
         const res = await fetch("/register", {
           method: "POST",
@@ -317,13 +312,28 @@
           return;
         }
 
+        if (result.linked) {
+          showToast(result.message || "Account linked successfully", "success");
+          window.location.href = "/";
+          return;
+        }
+
+        if (!result.email) {
+          showToast(result.message || "Unable to send OTP", "error");
+          return;
+        }
+
+        document.getElementById("otpEmail").textContent = result.email;
+        openOtpModal(result.email, "/verifyOtp", "signup");
         showToast(`OTP has been sent to ${result.email}`, "success");
 
       } catch (err) {
-
         console.error(err);
-
-        showToast("Something went wrong", "error");
+        document.getElementById("otpModal").classList.add("hidden");
+        showToast("Unable to send OTP. Please try again.", "error");
+      } finally {
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Register Now";
       }
     });
 

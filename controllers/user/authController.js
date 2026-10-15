@@ -115,6 +115,7 @@ export const signup = async (req, res) => {
 
             return res.status(200).json({
                 success: true,
+                linked: true,
                 message: "Account linked successfully"
             })
         }
