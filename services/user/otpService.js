@@ -20,17 +20,20 @@ export const sendOtpService = async (email) => {
     const expiresAt = new Date(Date.now() + 2 * 60 * 1000)
 
     const hashedOtp = await bcrypt.hash(otp, 10)
-    console.log("otp :", otp)
+
+    // Send first so the caller only opens the OTP screen after delivery succeeds.
+    // Do not persist an OTP if the email provider rejects the message.
+    await sendMail(email, otp)
+
     await Otp.findOneAndUpdate(
         { email },
         { otp: hashedOtp, expiresAt },
         {
             upsert: true,
-            returnDocument: "after"
+            returnDocument: "after",
+            setDefaultsOnInsert: true
         }
     )
 
-    await sendMail(email, otp)
-
-    return otp;
+    return { sent: true };
 }
