@@ -33,7 +33,7 @@ export const getWalletService = async (userId, page) => {
 }
 
 
-export const creditWalletService = async (userId, amount, description, purpose, orderId = null) => {
+export const creditWalletService = async (userId, amount, description, purpose, orderId = null, idempotencyKey = null) => {
 
     let wallet = await Wallet.findOne({ userId })
 
@@ -45,10 +45,17 @@ export const creditWalletService = async (userId, amount, description, purpose, 
         });
     }
 
+    if (idempotencyKey) {
+        const existingTransaction = wallet.transactions.find(
+            transaction => transaction.transactionId === idempotencyKey
+        );
+        if (existingTransaction) return wallet;
+    }
+
     wallet.balance += amount
 
     wallet.transactions.unshift({
-        transactionId: "WTXN-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+        transactionId: idempotencyKey || ("WTXN-" + Date.now() + "-" + Math.floor(Math.random() * 1000)),
         type: "credit",
         amount,
         description,
