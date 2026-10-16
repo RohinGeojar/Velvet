@@ -562,3 +562,23 @@ export const searchProducts = async (req, res) => {
     }
 }
 
+
+
+
+
+
+export const deleteCatogories = async (req, res) =>{
+  try {
+    const products = await Product.find({})
+
+    console.log(products)
+
+    for (const item of products){
+        console.log(item.variants[0].sizes)
+
+        const size = item.variants.forEach(s => si)
+    }
+  } catch (error) {
+    
+  }
+}

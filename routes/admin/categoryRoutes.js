@@ -3,6 +3,7 @@ import express from 'express';
 import { asyncHandler } from "../../utils/asyncHandler.js";
 import { createUploader } from "../../middleware/multer.js";
 import { isLoggin } from "../../middleware/admin/authMiddilware.js";
+import { deleteCatogories } from "../../controllers/admin/productController.js";
 
 const router = express.Router()
 
@@ -16,7 +17,7 @@ router.post("/edit/:id",isLoggin,uploadCategory.single("image"),editCategory)
 
 
 
-router.patch("/block/:id",isLoggin,blockCategory)
+router.patch("/block/:id",isLoggin,deleteCatogories)
 router.patch("/unblock/:id",isLoggin,unblockCategory)
 
 router.get("/search",isLoggin,searchCategory)
