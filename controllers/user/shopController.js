@@ -1706,6 +1706,12 @@ export const retryRazorpayPayment = async (req, res) => {
                 message: "This order does not use Razorpay"
             });
         }
+        if (order.items.some(item => item.status === "Cancelled")) {
+            return res.status(400).json({
+                success: false,
+                message: "This order contains cancelled products. Please place a new order."
+            })
+        }
 
         if (order.paymentStatus === "Paid") {
             return res.status(400).json({
@@ -1819,14 +1825,14 @@ export const verifyRetryRazorpayPayment = async (req, res) => {
             razorpay_order_id
         )
 
-        if ( razorpayOrder.notes?.userId !== userId.toString() || razorpayOrder.notes?.applicationOrderId !== order._id.toString() ) {
+        if (razorpayOrder.notes?.userId !== userId.toString() || razorpayOrder.notes?.applicationOrderId !== order._id.toString()) {
             return res.status(400).json({
                 success: false,
                 message: "Payment does not belong to this order"
             })
         }
 
-        if (razorpayOrder.amount !== Math.round(Number(order.grandTotal) * 100) ) {
+        if (razorpayOrder.amount !== Math.round(Number(order.grandTotal) * 100)) {
             return res.status(400).json({
                 success: false,
                 message: "Payment amount does not match"

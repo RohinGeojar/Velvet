@@ -843,44 +843,105 @@
 
             // ================================= 
 
-           const productForm = document.getElementById("productForm");
+           function validateProductForm() {
+    document.querySelectorAll(".error-text").forEach(el => {
+        el.textContent = "";
+    });
 
-productForm.addEventListener("submit", async function (e) {
+    const requiredFields = [
+        ["productName", "Product name is required"],
+        ["productTitle", "Product title is required"],
+        ["description", "Description is required"],
+        ["category", "Please select a category"],
+        ["materialDetails", "Material details are required"],
+        ["materialCare", "Material care is required"],
+        ["shippingDetails", "Shipping details are required"]
+    ];
 
-    e.preventDefault();
+    let isValid = true;
+
+    requiredFields.forEach(([name, message]) => {
+        const input = productForm.elements.namedItem(name);
+        const errorElement = document.querySelector(`[data-error="${name}"]`);
+
+        if (input && !input.value.trim()) {
+            if (errorElement) errorElement.textContent = message;
+            isValid = false;
+        }
+    });
 
     if (!validateVariantColors()) {
-        showToast(
-            "Each variant must have a unique color",
-            "error"
-        );
-
-        return;
+        isValid = false;
     }
 
-    document
-        .querySelectorAll(".error-text")
-        .forEach(el => el.textContent = "");
+    const variants = document.querySelectorAll("#variantsContainer > div");
 
-    const imageInputs = document.querySelectorAll(".variant-image-input");
+    if (variants.length === 0) {
+        showToast("Please add at least one product variant", "error");
+        isValid = false;
+    }
 
-    for (const input of imageInputs) {
+    variants.forEach((variant, index) => {
+        const colorInput = variant.querySelector('input[name*="[color]"]');
+        const priceInput = variant.querySelector('input[name*="[regularPrice]"]');
+        const imageInput = variant.querySelector(".variant-image-input");
+        const sizeSelects = variant.querySelectorAll(".size-select");
+        const stockInputs = variant.querySelectorAll('input[name*="[stock]"]');
 
-        if (input.files.length < 3) {
-
-            showToast(
-                "Each variant must contain at least 3 images",
-                "error"
-            );
-
-            return;
+        if (colorInput && !colorInput.value.trim()) {
+            const error = variant.querySelector('[data-error$=".color"]');
+            if (error) error.textContent = "Variant color is required";
+            isValid = false;
         }
-    }
+
+        if (priceInput && (!priceInput.value || Number(priceInput.value) <= 0)) {
+            const error = variant.querySelector('[data-error$=".regularPrice"]');
+            if (error) error.textContent = "Enter a valid regular price";
+            isValid = false;
+        }
+
+        if (!imageInput || imageInput.files.length < 3) {
+            showToast(`Variant ${index + 1} must contain at least 3 images`, "error");
+            isValid = false;
+        }
+
+        if (sizeSelects.length === 0) {
+            showToast(`Add at least one size to variant ${index + 1}`, "error");
+            isValid = false;
+        }
+
+        sizeSelects.forEach((select, sizeIndex) => {
+            if (!select.value) {
+                const error = variant.querySelector(
+                    `[data-error="variants.${index}.sizes.${sizeIndex}.size"]`
+                );
+                if (error) error.textContent = "Please select a size";
+                isValid = false;
+            }
+        });
+
+        stockInputs.forEach((input, sizeIndex) => {
+            if (input.value === "" || Number(input.value) < 0) {
+                const error = variant.querySelector(
+                    `[data-error="variants.${index}.sizes.${sizeIndex}.stock"]`
+                );
+                if (error) error.textContent = "Enter a valid stock quantity";
+                isValid = false;
+            }
+        });
+    });
+
+    return isValid;
+}
+
+const productForm = document.getElementById("productForm");
+
+productForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    if (!validateProductForm()) return;
 
     try {
-
-        console.log("Submitting product...");
-
         const formData = new FormData(productForm);
 
         const response = await fetch("/products/add", {
@@ -888,53 +949,23 @@ productForm.addEventListener("submit", async function (e) {
             body: formData
         });
 
-        console.log("Response status:", response.status);
-        console.log("Response type:", response.headers.get("content-type"));
+        const data = await response.json();
 
-        const text = await response.text();
-
-        console.log("Server response:", text);
-
-        if (!response.ok) {
-
-            showToast(
-                `Server error: ${response.status}`,
-                "error"
-            );
-
-            return;
-        }
-
-        const data = JSON.parse(text);
-
-        console.log("Data:", data);
-
-        if (data.success) {
-
-            showToast(
-                data.message,
-                "success"
-            );
-
-            productForm.reset();
-
-            window.location.href = data.redirect;
-
-            return;
-        }
-
-        if (data.errors) {
+        if (data.errors?.length) {
             showErrors(data.errors);
+            return;
         }
 
+        if (!response.ok || !data.success) {
+            showToast(data.message || `Server error: ${response.status}`, "error");
+            return;
+        }
+
+        showToast(data.message, "success");
+        window.location.href = data.redirect;
     } catch (error) {
-
         console.error("Add product error:", error);
-
-        showToast(
-            "Something went wrong",
-            "error"
-        );
+        showToast("Something went wrong. Please try again.", "error");
     }
 });
             function showToast(message, type = "success") {

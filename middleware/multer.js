@@ -27,7 +27,7 @@ export const createUploader = (folderName, fileSize = 2) => {
             "image/webp",
             "image/avif"
         ]
-        console.log(file.mimetype)
+       
 
         if (allowedTypes.includes(file.mimetype)) {
             cb(null, true)
