@@ -1,3 +1,4 @@
+
 import { createCouponService, deleteCouponService, getCouponByIdService, getCouponService, restoreCouponService, toggleCouponService, updateCouponService } from "../../services/admin/couponService.js"
 import { createOfferService, getCreateOfferData, getEditOfferData,toggleOfferservice, restoreOfferservice, deleteOfferservice, getOfferService, updateOfferService } from "../../services/admin/offerService.js"
 import { capitalizeName } from "../../utils/capitalizer.js"
@@ -404,7 +405,7 @@ export const createOffer = async (req, res) => {
         }
        
         const offerName = capitalizeName(value.offerName)
-        const result =  await createOfferService(value,offerName)
+         await createOfferService(value,offerName)
       
         return res.json({
             success: true,
